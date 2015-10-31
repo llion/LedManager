@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <string name="app_name">LedManager</string>
+        <string name="action_settings">Settings</string>
+        <string name="hello_world">Hello world!</string>
+        <string name="search_no_result">沒有查找到對應的終端</string>
+        <string name="back">返回</string>
+        <string name="second">秒</string>
+        <!-- 底部菜單 -->
+        <string name="home_page">首頁</string>
+        <string name="sender_card">發送卡</string>
+        <string name="receiver_card">接收卡</string>
+        <string name="connect_relation">連接關係</string>
+        <string name="search">查找</string>
+        <string name="online">在線</string>
+        <string name="offline">離線</string>
+        <string name="not_connect">未連接</string>
+        <string name="scan_device">掃一掃連接</string>
+        <string name="terminal_not_specified">未指定終端</string>
+        <string name="screen_manager">屏幕管理</string>
+        <string name="video_play_control">節目播放控制</string>
+        <string name="set_port_area">設定網口面積</string>
+        <string name="search_server">查找服務端</string>
+        <string name="search_server_type">查找方式</string>
+        <string name="select_upload_program">選擇節目</string>
+        <string name="delete_program">刪除節目</string>
+        <string name="name">節目名</string>
+        <string name="path">路徑</string>
+        <string name="delete_fail">刪除節目失敗</string>
+        <string name="delete_success">刪除節目成功</string>
+        <string name="screenshots">屏幕截圖</string>
+
+        <!-- Language -->
+        <string name="change_language">語言切換</string>
+        <string name="detect_sender_card">探測發送卡</string>
+        <!-- 发送卡参数 -->
+        <string name="x">列起點</string>
+        <string name="y">行起點</string>
+        <string name="width">寬度</string>
+        <string name="height">高度</string>
+        <string name="a_port">A口</string>
+        <string name="b_port">B口</string>
+        <string name="c_port">C口</string>
+        <string name="d_port">D口</string>
+        <string name="sender_type">發送卡型號</string>
+        <string name="custom">自定義</string>
+        <string name="bright">亮度</string>
+        <string name="color_temp">色溫</string>
+        <string name="switch_screen">開關屏幕</string>
+        <string name="auto_bright_adjust">自動亮度調節</string>
+        <string name="receiver_params_from_sender">接收卡參數來自發送卡</string>
+        <string name="pass_switch">過交換機</string>
+        <string name="no_video_audio_output">無信號輸入時禁止輸出視頻和音頻</string>
+        <string name="forbid_div_hdmi_switch">禁止dvi/hdmi自動切換</string>
+        <string name="zero_delay">0延遲</string>
+        <string name="enable_dhcp">啟用DHCP</string>
+        <string name="tenbit_flag">10bit位標誌</string>
+        <string name="signal_input_type">信號輸入類型</string>
+        <string name="sender_output">發送卡輸出</string>
+        <string name="frame_by_frame">逐幀</string>
+        <string name="frame_by_separate">隔幀</string>
+        <string name="sender_resolution">發送卡分辨率</string>
+        <string name="resolution">分辨率</string>
+        <string name="set">設定</string>
+        <string name="save">保存</string>
+        <string name="saved">已保存</string>
+        <string name="send">發送</string>
+        <string name="set_as_current_display_resolution">設定為當前顯示器分辨率</string>
+        <string name="test_mode">測試模式</string>
+        <string name="tempeture">實時溫度</string>
+        <string name="sender_dampness">發送卡濕度</string>
+        <string name="active_width">寬度</string>
+        <string name="active_height">高度</string>
+        <string name="DVI_info">DVI資訊</string>
+        <string name="frame_rate">幀率</string>
+        <string name="blank_time">消隱時間</string>
+        <string name="clock_rate">時鐘頻率</string>
+        <string name="fetch">讀取</string>
+        <string name="test_mode_type">測試模式類型</string>
+        <string name="detect">探測</string>
+        <string name="detect_sender">探測發送卡</string>
+        <string name="detect_sender_update">刷新</string>
+        <string name="sender_card_time">發送卡時間</string>
+
+        <!-- message -->
+        <string name="save_success">保存成功</string>
+        <string name="save_fail">保存失敗</string>
+        <string name="setting_success">設定成功</string>
+        <string name="setting_fail">設定失敗</string>
+        <string name="time_input_error">時間輸入錯誤</string>
+        <string name="please_input_brightness">請輸入亮度</string>
+        <string name="network_not_connected">網路連接失敗</string>
+        <string name="app_need_to_reboot">程式需要重新啟動，設置才能生效</string>
+        <string name="connect_network">請連接wifi</string>
+        <string name="fail_connect_to_server">連接服務器失敗</string>
+        <string name="detect_card_fail">探卡失敗，請重探</string>
+        <string name="detect_card_success">探卡成功</string>
+        <string name="please_input_r_c">請輸入一個1到256之間的正整數</string>
+        <string name="please_input_int">請輸入一個正整數</string>
+        <string name="please_select_vaild_file">請選擇正確的文件</string>
+        <string name="please_input_program_name">請輸入節目名</string>
+        <string name="please_input_r_c_mulity">行乘以列應該小於1024</string>
+        <string name="please_input_wh">請輸入一個1到1024之間的正整數</string>
+        <string name="please_input_pos_int">請輸入一個正確的正裝數</string>
+        <string name="submit">確定</string>
+        <string name="kick_of">有新的客戶端連接上播放機，本客戶端離線</string>
+        <!-- 文件上傳 -->
+        <string name="upload_program">節目上傳</string>
+        <string name="see_upload_situation">查看下載情況</string>
+        <string name="upload_center">下載中心</string>
+        <string name="uploaded">已完成</string>
+        <string name="update">刷新</string>
+        <string name="please_select_file">請選擇上傳文件</string>
+        <string name="upload_sucessful">上傳成功</string>
+        <string name="file_not_exist">文件不存在</string>
+        <string name="file_zero_size">文件大小為0</string>
+        <string name="select_all">全選</string>
+        <string name="cancel">取消</string>
+        <string name="have_select">已選中</string>
+        <string name="ge">個</string>
+        <string name="pause">暫停</string>
+        <string name="has_paused">已暫停</string>
+        <string name="continuee">繼續</string>
+        <string name="delete">刪除</string>
+        <string name="waitting">排隊中</string>
+        <string name="uploading">上傳中</string>
+        <string name="upload_fail">上傳失敗</string>
+        <string name="please_select">請選擇</string>
+        <string name="start_upload">開始上傳</string>
+        <string name="stop_upload">終止上傳</string>
+        <string name="program_type">節目類型</string>
+        <string name="window_properties">窗口屬性</string>
+        <string name="startX">起點X</string>
+        <string name="startY">起點Y</string>
+        <string name="add_file">添加文件</string>
+        <string name="add_image">添加圖片</string>
+        <string name="add_vedio">添加視頻</string>
+        <string name="add_txt">添加Txt</string>
+        <string name="image_properties">圖片屬性</string>
+        <string name="vedio_properties">視頻屬性</string>
+        <string name="singleline_text_properties">單行文本屬性</string>
+        <string name="multiline_text_properties">多行文本屬性</string>
+        <string name="opacity">不透明</string>
+        <string name="constrain_proportion">約束比例</string>
+        <string name="stay_time">停留時間</string>
+        <string name="play_times">播放次數</string>
+        <string name="transform">翻轉</string>
+        <string name="duration">時長</string>
+        <string name="volume">音量</string>
+        <string name="move_left">連續左移</string>
+        <string name="head_tail_conn">首尾相連</string>
+        <string name="text_source">文本來源</string>
+        <string name="font">字體</string>
+        <string name="scroll_up">連續上移</string>
+        <string name="vertical_central_align">垂直居中</string>
+        <string name="parent_directory">上一級</string>
+        <string name="please_add_image">請添加一個圖片</string>
+        <string name="please_add_vedio">請添加一個視頻</string>
+        <string name="please_add_txt">請添加一個txt</string>
+        <string name="add">添加</string>
+        <string name="text_color">文字顏色</string>
+        <string name="background_color">背景色</string>
+        <string name="has_selected_file_num">已選中%1$d 個文件</string>
+        
+            <!-- 節目 -->
+        <string name="program_manager">節目管理</string>
+        <string name="get_programs">獲取所有節目</string><![CDATA[
+        
+        ]]>
+    <string name="from_sd_card">SD卡</string>
+        <string name="from_internal_storage">內部存儲</string>
+        <string name="none">無</string>
+        <string name="start_upload_pic">開始上傳圖片</string>
+        <string name="upload_pic_success">上傳圖片成功</string>
+        <string name="program_size">大小</string>
+        <string name="program_create_time">創建時間</string>
+        <string name="program_path">路徑</string>
+        <string name="program_full_path">全路徑</string>
+        <string name="program_total">共%1$s個節目</string>
+        <string name="upload_pic">上傳節目</string>
+        <string name="pic_path">路徑</string>
+        <string name="create_upload">上傳節目</string>
+        <string name="size">寬高</string>
+        <string name="program_name">節目名</string>
+        <string name="upload_progress">%1$s/%2$s</string>
+
+        <!-- 接收卡參數設置 -->
+        <string name="send_cards">發送卡數</string>
+        <string name="ports">網口數</string>
+        <string name="send_row_count">行數</string>
+        <string name="send_col_count">列數 </string>
+        <string name="send_card">發送卡</string>
+        <string name="port_number">網口序號</string>
+        <string name="link_path">連線方向</string>
+        <string name="smart_link">智能連線</string>
+        <string name="advanced">高級 </string>
+        <string name="save_to_rcv">固化 </string>
+        <string name="reset">重置 </string>
+        <string name="empty_card">空卡 </string>
+        <!-- 接收卡 -->
+        <string name="box_parameter">箱體參數</string>
+        <string name="refresh">刷新</string>
+        <string name="refresh_rate">刷新倍數</string>
+        <string name="gray_level">灰度</string>
+        <string name="frequency">串鐘</string>
+        <string name="bright_percent">亮度等級</string>
+        <string name="gray_mode">灰度模式</string>
+        <string name="gamma_value">伽馬</string>
+        <string name="blanking_value">消隱時間</string>
+        <string name="bri_level">亮度等級</string>
+        <string name="lease_oe">最小OE </string>
+        <string name="box_width_tiny">&lt;=150</string>
+        <string name="box_height_tiny">&lt;=256</string>
+        <string name="box_w_h">箱體寬高</string>
+        <string name="onoff">開關</string>
+        <string name="on">開</string>
+        <string name="off">關</string>
+        <!-- 發送卡 -->
+        <string name="display_mode">顯示模式</string>
+        <string name="video_source">視頻來源</string>
+        <string name="please_input_pass">請輸入密碼</string>
+        <!-- 其他信息 -->
+        <string name="info">資訊</string>
+        <string name="programs_info">節目資訊</string>
+        <string name="other_info">相關資訊</string>
+        <string name="modify_term_name">重命名</string>
+        <string name="modify">修改</string>
+        <string name="currnet_term_name">現名</string>
+        <string name="new_term_name">新名</string>
+        <string name="sdcard_room">可用%1$s, 共%2$s</string>
+        <string name="term_info">終端資訊</string>
+        <string name="conn_state">連接終端</string>
+        <string name="sdcard_room_state">終端容量</string>
+        <string name="version_info">版本資訊</string>
+        <string name="version_ledmanager">LedManager</string>
+        <string name="version_ledserver">LedServer</string>
+        <string name="version_sender_card">發送卡</string>
+        <string name="version_system">ColorHome</string>
+        <string name="version_colorlight">ColorLight</string>
+        <string name="net_setting">網路設定</string>
+        <string name="no_program">沒有節目</string>
+        <!-- 發送卡輸出 -->
+        <string-array name="sender_output">
+            <item>逐幀</item>
+            <item>隔幀</item>
+        </string-array>
+        <!-- 測試模式 -->
+        <string-array name="test_mode">
+            <item>正常</item>
+            <item>純紅</item>
+            <item>純綠</item>
+            <item>純藍</item>
+            <item>純白</item>
+            <item>水平移動白條</item>
+            <item>垂直移動橫條</item>
+            <item>斜下移動白條</item>
+            <item>斜上移動白條</item>
+            <item>下移白方格</item>
+            <item>漸變紅</item>
+            <item>漸變綠</item>
+            <item>漸變藍</item>
+            <item>漸變白</item>
+            <item>黑</item>
+            <item>LOGO</item>
+            <item>紅灰度自動增加</item>
+            <item>綠灰度自動增加</item>
+            <item>藍灰度自動增加</item>
+            <item>白灰度自動增加</item>
+            <item>全白與全黑快速切換</item>
+            <item>紅綠藍白色條</item>
+            <item>自動循環上述測試模式</item>
+        </string-array>
+
+        <!-- 發送卡分辨率 -->
+        <string-array name="resolution">
+            <item>自定義</item>
+            <item>800*600</item>
+            <item>1024*768</item>
+            <item>1280*720</item>
+            <item>1280*960</item>
+            <item>1280*1024</item>
+            <item>1366*768</item>
+            <item>1440*900</item>
+            <item>1440*1050</item>
+            <item>1600*900</item>
+            <item>1680*1050</item>
+            <item>1920*1080</item>
+            <item>2048*1024</item>
+        </string-array>
+        <string-array name="signal_input_type_arr">
+            <item>HDMI</item>
+            <item>DVI</item>
+            <item>C1S</item>
+            <item>Not Found</item>
+        </string-array>
+        <!-- 開關屏 -->
+        <string-array name="on_off">
+            <item>開</item>
+            <item>關</item>
+        </string-array>
+
+        <!-- 顯示模式 -->
+        <string-array name="display_mode">
+            <item>正常2D</item>
+            <item>立體3D</item>
+        </string-array>
+        <!-- 幀率 -->
+        <string-array name="frame_rate">
+            <item>30</item>
+            <item>50</item>
+            <item>60</item>
+        </string-array>
+        <!-- 視頻來源 -->
+        <string-array name="video_source">
+            <item>HDMI</item>
+            <item>DVI</item>
+            <item>C1S</item>
+        </string-array>
+        <!-- port -->
+        <string-array name="ports">
+            <item>A口</item>
+            <item>B口</item>
+            <item>C口</item>
+            <item>D口</item>
+        </string-array>
+        <!-- port -->
+        <string-array name="smart_link">
+            <item>是</item>
+            <item>否</item>
+        </string-array>
+
+        <!-- 節目類型 -->
+        <string-array name="program_type">
+            <item>圖片</item>
+            <item>視頻</item>
+            <item>單行文本</item>
+            <item>多行文本</item>
+        </string-array>
+        <!-- 旋轉 -->
+        <string-array name="file_rotate">
+            <item>正常</item>
+            <item>鏡像</item>
+            <item>倒立</item>
+            <item>左旋</item>
+            <item>右旋</item>
+        </string-array>
+
+        <!-- 文本來源 -->
+        <string-array name="single_text_source">
+            <item>來自輸入</item>
+            <item>來自文本</item>
+        </string-array>
+     <!-- 顏色-->
+     <string-array name="text_color">
+            <item>黑色</item>
+            <item>深灰色</item>
+            <item>灰色</item>
+            <item>淺灰色</item>
+            <item>白色</item>
+            <item>紅色</item>
+            <item>綠色</item>
+            <item>藍色</item>
+            <item>黃色</item>
+            <item>青色</item>
+            <item>品紅色</item>
+        </string-array>
+        
+        <!-- 查找服務端方式 -->
+        <string-array name="find_term_type">
+            <item>UDP</item>
+            <item>TCP</item>
+        </string-array>
+    <string name="from">從</string>
+    <string name="save_to_receiver_cards">保存到接收卡</string>
+    <string name="to">到</string>
+
+</resources>

@@ -1,0 +1,4 @@
+include ':app', ':materialapp'
+include ':ZXingLib'
+include ':ledCommonLib'
+include ':library'

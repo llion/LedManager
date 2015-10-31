@@ -1,0 +1,86 @@
+apply plugin: 'com.android.application'
+//wrap with try and catch so the build is working even if the signing stuff is missing
+//try {
+//    apply from: '../../../signing.gradle'
+//} catch (ex) {
+//}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+    }
+
+    defaultConfig {
+        applicationId "com.clt.ledmanager"
+        minSdkVersion 11
+        targetSdkVersion 23
+        versionCode 430
+        versionName "4.3.0"
+
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                def file = output.outputFile
+                def fileName = file.name.replace(".apk", "-v" + versionName + "-c" + versionCode + ".apk")
+                output.outputFile = new File(file.parentFile, fileName)
+            }
+        }
+    }
+
+    productFlavors{
+        prod {
+
+        }
+        dev{
+
+        }
+    }
+
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-DEBUG"
+            try {
+                signingConfig signingConfigs.debug
+            } catch (ex) {
+            }
+            minifyEnabled false
+        }
+        release {
+            try {
+                signingConfig signingConfigs.release
+            } catch (ex) {
+            }
+            zipAlignEnabled true
+            minifyEnabled false
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile project(':library')
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.bumptech.glide:glide:3.6.1'
+
+    compile('com.mikepenz:aboutlibraries:5.2.3@aar') {
+        transitive = true
+    }
+    compile 'com.mikepenz:crossfader:1.0.5@aar'
+
+    compile 'com.mikepenz:google-material-typeface:1.2.0.1@aar'
+    compile 'com.mikepenz:fontawesome-typeface:4.4.0.1@aar'
+    compile 'com.mikepenz:octicons-typeface:3.0.0.1@aar'
+
+
+
+
+
+    compile project(':app')
+}
