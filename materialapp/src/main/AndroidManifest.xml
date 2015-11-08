@@ -1,61 +1,68 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.mikepenz.materialdrawer.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.android.email.permission.ACCESS_PROVIDER" />
+    <uses-permission android:name="com.android.email.permission.READ_ATTACHMENT" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <application
-        android:name="com.mikepenz.materialdrawer.app.CustomApplication"
-        android:allowBackup="true"
+        android:name="com.clt.ledmanager.app.CustomApplication"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        tools:replace="label,name"
-       >
+        android:label="@string/app_name">
         <!-- android:supportsRtl="true" -->
         <activity
-            android:name="com.mikepenz.materialdrawer.app.DrawerActivity"
+            android:name="com.clt.ledmanager.app.AdvancedActivity"
             android:label="@string/app_name"
-            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus">
+            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus"
+           >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--节目上传-->
         <activity
-            android:name="com.mikepenz.materialdrawer.app.CompactHeaderDrawerActivity"
+            android:name="com.clt.ledmanager.app.UploadProgramAcitvity">
+        </activity>
+        <activity
             android:label="@string/app_name"
-            android:theme="@style/CustomTheme" />
+            android:launchMode="singleTask"
+            android:name="com.clt.ledmanager.app.MyTabActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 选择上传节目页面 -->
         <activity
-            android:name="com.mikepenz.materialdrawer.app.ActionBarActivity"
-            android:theme="@style/MaterialDrawerTheme.ActionBar" />
+            android:configChanges="locale"
+            android:name="com.clt.ledmanager.app.FilesViewActivity"
+            android:screenOrientation="portrait" />
+        <!-- 选择终端页 -->
         <activity
-            android:name="com.mikepenz.materialdrawer.app.MenuDrawerActivity"
-            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus" />
+            android:configChanges="locale"
+            android:name="com.clt.ledmanager.app.LedSelectActivity"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.mikepenz.materialdrawer.app.NonTranslucentDrawerActivity"
-            android:theme="@style/MaterialDrawerTheme" />
-        <activity
-            android:name="com.mikepenz.materialdrawer.app.AdvancedActivity"
-            android:theme="@style/MaterialDrawerTheme.TranslucentStatus" />
-        <activity
-            android:name="com.mikepenz.materialdrawer.app.KeyboardUtilActivity"
-            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus"
+            android:configChanges="locale"
+            android:name="com.clt.ledmanager.app.ScreenShotActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name="com.mikepenz.materialdrawer.app.EmbeddedDrawerActivity"
-            android:theme="@style/MaterialDrawerTheme" />
-        <activity
-            android:name="com.mikepenz.materialdrawer.app.MiniDrawerActivity"
-            android:theme="@style/MaterialDrawerTheme" />
-        <activity
-            android:name="com.mikepenz.materialdrawer.app.FullscreenDrawerActivity"
-            android:theme="@style/FullscreenTheme" />
-        <activity
-            android:name="com.mikepenz.materialdrawer.app.CustomContainerActivity"
-            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar" />
-        <activity
-            android:name="com.mikepenz.materialdrawer.app.FragmentActivity"
-            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar" />
+
+        <service android:name="com.clt.ledmanager.service.NetService" />
+
+
     </application>
 
 </manifest>

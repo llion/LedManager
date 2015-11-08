@@ -86,7 +86,7 @@ public class DrawerBuilder {
      * @param activity current activity which will contain the drawer
      */
     public DrawerBuilder(@NonNull Activity activity) {
-        this.mRootView = (ViewGroup) activity.findViewById(android.R.id.content);
+        this.mRootView = (ViewGroup)activity.findViewById(android.R.id.content);
         this.mActivity = activity;
         this.mLayoutManager = new LinearLayoutManager(mActivity);
     }

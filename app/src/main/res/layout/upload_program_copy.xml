@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.clt.ui.TitleBarView
+    <TitleBarView
         android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="48dp"

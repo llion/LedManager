@@ -1,4 +1,4 @@
-include ':app', ':materialapp'
+include ':materialapp'
 include ':ZXingLib'
 include ':ledCommonLib'
 include ':library'

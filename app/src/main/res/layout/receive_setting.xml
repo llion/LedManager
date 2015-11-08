@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.clt.ui.TitleBarView
+    <TitleBarView
         android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -111,7 +111,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/send_card" />
 
-                    <com.clt.ui.CustomerSpinner
+                    <CustomerSpinner
                         android:id="@+id/spinner_receiver_port"
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
@@ -239,11 +239,11 @@
                             android:gravity="center_vertical"
                             android:text="行数" />
 
-                        <com.clt.ui.ReceiverAddMinusView
+                        <ReceiverAddMinusView
                             android:id="@+id/ramv_row"
                             android:layout_width="wrap_content"
                             android:layout_height="48dp" >
-                        </com.clt.ui.ReceiverAddMinusView>
+                        </ReceiverAddMinusView>
                     </LinearLayout>
 
                     <LinearLayout
@@ -258,22 +258,22 @@
                             android:gravity="center_vertical"
                             android:text="列数" />
 
-                        <com.clt.ui.ReceiverAddMinusView
+                        <ReceiverAddMinusView
                             android:id="@+id/ramv_column"
                             android:layout_width="wrap_content"
                             android:layout_height="48dp" >
-                        </com.clt.ui.ReceiverAddMinusView>
+                        </ReceiverAddMinusView>
                     </LinearLayout>
                 </LinearLayout>
                 <!--  -->
 
-                <com.clt.ui.ReceiverShowView
+                <ReceiverShowView
                     android:id="@+id/rsv_show"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:minHeight="300dp" >
-                </com.clt.ui.ReceiverShowView>
+                </ReceiverShowView>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

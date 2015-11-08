@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Home页面模块功能图片-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:state_selected="true" android:drawable="@drawable/home_pressed"/>
+
+    <item android:drawable="@drawable/home_normal"></item>
+
+</selector>

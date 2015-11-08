@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:orientation="vertical" >
 
-    <com.clt.ui.TitleBarView
+    <TitleBarView
         android:id="@+id/titlebar"
         android:layout_width="fill_parent"
         android:layout_height="48dp"

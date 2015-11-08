@@ -1,14 +1,9 @@
 package com.clt.adapter;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,15 +25,17 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.clt.activity.UploadProgramAcitvity3.ProgramItem;
 import com.clt.ledmanager.R;
 import com.clt.ui.CustomerSpinner;
 import com.clt.upload.PropertyCommon;
+import com.clt.upload.PropertyItem;
 import com.clt.upload.PropertyMultiLineText;
 import com.clt.upload.PropertyPicture;
 import com.clt.upload.PropertyVedio;
 import com.clt.util.Const;
 import com.clt.util.Tools;
+
+import java.util.ArrayList;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter
 {
@@ -55,6 +52,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
 			Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA
 	
 	};
+
+	public class ProgramItem {
+		public String fileName;
+
+		public String filePath;
+
+		public int fileType;
+
+		public PropertyItem property;
+	}
 	
 	private Context mContext;
 	

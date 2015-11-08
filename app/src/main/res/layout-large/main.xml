@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.clt.ui.TitleBarView
+    <TitleBarView
         android:id="@+id/titlebar"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
@@ -176,7 +176,7 @@
                             android:gravity="center_vertical"
                             android:text="@string/test_mode" />
 
-                        <com.clt.ui.CustomerSpinner
+                        <CustomerSpinner
                             android:id="@+id/spinner_test_mode_type"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height"
@@ -198,7 +198,7 @@
                             android:gravity="center_vertical"
                             android:text="@string/auto_bright_adjust" />
 
-                        <com.clt.ui.CustomerSpinner
+                        <CustomerSpinner
                             android:id="@+id/spinner_auto_bright_adjust"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height"
@@ -217,7 +217,7 @@
                             android:gravity="center_vertical|left"
                             android:text="@string/switch_screen" />
 
-                        <com.clt.ui.CustomerSpinner
+                        <CustomerSpinner
                             android:id="@+id/spinner_on_off"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height"
@@ -239,7 +239,7 @@
                             android:gravity="center_vertical|left"
                             android:text="@string/program_manager" />
 
-                        <com.clt.ui.CustomerSpinner
+                        <CustomerSpinner
                             android:id="@+id/spinner_program_manager"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height"
@@ -298,7 +298,7 @@
                             android:gravity="center_vertical"
                             android:text="@string/change_language" />
 
-                        <com.clt.ui.CustomerSpinner
+                        <CustomerSpinner
                             android:id="@+id/spinner_change_language"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height"

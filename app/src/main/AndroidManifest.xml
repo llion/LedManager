@@ -41,7 +41,7 @@
         android:icon="@drawable/ic_launcher"
         android:logo="@drawable/ic_launcher"
         android:label="LedManager"
-        android:name="com.clt.activity.Application"
+        android:name="Application"
         android:process="com.clt"
         android:theme="@android:style/Theme.Light.NoTitleBar" >
 
@@ -62,7 +62,7 @@
             android:configChanges="locale"
             android:label="@string/app_name"
             android:launchMode="standard"
-            android:name="com.clt.activity.MainActivity"
+            android:name="MainActivity"
             android:screenOrientation="portrait" />
 
         <!-- 选择上传节目页面 -->
@@ -102,13 +102,6 @@
             android:windowSoftInputMode="stateHidden" >
            
         </activity>-->
-        <activity
-            android:configChanges="locale"
-            android:name="com.clt.activity.UploadProgramAcitvity3"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" >
-           
-        </activity>
         <!-- 信息 -->
         <activity
             android:configChanges="locale"
@@ -134,7 +127,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
-        <service android:name="com.clt.service.NetService" />
+        <service android:name="NetService" />
         <!--<service android:name="com.clt.service.UploadFileService" />-->
         <!--<service android:name="com.clt.service.ReceiveService" />-->
     </application>

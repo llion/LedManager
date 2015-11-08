@@ -6,7 +6,7 @@
     android:orientation="vertical" 
     >
 
-    <com.clt.ui.TitleBarView
+    <TitleBarView
         android:id="@+id/titlebar"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
@@ -79,7 +79,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/send_card" />
 
-            <com.clt.ui.CustomerSpinner
+            <CustomerSpinner
                 android:id="@+id/spinner_send_card"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/item_height"
@@ -93,7 +93,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/port_number" />
 
-            <com.clt.ui.CustomerSpinner
+            <CustomerSpinner
                 android:id="@+id/spinner_port_number"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/item_height"
@@ -136,7 +136,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/smart_link" />
 
-            <com.clt.ui.CustomerSpinner
+            <CustomerSpinner
                 android:id="@+id/spinner_smart_link"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/item_height"
@@ -267,13 +267,13 @@
     </LinearLayout>
 
     <!--
-    <com.clt.ui.HVScrollView
+    <HVScrollView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_margin="10dp"
         android:layout_weight="1.0"
         android:fillViewport="true" >
-	</com.clt.ui.HVScrollView>
+	</HVScrollView>
 
     -->
 
@@ -287,13 +287,13 @@
         android:focusableInTouchMode="true" 
         android:background="@android:color/black">
 
-        <com.clt.ui.ReceiverShowViewSimpleType
+        <ReceiverShowViewSimpleType
             android:id="@+id/rs_showview"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
             android:focusableInTouchMode="true" >
-        </com.clt.ui.ReceiverShowViewSimpleType>
+        </ReceiverShowViewSimpleType>
     </LinearLayout>
 
 </LinearLayout>

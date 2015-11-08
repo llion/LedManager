@@ -1237,7 +1237,7 @@ public class AccountHeaderBuilder {
                 mDrawer.setOnDrawerItemClickListener(null);
             }
 
-            //wrap the onSelection call and the reset stuff within a handler to prevent lag
+            //wrap the onSelection call and the reset stuF within a handler to prevent lag
             if (mResetDrawerOnProfileListClick && mDrawer != null && view != null && view.getContext() != null) {
                 resetDrawerContent(view.getContext());
             }
