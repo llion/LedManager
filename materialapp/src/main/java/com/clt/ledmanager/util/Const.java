@@ -20,7 +20,7 @@ public class Const {
 	public static final String ZH_rTW = "zh-rTW"; // zh rTW
 
 	// 连接断开
-	public static final String CONNECT_BEARK_ACTION = "com.clt.connectBreak";
+	public static final String CONNECT_BREAK_ACTION = "com.clt.connectBreak";
 	// 连接时长
 	public static final String CONNECT_TIME_ACTION = "com.clt.connectTime";
 

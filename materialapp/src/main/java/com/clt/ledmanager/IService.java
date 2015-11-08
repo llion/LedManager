@@ -1,20 +1,21 @@
 package com.clt.ledmanager;
 
-import java.util.LinkedHashMap;
-
 import android.os.Handler;
+import android.os.Parcelable;
 
 import com.clt.commondata.SenderParameters;
 import com.clt.entity.ConnectionParam;
 import com.clt.entity.Program;
 import com.clt.entity.ReceiverSettingInfo;
 
+import java.util.LinkedHashMap;
+
 /**
  * 服务
  */
-public interface IService 
+public interface IService
 {
-    
+
     /**
      * 设置handler
      * @param nmHandler

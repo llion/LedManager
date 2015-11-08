@@ -4,19 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -43,17 +39,12 @@ import com.clt.commondata.SenderInfo;
 import com.clt.commondata.SenderParameters;
 import com.clt.commondata.SomeInfo;
 import com.clt.entity.Program;
-import com.clt.ledmanager.IService;
 import com.clt.ledmanager.activity.Application;
-import com.clt.ledmanager.activity.BaseFragment;
+import com.clt.ledmanager.activity.BaseObserverFragment;
 import com.clt.ledmanager.adapter.ChangeLanguageListener;
-import com.clt.ledmanager.adapter.OnTabActivityResultListener;
-import com.clt.ledmanager.adapter.UploadPicListener;
 import com.clt.ledmanager.app.LedSelectActivity;
 import com.clt.ledmanager.app.ScreenShotActivity;
 import com.clt.ledmanager.app.UploadProgramAcitvity;
-import com.clt.ledmanager.service.BaseService.LocalBinder;
-import com.clt.ledmanager.service.BaseServiceFactory;
 import com.clt.ledmanager.service.Clock;
 import com.clt.ledmanager.ui.CustomerSpinner;
 import com.clt.ledmanager.ui.DialogFactory;
@@ -88,13 +79,12 @@ import java.util.Locale;
  * 首页 修改2014.6.5 caocong
  * http://developer.android.com/reference/android/app/Fragment.html#Lifecycle
  */
-public class MainFragment extends BaseFragment implements
-        OnTabActivityResultListener, UploadPicListener, ChangeLanguageListener {
+public class MainFragment extends BaseObserverFragment implements
+        ChangeLanguageListener {
     private static final String TAG = "MainFragment";
 
     private Application app;
 
-    private IService mangerNetService;// 通信服务
 
     private ArrayList<LedTerminateInfo> ledList = new ArrayList<LedTerminateInfo>();// 服务端列表
 
@@ -171,31 +161,7 @@ public class MainFragment extends BaseFragment implements
 
     private static final int REQUST_CODE_SEARCH = 1001;
 
-    /**
-     * 绑定通信service
-     */
-    private ServiceConnection mangerNetServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
 
-            mangerNetService = null;
-
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            try {
-                mangerNetService = ((LocalBinder) service).getService();
-                if (mangerNetService != null) {
-                    mangerNetService.setNmHandler(nmHandler);
-                }
-            } catch (Exception e) {
-            }
-
-        }
-
-    };
-    private FragmentActivity fragmentActivity;
     private View trTestMode;
     private View btnEmpTestmode;
     private Drawer result;
@@ -204,7 +170,7 @@ public class MainFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fragmentActivity = super.getActivity();
+
         init();
         initView(llLayout);
         initListener();
@@ -237,10 +203,7 @@ public class MainFragment extends BaseFragment implements
             sharedPreferenceUtil = SharedPreferenceUtil.getInstance(fragmentActivity, null);
             // 查找提示框
             searchTerminateDialog = new DialogUtil().createDownloadDialog(fragmentActivity);
-            // 绑定mangerNetService
-            Intent _intent1 = new Intent(fragmentActivity,
-                    BaseServiceFactory.getBaseService());
-            fragmentActivity.getApplicationContext().bindService(_intent1, mangerNetServiceConnection, Context.BIND_AUTO_CREATE);
+
             // 连接时长
             receiver = new MyBroadcastReceiver();
             IntentFilter filter = new IntentFilter();
@@ -257,19 +220,13 @@ public class MainFragment extends BaseFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        fragmentActivity.getApplicationContext().unbindService(mangerNetServiceConnection);
         fragmentActivity.unregisterReceiver(receiver);
-
-
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mangerNetService != null) {
-            mangerNetService.setNmHandler(nmHandler);
-        }
         showConnectInfo(app.isOnline());
 
     }
@@ -376,6 +333,7 @@ public class MainFragment extends BaseFragment implements
         }
     }
 
+
     /**
      * 初始化监听器
      */
@@ -385,12 +343,12 @@ public class MainFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
 
-                    //Home页查找button
-                    if (mangerNetService != null) {
+                //Home页查找button
+                if (mangerNetService != null) {
 
-                        Intent intent = new Intent(getActivity(), LedSelectActivity.class);
-                        startActivityForResult(intent, 0);
-                    }
+                    Intent intent = new Intent(getActivity(), LedSelectActivity.class);
+                    startActivityForResult(intent, 0);
+                }
             }
         });
 
@@ -416,20 +374,20 @@ public class MainFragment extends BaseFragment implements
             public void onProgressChanged(SeekBar seekBar, int progress,
                                           boolean fromUser) {
 
-                    if (mangerNetService == null)
-                        return;
+                if (mangerNetService == null)
+                    return;
 
-                    mangerNetService.SetBrightness(seekbarBright.getProgress());
+                mangerNetService.SetBrightness(seekbarBright.getProgress());
 
-                    int percent = (int) (seekbarBright.getProgress() / 255.0f * 100);
-                    tvBrightValue.setText(String.valueOf(percent) + "%");
+                int percent = (int) (seekbarBright.getProgress() / 255.0f * 100);
+                tvBrightValue.setText(String.valueOf(percent) + "%");
 
-                    btnSaveBrightAndColorTemp.setText(getResources().getString(
-                            R.string.save));
-                    btnSaveBrightAndColorTemp.setClickable(true);
-                    sharedPreferenceUtil.putInt(ShareKey.KEY_BRIGHT, seekbarBright.getProgress());
+                btnSaveBrightAndColorTemp.setText(getResources().getString(
+                        R.string.save));
+                btnSaveBrightAndColorTemp.setClickable(true);
+                sharedPreferenceUtil.putInt(ShareKey.KEY_BRIGHT, seekbarBright.getProgress());
 
-                }
+            }
         });
 
 
@@ -463,8 +421,8 @@ public class MainFragment extends BaseFragment implements
                 btnSaveBrightAndColorTemp.setClickable(true);
 
                 sharedPreferenceUtil.putInt(ShareKey.KEY_COLOR_TEMP, value);
-                    }
-                });
+            }
+        });
         /**
          * 保存亮度和色温
          */
@@ -472,10 +430,10 @@ public class MainFragment extends BaseFragment implements
 
             @Override
             public void onClick(View v) {
-                    if (mangerNetService == null) {
-                        return;
-                    }
-                    mangerNetService.saveBrightAndColorTemp(seekbarBright.getProgress(), seekbarColorTemp.getProgress() * 100 + 2000);
+                if (mangerNetService == null) {
+                    return;
+                }
+                mangerNetService.saveBrightAndColorTemp(seekbarBright.getProgress(), seekbarColorTemp.getProgress() * 100 + 2000);
 
             }
         });
@@ -542,14 +500,14 @@ public class MainFragment extends BaseFragment implements
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                    if (mangerNetService == null) {
-                        return;
-                    }
-                    if (position == 0) {
-                        mangerNetService.SetShowOnOff(true);
-                    } else {
-                        mangerNetService.SetShowOnOff(false);
-                    }
+                if (mangerNetService == null) {
+                    return;
+                }
+                if (position == 0) {
+                    mangerNetService.SetShowOnOff(true);
+                } else {
+                    mangerNetService.SetShowOnOff(false);
+                }
             }
         });
 
@@ -563,7 +521,7 @@ public class MainFragment extends BaseFragment implements
             public void onClick(View v) {
 
                 if (mangerNetService == null || !mangerNetService.isConnecting()) {
-                   Toast.makeText(getActivity(), getResources().getString(R.string.fail_connect_to_server), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.fail_connect_to_server), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -671,8 +629,12 @@ public class MainFragment extends BaseFragment implements
                             @Override
                             public void onClick(View v) {
 
-                                if (program != null) {mangerNetService.deletePlayProgram(program);}
-                                if (deleteProgramDialog != null) {deleteProgramDialog.dismiss();}
+                                if (program != null) {
+                                    mangerNetService.deletePlayProgram(program);
+                                }
+                                if (deleteProgramDialog != null) {
+                                    deleteProgramDialog.dismiss();
+                                }
                             }
                         });
 
@@ -680,7 +642,9 @@ public class MainFragment extends BaseFragment implements
 
                             @Override
                             public void onClick(View v) {
-                                if (deleteProgramDialog != null) {deleteProgramDialog.dismiss();}
+                                if (deleteProgramDialog != null) {
+                                    deleteProgramDialog.dismiss();
+                                }
                             }
                         });
                         deleteProgramDialog = DialogFactory.createDialog(fragmentActivity, mView);
@@ -732,8 +696,8 @@ public class MainFragment extends BaseFragment implements
 
             @Override
             public void onClick(View v) {
-				Intent intent=new Intent(getActivity(), ScreenShotActivity.class);
-				getActivity().startActivity(intent);
+                Intent intent = new Intent(getActivity(), ScreenShotActivity.class);
+                getActivity().startActivity(intent);
             }
         });
     }
@@ -766,20 +730,14 @@ public class MainFragment extends BaseFragment implements
      * 显示连接信息
      */
     public void showConnectInfo() {
-        try {
-            boolean bConnectted = false;
+        boolean bConnectted = false;
 
-            if (mangerNetService != null) {
-                bConnectted = mangerNetService.isConnecting();
-            }
-
+        if (mangerNetService != null) {
+            bConnectted = mangerNetService.isConnecting();
+        }
+        if (app.ledTerminateInfo != null) {
             String strTerminateConInfo = app.ledTerminateInfo.getStrName();
             String ipAddress = app.ledTerminateInfo.getIpAddress();
-            // strTerminateConInfo = sharedPreferenceUtil.getString(
-            // ShareKey.TerminateName,
-            // getResources().getString(R.string.terminal_not_specified));
-            // String ipAddress = sharedPreferenceUtil.getString(
-            // ShareKey.TerminateAddress, "");
             if (!TextUtils.isEmpty(ipAddress)) {
                 strTerminateConInfo += "(" + ipAddress + ")";
             }
@@ -792,10 +750,13 @@ public class MainFragment extends BaseFragment implements
 
 //          设置TextView 查找终端的服务器
             tvTerminateConInfo.setText(strTerminateConInfo);
-            // 设置与服务器的链接状态
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        // strTerminateConInfo = sharedPreferenceUtil.getString(
+        // ShareKey.TerminateName,
+        // getResources().getString(R.string.terminal_not_specified));
+        // String ipAddress = sharedPreferenceUtil.getString(
+        // ShareKey.TerminateAddress, "");
+        // 设置与服务器的链接状态
 
     }
 
@@ -847,10 +808,9 @@ public class MainFragment extends BaseFragment implements
                 return;
 
             this.ledList = ledList;
-			Intent intent = new Intent(getActivity(),
-					LedSelectActivity.class);
-			intent.putExtra("ledList", ledList);
-			startActivityForResult(intent, 0);
+            Intent intent = new Intent(getActivity(), LedSelectActivity.class);
+            intent.putExtra("ledList", ledList);
+            startActivityForResult(intent, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -859,7 +819,6 @@ public class MainFragment extends BaseFragment implements
 
     /**
      * onActivityResult处理选择上传文件
-     *
      *
      * @param data
      */
@@ -886,9 +845,7 @@ public class MainFragment extends BaseFragment implements
      */
     private void handlerSelectedServer(Intent data) {
 
-        app.ledTerminateInfo = (LedTerminateInfo) data.getExtras().get(
-                "terminateInfo");
-        mangerNetService.setNmHandler(nmHandler);
+        app.ledTerminateInfo = (LedTerminateInfo) data.getExtras().get("terminateInfo");
         if (app.ledTerminateInfo != null) {
 
             if (mangerNetService != null) {
@@ -1178,7 +1135,7 @@ public class MainFragment extends BaseFragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        onTabActivityResult(requestCode,resultCode,data);
+        handleActivityForResult(requestCode, resultCode, data);
 //        switch (requestCode) {
 //            case 0:
 //                if (resultCode == Activity.RESULT_OK) {
@@ -1211,14 +1168,16 @@ public class MainFragment extends BaseFragment implements
     /**
      * 选择服务端后回到这个页面
      */
-    @Override
-    public void onTabActivityResult(int requestCode, int resultCode, Intent data) {
+    public void handleActivityForResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             String type = data.getStringExtra("type");
             if (type.equalsIgnoreCase("selectServer")) {// 选择服务端
                 handlerSelectedServer(data);
             } else if (type.equalsIgnoreCase("selectProgram")) {// 选择节目
                 handlerSelectedUploadProgram(data);
+            } else if (type.equalsIgnoreCase("uploadProgram")) {
+                UploadProgram uploadProgram = (UploadProgram) data.getSerializableExtra("ProgramInfo");
+                onUploadPic(uploadProgram);
             }
 
         }
@@ -1337,7 +1296,6 @@ public class MainFragment extends BaseFragment implements
     /**
      * 上传节目
      */
-    @Override
     public void onUploadPic(UploadProgram uploadProgram) {
         if (mangerNetService == null || !mangerNetService.isConnecting()) {
             Toast.makeText(fragmentActivity,

@@ -1,20 +1,38 @@
 package com.clt.ledmanager.app;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.clt.ledmanager.IService;
+import com.clt.ledmanager.activity.Application;
+import com.clt.ledmanager.activity.FragmentController;
 import com.clt.ledmanager.app.DrawerItems.CustomPrimaryDrawerItem;
 import com.clt.ledmanager.app.DrawerItems.CustomUrlPrimaryDrawerItem;
 import com.clt.ledmanager.app.Fragment.ConnectRelationActivity;
 import com.clt.ledmanager.app.Fragment.MainFragment;
 import com.clt.ledmanager.app.Fragment.ReceiverCardFragment;
-import com.clt.ledmanager.app.Fragment.SenderCardActivity;
+import com.clt.ledmanager.app.Fragment.SenderCardFragment;
+import com.clt.ledmanager.app.Fragment.observable.TerminateObservable;
+import com.clt.ledmanager.service.BaseService;
+import com.clt.ledmanager.service.BaseServiceFactory;
+import com.clt.ledmanager.util.Const;
+import com.clt.ledmanager.util.DialogUtil;
+import com.clt.netmessage.NetMessageType;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -44,16 +62,140 @@ public class AdvancedActivity extends AppCompatActivity {
 
 //  Fragment切换标记
     private static final int ITEM_POSITION_HOME = 1;
-    private static final int ITEM_POSITION_FREE = 2;
-    private static final int ITEM_POSITION_CUSTOM = 3;
-    private static final int ITEM_POSITION_DRAWER = 4;
+    private static final int ITEM_POSITION_SEND_CARD = 2;
+    private static final int ITEM_POSITION_RECEIVE_CARD = 3;
+    private static final int ITEM_POSITION_LINKING = 4;
+
+    private static final String FRAGMENT_TAG_HOME = "home";
+    private static final String FRAGMENT_TAG_SEND_CARD = "send_card";
+    private static final String FRAGMENT_TAG_RECEIVE_CARD= "receive_card";
+    private static final String FRAGMENT_TAG_LINKING = "linking";
+
+    private FragmentController fragmentController;
+
+    public TerminateObservable getTerminateObservable() {
+        return terminateObservable;
+    }
+
+    private TerminateObservable terminateObservable;
+
+    public IService getMangerNetService() {
+        return mangerNetService;
+    }
+
+    private IService mangerNetService;// 通信服务
+
+    public static class MessageWrapper{
+        public MessageWrapper(int type,Message msg){
+            this.type = type;
+            this.msg = msg;
+        }
+
+        public final static int TYPE_SERVICE_INIT = 0;
+        public final static int TYPE_SERVICE_UPDATE = 1;
+        public Message msg;
+        public int type;
+    }
+
+    /**
+     * 异步处理消息
+     */
+    protected Handler nmHandler = new Handler()
+    {
+        public void handleMessage(android.os.Message msg)
+        {
+            switch (msg.what)
+            {
+                case Const.connectBreak:// 连接断开
+                    // DialogUtil.createConnBreakDialog(BaseActivity.this).show();
+                    break;
+                case NetMessageType.KickOutOf:// 被踢
+                    Application app = (Application)getApplication();
+                    app.setOnline(false);
+                    DialogUtil.createKickOfDialog(AdvancedActivity.this).show();
+                    break;
+                case Const.connnectFail:// 连接失败
+                    Toast.makeText(AdvancedActivity.this, getResources().getString(R.string.fail_connect_to_server), Toast.LENGTH_SHORT).show();
+                    break;
+
+            }
+            terminateObservable.dealHandlerMessage(new MessageWrapper(MessageWrapper.TYPE_SERVICE_UPDATE,msg));
+        }
+    };
+
+
+    /**
+     * 绑定通信service
+     */
+    private ServiceConnection mangerNetServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+            mangerNetService = null;
+
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            try {
+               mangerNetService = ((BaseService.LocalBinder) service).getService();
+                ((Application) getApplication()).mangerNetService = mangerNetService;
+                if (mangerNetService != null) {
+                    terminateObservable.dealHandlerMessage(new MessageWrapper(MessageWrapper.TYPE_SERVICE_INIT,null));
+                    mangerNetService.setNmHandler(nmHandler);
+                }
+            } catch (Exception e) {
+            }
+
+        }
+
+    };
 
     private Toolbar mToolbar;
+    private BroadcastReceiver receiver;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Const.CONNECT_BREAK_ACTION);
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
+    /**
+     * 广播接收器
+     */
+    class ConnectBreakBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equalsIgnoreCase(Const.CONNECT_BREAK_ACTION)) {
+                nmHandler.obtainMessage(Const.connectBreak).sendToTarget();
+            }
+        }
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_sample);
         setContentView(R.layout.activity_sample_fragment_dark_toolbar);
+        fragmentController = new FragmentController(this);
+        Application.getInstance().terminateObservable = terminateObservable = new TerminateObservable();
+        receiver = new ConnectBreakBroadcastReceiver();
+
+        // 绑定mangerNetService
+        Intent _intent1 = new Intent(this, BaseServiceFactory.getBaseService());
+        bindService(_intent1, mangerNetServiceConnection, Context.BIND_AUTO_CREATE);
 
         // Handle Toolbar
         mToolbar= (Toolbar) findViewById(R.id.toolbar);
@@ -77,75 +219,49 @@ public class AdvancedActivity extends AppCompatActivity {
                 .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(R.drawable.btn_home_selector),
-                        //here we use a customPrimaryDrawerItem we defined in our sample app
-                        //this custom DrawerItem extends the PrimaryDrawerItem so it just overwrites some methods
-                        new CustomPrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(R.drawable.btn_sending_selector),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_custom).withIcon(R.drawable.btn_receiving_selector),
-                        new CustomUrlPrimaryDrawerItem().withName(R.string.drawer_item_fragment_drawer).withIcon(R.drawable.btn_linking_selector)
-//                        new SectionDrawerItem().withName(R.string.drawer_item_section_header)
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cart_plus),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(FontAwesome.Icon.faw_database).withEnabled(false),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_open_source).withIcon(FontAwesome.Icon.faw_github),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withSelectedIconColor(Color.RED).withIconTintingEnabled(true).withIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_add).actionBarSize().paddingDp(5).colorRes(R.color.material_drawer_dark_primary_text)).withTag("Bullhorn"),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(FontAwesome.Icon.faw_question).withEnabled(false)
+                        new CustomPrimaryDrawerItem().withName(R.string.drawer_item_send_card).withIcon(R.drawable.btn_sending_selector),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_receive_card).withIcon(R.drawable.btn_receiving_selector),
+                        new CustomUrlPrimaryDrawerItem().withName(R.string.drawer_item_fragment_linking).withIcon(R.drawable.btn_linking_selector)
                 ) // add the items we want to use with our Drawer
                 .withOnDrawerNavigationListener(new Drawer.OnDrawerNavigationListener() {
                     @Override
                     public boolean onNavigationClickListener(View clickedView) {
-                        //this method is only called if the Arrow icon is shown. The hamburger is automatically managed by the MaterialDrawer
-                        //if the back arrow is shown. close the activity
                         AdvancedActivity.this.finish();
-                        //return true if we have consumed the event
                         return true;
                     }
                 })
 
-//                抽屉固定窗口
-//                .addStickyDrawerItems(
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(10),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_open_source).withIcon(FontAwesome.Icon.faw_github)
-//                )
 
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        //check if the drawerItem is set.
-                        //there are different reasons for the drawerItem to be null
-                        //--> click on the header
-                        //--> click on the footer
-                        //those items don't contain a drawerItem
 
                         if (drawerItem != null) {
-                            Fragment f = null;
+                            String tag = null;
                             switch (position) {
                                 case ITEM_POSITION_HOME:
 
                                     getSupportActionBar().setTitle(R.string.drawer_item_home);
-                                    f = new MainFragment();
+                                    tag = FRAGMENT_TAG_HOME;
                                     break;
-                                case ITEM_POSITION_FREE:
+                                case ITEM_POSITION_SEND_CARD:
 
-                                    getSupportActionBar().setTitle(R.string.drawer_item_free_play);
-                                    f = new SenderCardActivity();
+                                    getSupportActionBar().setTitle(R.string.drawer_item_send_card);
+                                   tag = FRAGMENT_TAG_SEND_CARD;
                                     break;
 
-                                case ITEM_POSITION_CUSTOM:
+                                case ITEM_POSITION_RECEIVE_CARD:
 
-                                    getSupportActionBar().setTitle(R.string.drawer_item_custom);
-                                    f = new ReceiverCardFragment();
+                                    getSupportActionBar().setTitle(R.string.drawer_item_receive_card);
+                                    tag = FRAGMENT_TAG_RECEIVE_CARD;
                                     break;
-                                case ITEM_POSITION_DRAWER:
+                                case ITEM_POSITION_LINKING:
 
-                                    getSupportActionBar().setTitle(R.string.drawer_item_fragment_drawer);
-                                    f = new ConnectRelationActivity();
+                                    getSupportActionBar().setTitle(R.string.drawer_item_fragment_linking);
+                                    tag = FRAGMENT_TAG_LINKING;
                                     break;
                             }
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
-
-                            //吐司提示
-//                            if (drawerItem instanceof Nameable) {
-//                                Toast.makeText(AdvancedActivity.this, ((Nameable) drawerItem).getName().getText(AdvancedActivity.this), Toast.LENGTH_SHORT).show();
-//                            }
+                            fragmentController.changeFragment(tag);
 
                             if (drawerItem instanceof Badgeable) {
                                 Badgeable badgeable = (Badgeable) drawerItem;
@@ -163,34 +279,17 @@ public class AdvancedActivity extends AppCompatActivity {
                         return false;
                     }
                 })
-//                .withSavedInstance(savedInstanceState)
                 .build();
-        //now we add the second drawer on the other site.
-        //use the .append method to add this drawer to the first one
-//        resultAppended = new DrawerBuilder()
-//                .withActivity(this)
-//                .withFooter(R.layout.footer)
-//                .withDisplayBelowStatusBar(true)
-//                .withSavedInstance(savedInstanceState)
-//                .addDrawerItems(
-//                        new PrimaryDrawerItem().withName(R.string.drawer_item_custom).withIcon(FontAwesome.Icon.faw_eye),
-//                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home),
-//                        new PrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(FontAwesome.Icon.faw_gamepad),
-//                        new SectionDrawerItem().withName(R.string.drawer_item_section_header),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog),
-//                        new DividerDrawerItem(),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_open_source).withIcon(FontAwesome.Icon.faw_github),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(FontAwesome.Icon.faw_question).withEnabled(false),
-//                        new SectionDrawerItem().withName(R.string.drawer_item_section_header),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(FontAwesome.Icon.faw_bullhorn)
-//                )
-//                .withDrawerGravity(Gravity.END)
-//                .append(result);
-//
-        Fragment f = new MainFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+        fragmentController.add(false, FRAGMENT_TAG_SEND_CARD, R.id.fragment_container, new SenderCardFragment());
+        fragmentController.add(false,FRAGMENT_TAG_RECEIVE_CARD, R.id.fragment_container, new ReceiverCardFragment());
+        fragmentController.add(false,FRAGMENT_TAG_LINKING, R.id.fragment_container, new ConnectRelationActivity());
+        fragmentController.add(true,FRAGMENT_TAG_HOME, R.id.fragment_container, new MainFragment());
+
+//        Fragment f = new MainFragment();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
 
     }
+
 
     /**
      * small helper method to reuse the logic to build the AccountHeader
@@ -306,4 +405,9 @@ public class AdvancedActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mangerNetServiceConnection);
+    }
 }

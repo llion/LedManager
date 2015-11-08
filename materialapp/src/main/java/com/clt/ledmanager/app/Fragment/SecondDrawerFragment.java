@@ -51,8 +51,8 @@ public class SecondDrawerFragment extends Fragment {
                 .withSavedInstance(savedInstanceState)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home).withIdentifier(1),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(FontAwesome.Icon.faw_gamepad),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_custom).withIcon(FontAwesome.Icon.faw_eye)
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_send_card).withIcon(FontAwesome.Icon.faw_gamepad),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_receive_card).withIcon(FontAwesome.Icon.faw_eye)
                 )
                 .buildForFragment();
 

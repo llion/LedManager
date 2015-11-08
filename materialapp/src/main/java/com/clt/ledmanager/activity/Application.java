@@ -6,6 +6,8 @@ import com.clt.commondata.LedTerminateInfo;
 import com.clt.commondata.SenderInfo;
 import com.clt.commondata.SomeInfo;
 import com.clt.entity.Program;
+import com.clt.ledmanager.IService;
+import com.clt.ledmanager.app.Fragment.observable.TerminateObservable;
 import com.clt.ledmanager.entity.SendCardType;
 import com.clt.ledmanager.util.ApkUtil;
 
@@ -18,6 +20,7 @@ public class Application extends android.app.Application
     /**
      * 全局变量
      */
+    public TerminateObservable terminateObservable;
 
     private String language;// 语言
 
@@ -53,6 +56,9 @@ public class Application extends android.app.Application
         this.needChangeLanguage = needChangeLanguage;
     }
 
+    public FragmentController fragmentController;
+
+
     @Override
     public void onCreate()
     {
@@ -81,6 +87,8 @@ public class Application extends android.app.Application
     {
         ApkUtil.configLanguage(getLanguage());
     }
+
+    public IService mangerNetService;
 
     /**
      * 单例

@@ -1,11 +1,7 @@
 package com.clt.ledmanager.app.Fragment;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,10 +25,8 @@ import com.clt.commondata.SenderInfo;
 import com.clt.entity.ConnectionParam;
 import com.clt.ledmanager.IService;
 import com.clt.ledmanager.activity.Application;
-import com.clt.ledmanager.activity.BaseFragment;
+import com.clt.ledmanager.activity.BaseObserverFragment;
 import com.clt.ledmanager.adapter.OnTextChangeListener;
-import com.clt.ledmanager.service.BaseService.LocalBinder;
-import com.clt.ledmanager.service.BaseServiceFactory;
 import com.clt.ledmanager.ui.CustomerSpinner;
 import com.clt.ledmanager.ui.CustomerSpinner2;
 import com.clt.ledmanager.ui.DialogProgressBar;
@@ -50,7 +44,7 @@ import java.util.ArrayList;
  *
  * @author caocong 2014.6.9
  */
-public class ConnectRelationActivity extends BaseFragment {
+public class ConnectRelationActivity extends BaseObserverFragment {
     private static final String TAG = "ReceiverSettingActivity";
 
     private GestureDetector gestureDetector;// 手势
@@ -101,31 +95,6 @@ public class ConnectRelationActivity extends BaseFragment {
 
     private int portIndex = 0, senderIndex = 0;// 端口，发送卡索引
 
-    /**
-     * 绑定service
-     */
-    private ServiceConnection mangerNetServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-            mangerNetService = null;
-
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            try {
-                mangerNetService = ((LocalBinder) service).getService();
-                if (mangerNetService != null) {
-                    mangerNetService.setNmHandler(nmHandler);
-                }
-            } catch (Exception e) {
-
-            }
-
-        }
-
-    };
     private View view;
 
     @Nullable
@@ -139,9 +108,6 @@ public class ConnectRelationActivity extends BaseFragment {
     public void init() {
 
         app = (Application) getActivity().getApplication();
-        // 绑定service
-        Intent _intent1 = new Intent(getActivity(), BaseServiceFactory.getBaseService());
-        getActivity().bindService(_intent1, mangerNetServiceConnection, Context.BIND_AUTO_CREATE);
 
         waittingDialog = new DialogProgressBar(getActivity());
 
@@ -156,16 +122,6 @@ public class ConnectRelationActivity extends BaseFragment {
 
         initData();
         initListener();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        try {
-            this.getActivity().unbindService(mangerNetServiceConnection);
-        } catch (Exception e) {
-        }
-
     }
 
     /**
@@ -647,14 +603,6 @@ public class ConnectRelationActivity extends BaseFragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mangerNetService != null) {
-            mangerNetService.setNmHandler(nmHandler);
-        }
-    }
-
     /**
      * 处理Handler消息
      *
@@ -705,7 +653,5 @@ public class ConnectRelationActivity extends BaseFragment {
         }
 
     }
-
-    ;
 
 }

@@ -1,12 +1,7 @@
 package com.clt.ledmanager.app.Fragment;
 
 import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,9 +20,7 @@ import android.widget.Toast;
 import com.clt.entity.ReceiverSettingInfo;
 import com.clt.ledmanager.IService;
 import com.clt.ledmanager.activity.Application;
-import com.clt.ledmanager.activity.BaseFragment;
-import com.clt.ledmanager.service.BaseService.LocalBinder;
-import com.clt.ledmanager.service.BaseServiceFactory;
+import com.clt.ledmanager.activity.BaseObserverFragment;
 import com.clt.ledmanager.ui.CustomerSpinner;
 import com.clt.ledmanager.util.DialogUtil;
 import com.clt.netmessage.NMGetReceiverCardInfoAnswer;
@@ -43,7 +36,7 @@ import java.util.ArrayList;
  * 接收卡页面
  * @author caocong 2014.6.9
  */
-public class ReceiverCardFragment extends BaseFragment
+public class ReceiverCardFragment extends BaseObserverFragment
 
 {
     private LinearLayout llLayout;// 根容器
@@ -68,32 +61,6 @@ public class ReceiverCardFragment extends BaseFragment
 
     private int boxWidth = 128, boxHeight = 128;// 箱体宽高默认值
 
-    /**
-     * 绑定通信service
-     */
-    private ServiceConnection mangerNetServiceConnection = new ServiceConnection()
-    {
-        @Override
-        public void onServiceDisconnected(ComponentName name)
-        {
-
-            mangerNetService = null;
-
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service)
-        {
-            // TODO Auto-generated method stub
-            mangerNetService = ((LocalBinder) service)
-                    .getService();
-            if (mangerNetService != null)
-            {
-                mangerNetService.setNmHandler(nmHandler);
-            }
-        }
-
-    };
     private View view;
 
     @Nullable
@@ -118,9 +85,6 @@ public class ReceiverCardFragment extends BaseFragment
      */
     private void init()
     {
-        // 绑定mangerNetService
-        Intent _intent1 = new Intent(getActivity(), BaseServiceFactory.getBaseService());
-        getActivity().bindService(_intent1, mangerNetServiceConnection, Context.BIND_AUTO_CREATE);
         waittingDialog = DialogUtil.createDownloadDialog(getActivity());
     }
 
@@ -225,29 +189,23 @@ public class ReceiverCardFragment extends BaseFragment
             }
         });
         // 固化
-        btnSolid.setOnClickListener(new OnClickListener()
-        {
+        btnSolid.setOnClickListener(new OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 boolean isOk = doConditional();
-                if (!isOk)
-                {
+                if (!isOk) {
                     return;
                 }
                 if (receiverSettingInfos == null
-                        || receiverSettingInfos.isEmpty())
-                {
+                        || receiverSettingInfos.isEmpty()) {
 
                     return;
                 }
-                if (waittingDialog.isShowing())
-                {
+                if (waittingDialog.isShowing()) {
                     waittingDialog.dismiss();
                 }
-                if (mangerNetService != null)
-                {
+                if (mangerNetService != null) {
                     boxWidth = Integer
                             .parseInt(etBoxWidth.getText().toString());
                     boxHeight = Integer.parseInt(etBoxHeight.getText()
@@ -271,7 +229,6 @@ public class ReceiverCardFragment extends BaseFragment
         super.onResume();
         if (mangerNetService != null)
         {
-            mangerNetService.setNmHandler(nmHandler);
             mangerNetService.getReceiverCardInfo();
         }
     }
@@ -323,18 +280,12 @@ public class ReceiverCardFragment extends BaseFragment
 
     }
 
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        getActivity().unbindService(mangerNetServiceConnection);
-    }
 
     /**
      * 处理message
      */
     @Override
-    public void dealHandlerMessage(android.os.Message netMessage)
+    protected void dealHandlerMessage(android.os.Message netMessage)
     {
         switch (netMessage.what)
         {

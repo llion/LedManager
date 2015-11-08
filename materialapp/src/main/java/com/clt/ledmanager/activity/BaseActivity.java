@@ -66,7 +66,7 @@ public abstract class BaseActivity extends Activity
 		
 		// 接收广播：心跳检测连接断开
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(Const.CONNECT_BEARK_ACTION);
+		filter.addAction(Const.CONNECT_BREAK_ACTION);
 		
 		receiver = new MyBrocastReceiver();
 		registerReceiver(receiver, filter);
@@ -139,7 +139,7 @@ public abstract class BaseActivity extends Activity
 		public void onReceive(Context context, Intent intent)
 		{
 			String action = intent.getAction();
-			if (action.equalsIgnoreCase(Const.CONNECT_BEARK_ACTION))
+			if (action.equalsIgnoreCase(Const.CONNECT_BREAK_ACTION))
 			{
 				
 				nmHandler.obtainMessage(Const.connectBreak).sendToTarget();

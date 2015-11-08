@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.clt.ledmanager.app.Fragment.ConnectRelationActivity;
 import com.clt.ledmanager.app.Fragment.MainFragment;
+import com.clt.ledmanager.app.Fragment.SenderCardFragment;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -24,7 +25,6 @@ import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.clt.ledmanager.app.DrawerItems.CustomPrimaryDrawerItem;
 import com.clt.ledmanager.app.DrawerItems.CustomUrlPrimaryDrawerItem;
 import com.clt.ledmanager.app.Fragment.ReceiverCardFragment;
-import com.clt.ledmanager.app.Fragment.SenderCardActivity;
 import com.mikepenz.materialdrawer.app.R;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -86,9 +86,9 @@ public class AdvancedMainActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home),
                         //here we use a customPrimaryDrawerItem we defined in our sample app
                         //this custom DrawerItem extends the PrimaryDrawerItem so it just overwrites some methods
-                        new CustomPrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(FontAwesome.Icon.faw_gamepad),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_custom).withIcon(FontAwesome.Icon.faw_eye),
-                        new CustomUrlPrimaryDrawerItem().withName(R.string.drawer_item_fragment_drawer).withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460"),
+                        new CustomPrimaryDrawerItem().withName(R.string.drawer_item_send_card).withIcon(FontAwesome.Icon.faw_gamepad),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_receive_card).withIcon(FontAwesome.Icon.faw_eye),
+                        new CustomUrlPrimaryDrawerItem().withName(R.string.drawer_item_fragment_linking).withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460"),
                         new SectionDrawerItem().withName(R.string.drawer_item_section_header),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cart_plus),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(FontAwesome.Icon.faw_database).withEnabled(false),
@@ -129,7 +129,7 @@ public class AdvancedMainActivity extends AppCompatActivity {
                                     f = new MainFragment();
                                     break;
                                 case ITEM_POSITION_FREE:
-                                    f = new SenderCardActivity();
+                                    f = new SenderCardFragment();
                                     break;
 
                                 case ITEM_POSITION_CUSTOM:
@@ -172,9 +172,9 @@ public class AdvancedMainActivity extends AppCompatActivity {
                 .withDisplayBelowStatusBar(true)
                 .withSavedInstance(savedInstanceState)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_custom).withIcon(FontAwesome.Icon.faw_eye),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_receive_card).withIcon(FontAwesome.Icon.faw_eye),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(FontAwesome.Icon.faw_gamepad),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_send_card).withIcon(FontAwesome.Icon.faw_gamepad),
                         new SectionDrawerItem().withName(R.string.drawer_item_section_header),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog),
                         new DividerDrawerItem(),

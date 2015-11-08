@@ -1,12 +1,7 @@
 package com.clt.ledmanager.app.Fragment;
 
 import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,11 +21,8 @@ import android.widget.Toast;
 
 import com.clt.commondata.PortArea;
 import com.clt.commondata.SenderParameters;
-import com.clt.ledmanager.IService;
 import com.clt.ledmanager.activity.Application;
-import com.clt.ledmanager.activity.BaseFragment;
-import com.clt.ledmanager.service.BaseService.LocalBinder;
-import com.clt.ledmanager.service.BaseServiceFactory;
+import com.clt.ledmanager.activity.BaseObserverFragment;
 import com.clt.ledmanager.ui.CustomerSpinner;
 import com.clt.ledmanager.util.Const;
 import com.clt.ledmanager.util.DialogUtil;
@@ -43,17 +35,18 @@ import com.clt.netmessage.NetMessageType;
 import com.google.gson.Gson;
 import com.mikepenz.materialdrawer.app.R;
 
+import java.util.Observer;
+
 /**
  * 发送卡 修改时间：2014.6.7
  */
-public class SenderCardActivity extends BaseFragment
+public class SenderCardFragment extends BaseObserverFragment implements Observer
 
 {
     private static boolean DEBUG = true;
 
     private Application app;
 
-    private IService mangerNetService;
 
     // private SenderInfo app.senderInfo;// 探测发送卡信息
 
@@ -126,40 +119,7 @@ public class SenderCardActivity extends BaseFragment
 
     private Button btnSaveCtrArea;
 
-    // // handler
-    // private Handler mHandler = new Handler()
-    // {
-    // public void handleMessage(android.os.Message msg)
-    // {
-    // dealHandlerMessage(msg);
-    // }
-    //
-    // };
 
-    /**
-     * 绑定service
-     */
-    private ServiceConnection mangerNetServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-            mangerNetService = null;
-
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            try {
-                mangerNetService = ((LocalBinder) service).getService();
-                if (mangerNetService != null) {
-                    mangerNetService.setNmHandler(nmHandler);
-                }
-            } catch (Exception e) {
-            }
-
-        }
-
-    };
     private View view;
 
     @Nullable
@@ -173,6 +133,7 @@ public class SenderCardActivity extends BaseFragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        app = Application.getInstance();
         init();
         initView();
         initListener();
@@ -185,9 +146,6 @@ public class SenderCardActivity extends BaseFragment
         try {
             if (app != null && app.senderInfo != null) {
                 updateView();
-            }
-            if (mangerNetService != null) {
-                mangerNetService.setNmHandler(nmHandler);
             }
         } catch (Exception e) {
         }
@@ -210,25 +168,7 @@ public class SenderCardActivity extends BaseFragment
     }
 
     private void init() {
-        try {
-            // 绑定service
-            Intent _intent1 = new Intent(getActivity(), BaseServiceFactory.getBaseService());
-            getActivity().bindService(_intent1, mangerNetServiceConnection, Context.BIND_AUTO_CREATE);
-
-            // 等待圆圈
-            detectWaittingDialog = DialogUtil.createDownloadDialog(getActivity());
-        } catch (Exception e) {
-        }
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        try {
-            getActivity().unbindService(mangerNetServiceConnection);
-        } catch (Exception e) {
-        }
+        detectWaittingDialog = DialogUtil.createDownloadDialog(getActivity());
 
     }
 
@@ -336,7 +276,6 @@ public class SenderCardActivity extends BaseFragment
             public void onClick(View v) {
                 try {
                     if (mangerNetService != null) {
-                        mangerNetService.setNmHandler(nmHandler);
                         mangerNetService.DetectSender();
                         if (detectWaittingDialog != null) {
                             detectWaittingDialog.show();
@@ -573,7 +512,6 @@ public class SenderCardActivity extends BaseFragment
 
     /**
      * 发送卡输出，逐帧，隔帧
-
      */
     public void setOutPut(int frameRate) {
         try {
@@ -882,83 +820,80 @@ public class SenderCardActivity extends BaseFragment
      * @param msg
      */
     @Override
-    public void dealHandlerMessage(android.os.Message msg) {
-        try {
-            switch (msg.what) {
-                case NetMessageType.DetectSenderAnswer:// 探卡成功
-                    if (detectWaittingDialog.isShowing()) {
-                        detectWaittingDialog.dismiss();
-                    }
-                    String strMessage = (String) msg.obj;
-                    Log.i("DetectSenderAnswer", strMessage);
-                    Gson gson = new Gson();
-                    NMDetectSenderAnswer nmDetectSenderAnswer = gson.fromJson(
-                            strMessage, NMDetectSenderAnswer.class);
-                    if (nmDetectSenderAnswer.getErrorCode() == 0) {
-                        Toast.makeText(
-                                getActivity(),
-                                getResources().getString(
-                                        R.string.detect_card_fail), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(
-                                getActivity(),
-                                getResources().getString(
-                                        R.string.detect_card_success), Toast.LENGTH_SHORT)
-                                .show();
-                        app.senderInfo = nmDetectSenderAnswer.getSenderInfo();
-                        updateView();
-                    }
-                    break;
-                case NetMessageType.SetSenderBasicParametersAnswer:// 保存基本参数是否成功
-                    if (detectWaittingDialog.isShowing()) {
-                        detectWaittingDialog.dismiss();
-                    }
-                    String strMessage2 = (String) msg.obj;
-                    Gson gson2 = new Gson();
-                    NMSetSenderBasicParametersAnswer answer = gson2
-                            .fromJson(strMessage2,
-                                    NMSetSenderBasicParametersAnswer.class);
-                    if (answer.getErrorCode() == 0) {
-                        Toast.makeText(getActivity(),
-                                getResources().getString(R.string.save_fail),
-                                 Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(
-                                getActivity(),
-                                getResources().getString(R.string.save_success),
-                                 Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case NetMessageType.SetEDIDAnswer:
-                    if (detectWaittingDialog.isShowing()) {
-                        detectWaittingDialog.dismiss();
-                    }
+    protected void dealHandlerMessage(android.os.Message msg) {
+        switch (msg.what) {
+            case NetMessageType.DetectSenderAnswer:// 探卡成功
+                if (detectWaittingDialog.isShowing()) {
+                    detectWaittingDialog.dismiss();
+                }
+                String strMessage = (String) msg.obj;
+                Log.i("DetectSenderAnswer", strMessage);
+                Gson gson = new Gson();
+                NMDetectSenderAnswer nmDetectSenderAnswer = gson.fromJson(
+                        strMessage, NMDetectSenderAnswer.class);
+                if (nmDetectSenderAnswer.getErrorCode() == 0) {
+                    Toast.makeText(
+                            getActivity(),
+                            getResources().getString(
+                                    R.string.detect_card_fail), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(
+                            getActivity(),
+                            getResources().getString(
+                                    R.string.detect_card_success), Toast.LENGTH_SHORT)
+                            .show();
+                    app.senderInfo = nmDetectSenderAnswer.getSenderInfo();
+                    updateView();
+                }
+                break;
+            case NetMessageType.SetSenderBasicParametersAnswer:// 保存基本参数是否成功
+                if (detectWaittingDialog != null && detectWaittingDialog.isShowing()) {
+                    detectWaittingDialog.dismiss();
+                }
+                String strMessage2 = (String) msg.obj;
+                Gson gson2 = new Gson();
+                NMSetSenderBasicParametersAnswer answer = gson2
+                        .fromJson(strMessage2,
+                                NMSetSenderBasicParametersAnswer.class);
+                if (answer.getErrorCode() == 0) {
+                    Toast.makeText(getActivity(),
+                            getResources().getString(R.string.save_fail),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(
+                            getActivity(),
+                            getResources().getString(R.string.save_success),
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case NetMessageType.SetEDIDAnswer:
+                if (detectWaittingDialog.isShowing()) {
+                    detectWaittingDialog.dismiss();
+                }
 
-                    String testEDIDAnswer = (String) msg.obj;
-                    Gson testEDIDgson = new Gson();
-                    NMSetEDIDAnswer setEDID = testEDIDgson.fromJson(
-                            testEDIDAnswer, NMSetEDIDAnswer.class);
-                    if (setEDID.getErrorCode() == 0) {
-                        Toast.makeText(
-                                getActivity(),
-                                getResources().getString(R.string.setting_fail),
-                                 Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(
-                                getActivity(),
-                                getResources().getString(
-                                        R.string.setting_success),  Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case Const.connnectFail:
-                    if (detectWaittingDialog.isShowing()) {
-                        detectWaittingDialog.dismiss();
-                    }
-                    break;
-            }
-        } catch (Exception e) {
-
+                String testEDIDAnswer = (String) msg.obj;
+                Gson testEDIDgson = new Gson();
+                NMSetEDIDAnswer setEDID = testEDIDgson.fromJson(
+                        testEDIDAnswer, NMSetEDIDAnswer.class);
+                if (setEDID.getErrorCode() == 0) {
+                    Toast.makeText(
+                            getActivity(),
+                            getResources().getString(R.string.setting_fail),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(
+                            getActivity(),
+                            getResources().getString(
+                                    R.string.setting_success), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case Const.connnectFail:
+                if (detectWaittingDialog.isShowing()) {
+                    detectWaittingDialog.dismiss();
+                }
+                break;
         }
 
     }
+
 }

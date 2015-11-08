@@ -51,9 +51,7 @@ import com.clt.ledmanager.util.NetUtil;
 /**
  * 作用：1.作为Connector的容器  2.对发送的消息打包，并交给Connector发送，3.处理Connector接收到的消息
  */
-public class NetService extends BaseService implements
-        OnHandlerMessageListener, OnHeartBreakListener
-{
+public class NetService extends BaseService implements OnHandlerMessageListener, OnHeartBreakListener {
     private static String TAG = "ManagerNetService";
 
     private static final boolean DEBUG = true;
@@ -65,7 +63,7 @@ public class NetService extends BaseService implements
     private UDPConnector searchServer;// UDP查找服务端
 
     private TCPConnector connector;// tcp连接器
-    
+
     private TCPFindTerminal tcpFindTerminal;//TCP查找服务器
 
     private Interceptor interceptor;// 拦截器
@@ -75,17 +73,15 @@ public class NetService extends BaseService implements
     private Clock clock;// 计算连接时长
 
     @Override
-    public IBinder onBind(Intent intent)
-    {
+    public IBinder onBind(Intent intent) {
         return mBinder;
     }
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
         app = (Application) getApplication();
-        
+
         // tcp连接器
         connector = new TCPConnectorImpl(this);
         connector.setOnHandlerMessageListener(this);
@@ -101,69 +97,60 @@ public class NetService extends BaseService implements
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
-        if (connector != null)
-        {
+        if (connector != null) {
             connector.stop();
         }
-        if (searchServer != null)
-        {
+        if (searchServer != null) {
             searchServer.stop();
         }
-        if(tcpFindTerminal!=null){
-        	tcpFindTerminal.stop();
+        if (tcpFindTerminal != null) {
+            tcpFindTerminal.stop();
         }
     }
 
     /**
      * 服务器地址改变
-     * 
+     *
      * @param newServerAddress
      */
-    public void onSeverAddressChanged(String newServerAddress)
-    {
-        try
-        {
-            if (connector.isConnecting())
-            {
+    public void onSeverAddressChanged(String newServerAddress) {
+        try {
+            if (connector.isConnecting()) {
                 connector.stop();
 
             }
             connector.setIpAddress(newServerAddress);
             connector.start();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
      * 判断当前的Socket对象是否处于连接状态
+     *
      * @return
      */
-    public boolean isConnecting()
-    {
+    public boolean isConnecting() {
         return connector.isConnecting();
     }
-    
+
     /**
      * 设置handler
+     *
      * @param nmHandler
      */
-    public void setNmHandler(Handler nmHandler)
-    {
+    public void setNmHandler(Handler nmHandler) {
         this.nmHandler = nmHandler;
     }
+
     /**
      * 查找终端，开启线程
      */
-    public void searchTerminate()
-    {
-        if (searchServer != null)
-        {
+    public void searchTerminate() {
+        if (searchServer != null) {
             searchServer.stop();
             searchServer = null;
         }
@@ -172,35 +159,32 @@ public class NetService extends BaseService implements
         searchServer.setHandler(this.nmHandler);
         searchServer.start();
     }
-    
+
     @Override
-	public void searchTerminateByTcpLoop(Object callback)
-	{
-    	if(callback instanceof TCPFindTerminal.OnCallBack){
-    		if(tcpFindTerminal!=null&&tcpFindTerminal.isRunning()){
-    			tcpFindTerminal.stop();
-    			tcpFindTerminal=null;
-    		}
-    		tcpFindTerminal=new TCPFindTerminal(this);
-    		tcpFindTerminal.setOnCallBack((OnCallBack)callback);
-    		tcpFindTerminal.start();
-    	}
-	}
-    
+    public void searchTerminateByTcpLoop(Object callback) {
+        if (callback instanceof TCPFindTerminal.OnCallBack) {
+            if (tcpFindTerminal != null && tcpFindTerminal.isRunning()) {
+                tcpFindTerminal.stop();
+                tcpFindTerminal = null;
+            }
+            tcpFindTerminal = new TCPFindTerminal(this);
+            tcpFindTerminal.setOnCallBack((OnCallBack) callback);
+            tcpFindTerminal.start();
+        }
+    }
+
     /**
      * 请求命令，添加消息到消息队列
-     * 
+     *
      * @param nmBase
      */
 
-    public void addOutNetMessage(NMBase nmBase)
-    {
+    public void addOutNetMessage(NMBase nmBase) {
         // 网络连接正常
         if (connector.isConnecting() && app.isOnline()
-                && NetUtil.isWifiConnect(this))
-        {
+                && NetUtil.isWifiConnect(this)) {
             //消息拦截
-            if(interceptor!=null){
+            if (interceptor != null) {
                 interceptor.filterRequest(nmBase);
             }
             nmBase.setNetType(NMBase.WIFI);
@@ -208,30 +192,26 @@ public class NetService extends BaseService implements
             return;
         }
         //网络连接失败
-        if (nmHandler != null)
-        {
+        if (nmHandler != null) {
             // 避免调节亮度时重复显示提示框
             int type = nmBase.getmType();
             if (type == NetMessageType.SetSenderBright
-                    || type == NetMessageType.SetColorTemperture)
-            {
+                    || type == NetMessageType.SetColorTemperture) {
                 return;
             }
             nmHandler.obtainMessage(Const.connnectFail).sendToTarget();
         }
     }
-  
+
 
     /**
-     *  响应命令，处理
+     * 响应命令，处理
      */
     @Override
-    public void handlerMessage(String readMsg)
-    {
-        try
-        {
+    public void handlerMessage(String readMsg) {
+        try {
             //消息拦截
-            if(interceptor!=null){
+            if (interceptor != null) {
                 interceptor.filterResponse(readMsg);
             }
             //
@@ -243,24 +223,19 @@ public class NetService extends BaseService implements
 
                 heartBreakHanlder.start();
                 clock.start();
-            }
-            else if (nmType == NetMessageType.KickOutOf)// 被踢
+            } else if (nmType == NetMessageType.KickOutOf)// 被踢
             {
                 connector.stop();
                 clock.stop();
 
-            }else if(nmType==Const.connectBreak){
-            	clock.stop();
+            } else if (nmType == Const.connectBreak) {
+                clock.stop();
             }
             heartBreakHanlder.recevierOneHeartBreak();
             nmHandler.obtainMessage(nmType, readMsg).sendToTarget();
-        }
-        catch (JSONException e)
-        {
+        } catch (JSONException e) {
             e.printStackTrace();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -269,23 +244,23 @@ public class NetService extends BaseService implements
      * 回调  心跳接收失败
      */
     @Override
-    public void onReceiverHeartBreakFail()
-    {
+    public void onReceiverHeartBreakFail() {
         connector.stop();
         heartBreakHanlder.stop();
-        sendBroadcast(new Intent(Const.CONNECT_BEARK_ACTION));
+        sendBroadcast(new Intent(Const.CONNECT_BREAK_ACTION));
         clock.stop();
 
     }
     // ///////////////////////////////////////////////////////////////////////////////////////
     ///////////              处理各种命令                                                                                                 /////////////////
     // ///////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * 设置亮度
+     *
      * @param bright
      */
-    public void SetBrightness(int bright)
-    {
+    public void SetBrightness(int bright) {
         NMSetSenderBright nmSetSenderBright = new NMSetSenderBright();
         nmSetSenderBright.setBright(bright);
         addOutNetMessage(nmSetSenderBright);
@@ -293,10 +268,10 @@ public class NetService extends BaseService implements
 
     /**
      * 设置色温
+     *
      * @param colorTemp
      */
-    public void SetColorTemp(int colorTemp)
-    {
+    public void SetColorTemp(int colorTemp) {
         NMSetSenderColorTemp nmSetSenderColorTemp = new NMSetSenderColorTemp();
         nmSetSenderColorTemp.setColorTemp(colorTemp);
         addOutNetMessage(nmSetSenderColorTemp);
@@ -304,10 +279,10 @@ public class NetService extends BaseService implements
 
     /**
      * 设置色温RGB
+     *
      * @param colorTemp
      */
-    public void SetColorTempRGB(int colorTempR, int colorTempG, int colorTempB)
-    {
+    public void SetColorTempRGB(int colorTempR, int colorTempG, int colorTempB) {
         NMSetSenderColorTempRGB nmSetSenderColorTempRGB = new NMSetSenderColorTempRGB();
         nmSetSenderColorTempRGB.setColorTempR(colorTempR);
         nmSetSenderColorTempRGB.setColorTempG(colorTempG);
@@ -317,10 +292,10 @@ public class NetService extends BaseService implements
 
     /**
      * 设置开关
+     *
      * @param bShowOn
      */
-    public void SetShowOnOff(boolean bShowOn)
-    {
+    public void SetShowOnOff(boolean bShowOn) {
         NMSetSenderShowOnOff nmSetSenderShowOnOff = new NMSetSenderShowOnOff();
         nmSetSenderShowOnOff.setShowOn(bShowOn);
         addOutNetMessage(nmSetSenderShowOnOff);
@@ -328,10 +303,10 @@ public class NetService extends BaseService implements
 
     /**
      * 播放节目
+     *
      * @param index
      */
-    public void setPlayProgram(Program program)
-    {
+    public void setPlayProgram(Program program) {
         NMSetPlayProgram nmSetPlayProgram = new NMSetPlayProgram();
         nmSetPlayProgram.setProgram(program);
         addOutNetMessage(nmSetPlayProgram);
@@ -339,10 +314,10 @@ public class NetService extends BaseService implements
 
     /**
      * 删除节目
+     *
      * @param program
      */
-    public void deletePlayProgram(Program program)
-    {
+    public void deletePlayProgram(Program program) {
         NMDeleteProgram nmDeleteProgram = new NMDeleteProgram();
         nmDeleteProgram.setProgram(program);
         addOutNetMessage(nmDeleteProgram);
@@ -351,10 +326,10 @@ public class NetService extends BaseService implements
 
     /**
      * 设置测试模式
+     *
      * @param index
      */
-    public void setTestMode(int index)
-    {
+    public void setTestMode(int index) {
         NMSetTestMode nmSetTestMode = new NMSetTestMode();
         nmSetTestMode.setIndex(index);
         addOutNetMessage(nmSetTestMode);
@@ -363,19 +338,18 @@ public class NetService extends BaseService implements
     /**
      * 探卡
      */
-    public void DetectSender()
-    {
+    public void DetectSender() {
         NMDetectSender nmDetectSender = new NMDetectSender();
         addOutNetMessage(nmDetectSender);
     }
 
     /**
      * 设置发送卡分辨率
+     *
      * @param width
      * @param height
      */
-    public void setSenderResolution(int width, int height, int freq)
-    {
+    public void setSenderResolution(int width, int height, int freq) {
         NMSetEDID nmSetEdid = new NMSetEDID();
         nmSetEdid.setWidth(width);
         nmSetEdid.setHeight(height);
@@ -386,8 +360,7 @@ public class NetService extends BaseService implements
     /**
      * 保存亮度
      */
-    public void saveBright(int bright)
-    {
+    public void saveBright(int bright) {
         NMSaveSenderBright nmSaveSenderBright = new NMSaveSenderBright();
         nmSaveSenderBright.setBright(bright);
         addOutNetMessage(nmSaveSenderBright);
@@ -395,10 +368,10 @@ public class NetService extends BaseService implements
 
     /**
      * 保存色温
+     *
      * @param colorTemp
      */
-    public void saveColorTemp(int colorTemp)
-    {
+    public void saveColorTemp(int colorTemp) {
         NMSaveSenderColorTemp nmSaveSenderColorTemp = new NMSaveSenderColorTemp();
         nmSaveSenderColorTemp.setColorTemp(colorTemp);
         addOutNetMessage(nmSaveSenderColorTemp);
@@ -406,19 +379,18 @@ public class NetService extends BaseService implements
 
     /**
      * 保存亮度和色温
+     *
      * @param bright
      * @param colorTemp
      */
-    public void saveBrightAndColorTemp(int bright, int colorTemp)
-    {
+    public void saveBrightAndColorTemp(int bright, int colorTemp) {
         NMSaveBrightAndColorTemp saveBrightAndColorTemp = new NMSaveBrightAndColorTemp();
         saveBrightAndColorTemp.setBright(bright);
         saveBrightAndColorTemp.setColorTemp(colorTemp);
         addOutNetMessage(saveBrightAndColorTemp);
     }
 
-    public void saveBrightAndColorTemp(int bright, int r, int g, int b)
-    {
+    public void saveBrightAndColorTemp(int bright, int r, int g, int b) {
         int colorTemp = RGB2ColorTemp(r, g, b);
         saveBrightAndColorTemp(bright, colorTemp);
     }
@@ -426,8 +398,7 @@ public class NetService extends BaseService implements
     /**
      * RGB转成色温
      */
-    public int RGB2ColorTemp(int r, int g, int b)
-    {
+    public int RGB2ColorTemp(int r, int g, int b) {
         double total = 0.66697 * r + 1.13240 * g + 1.20063 * b;
         double x = (0.341427 * r + 0.188273 * g + 0.390202 * g) / total;
         double y = (0.138972 * r + 0.837182 * g + 0.073588 * b) / total;
@@ -447,10 +418,10 @@ public class NetService extends BaseService implements
 
     /**
      * 色温转成RGB
+     *
      * @param colorTemp
      */
-    public void colorTemp2RGB(int colorTemp)
-    {
+    public void colorTemp2RGB(int colorTemp) {
         float r = 0.0f, g = 0.0f, b = 0.0f;
         int rr = CommonUtil.getRounding(r * 255);
         int gg = CommonUtil.getRounding(g * 255);
@@ -460,10 +431,10 @@ public class NetService extends BaseService implements
 
     /**
      * 分时亮度设置
+     *
      * @param maps
      */
-    public void setDayPeriodBright(LinkedHashMap<String, Integer> maps)
-    {
+    public void setDayPeriodBright(LinkedHashMap<String, Integer> maps) {
         NMSetDayPeriodBright nmSetDayPeriodBright = new NMSetDayPeriodBright();
         nmSetDayPeriodBright.setMaps(maps);
         addOutNetMessage(nmSetDayPeriodBright);
@@ -473,18 +444,17 @@ public class NetService extends BaseService implements
     /**
      * 获取节目名称
      */
-    public void getProgramsNames()
-    {
+    public void getProgramsNames() {
         NMGetProgramsNames nmGetProgramsNames = new NMGetProgramsNames();
         addOutNetMessage(nmGetProgramsNames);
     }
 
     /**
      * 发送基本参数到发送卡
+     *
      * @param connectionParam
      */
-    public void setConnectionToSenderCard(ConnectionParam connectionParam)
-    {
+    public void setConnectionToSenderCard(ConnectionParam connectionParam) {
         NMSetConnectionToSenderCard nmSetConnectionToSenderCard = new NMSetConnectionToSenderCard();
         nmSetConnectionToSenderCard.setConnectionParam(connectionParam);
         addOutNetMessage(nmSetConnectionToSenderCard);
@@ -492,10 +462,10 @@ public class NetService extends BaseService implements
 
     /**
      * 固化连接关系到接收卡
+     *
      * @param connectionParam
      */
-    public void setConnectionToReceiverCard(ConnectionParam connectionParam)
-    {
+    public void setConnectionToReceiverCard(ConnectionParam connectionParam) {
         NMSetConnectionToReceiverCard nmSetConnectionToReceiverCard = new NMSetConnectionToReceiverCard();
         nmSetConnectionToReceiverCard.setConnectionParam(connectionParam);
         addOutNetMessage(nmSetConnectionToReceiverCard);
@@ -503,10 +473,10 @@ public class NetService extends BaseService implements
 
     /**
      * 发送接收卡基本参数
+     *
      * @param receiverSettingInfo
      */
-    public void setReceiverCardInfoSend(ReceiverSettingInfo receiverSettingInfo)
-    {
+    public void setReceiverCardInfoSend(ReceiverSettingInfo receiverSettingInfo) {
         NMSetReceiverCardInfoSender nmSetReceiverCardInfo = new NMSetReceiverCardInfoSender();
         nmSetReceiverCardInfo.setFileName(receiverSettingInfo.getFileName());
         nmSetReceiverCardInfo.setBoxWidth(receiverSettingInfo.getWidth());
@@ -516,11 +486,11 @@ public class NetService extends BaseService implements
 
     /**
      * 固化接收卡基本参数
+     *
      * @param receiverSettingInfo
      */
     public void setReceiverCardInfoSaveToReceiver(
-            ReceiverSettingInfo receiverSettingInfo)
-    {
+            ReceiverSettingInfo receiverSettingInfo) {
         NMSetReceiverCardInfoSaveToReceiver nmSetReceiverCardInfo = new NMSetReceiverCardInfoSaveToReceiver();
         nmSetReceiverCardInfo.setFileName(receiverSettingInfo.getFileName());
         nmSetReceiverCardInfo.setBoxWidth(receiverSettingInfo.getWidth());
@@ -531,18 +501,17 @@ public class NetService extends BaseService implements
     /**
      * 获得接收卡参数信息，从bin文件中获取
      */
-    public void getReceiverCardInfo()
-    {
+    public void getReceiverCardInfo() {
         NMGetReceiverCardInfo nmGetReceiverCardInfo = new NMGetReceiverCardInfo();
         addOutNetMessage(nmGetReceiverCardInfo);
     }
 
     /**
      * 设置发送卡基本参数
+     *
      * @param params
      */
-    public void setBasicParams(SenderParameters params)
-    {
+    public void setBasicParams(SenderParameters params) {
         NMSetSenderBasicParameters basicParams = new NMSetSenderBasicParameters();
         basicParams.setParams(params);
         addOutNetMessage(basicParams);
@@ -550,10 +519,10 @@ public class NetService extends BaseService implements
 
     /**
      * 修改终端名
+     *
      * @param termName
      */
-    public void modifyTermName(String termName)
-    {
+    public void modifyTermName(String termName) {
         NMChangeTermName nmChangeTermName = new NMChangeTermName();
         nmChangeTermName.setTermName(termName);
         addOutNetMessage(nmChangeTermName);
@@ -562,15 +531,14 @@ public class NetService extends BaseService implements
 
     /**
      * 获取磁盘使用，版本等信息
+     *
      * @param someInfo
      */
-    public void getSomeInfo()
-    {
+    public void getSomeInfo() {
         NMGetSomeInfo nmGetSomeInfo = new NMGetSomeInfo();
         addOutNetMessage(nmGetSomeInfo);
 
     }
 
-	
 
 }
