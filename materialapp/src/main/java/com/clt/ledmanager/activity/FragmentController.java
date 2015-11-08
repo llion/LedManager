@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import java.util.List;
 
 /**
- * Created by chenyu on 15/11/8.
+ * Created by wyh on 15/11/7.
  */
 public class FragmentController {
     private final FragmentActivity fragmentActivity;

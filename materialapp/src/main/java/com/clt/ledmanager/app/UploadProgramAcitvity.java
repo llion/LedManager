@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -115,17 +116,14 @@ public class UploadProgramAcitvity extends com.clt.ledmanager.activity.BaseActiv
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        try {
+
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
             super.onCreate(savedInstanceState);
             setContentView(R.layout.upload_expandable_list);
             init();
             initView();
             initListener();
             initData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void init() {
@@ -309,13 +307,6 @@ public class UploadProgramAcitvity extends com.clt.ledmanager.activity.BaseActiv
                 } else {
                     Toast.makeText(UploadProgramAcitvity.this, "构建节目失败", Toast.LENGTH_SHORT);
                 }
-//					Intent intent = new Intent(UploadProgramAcitvity.this,
-//							MyTabActivity.class);
-//					intent.putExtra("Type", "uploadProgram");
-//					intent.putExtra("ProgramInfo", uploadProgram);
-//					startActivity(intent);
-//					finish();
-
             }
 
         });

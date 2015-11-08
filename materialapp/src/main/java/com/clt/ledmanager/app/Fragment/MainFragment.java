@@ -181,7 +181,6 @@ public class MainFragment extends BaseObserverFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Replace LinearLayout by the type of the root element of the layout you're trying to load
         llLayout = (LinearLayout) inflater.inflate(R.layout.main, container, false);
-
         return llLayout; // We must return the loaded Layout
 
     }

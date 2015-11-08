@@ -22,7 +22,6 @@ import com.clt.ledmanager.IService;
 import com.clt.ledmanager.activity.Application;
 import com.clt.ledmanager.activity.FragmentController;
 import com.clt.ledmanager.app.DrawerItems.CustomPrimaryDrawerItem;
-import com.clt.ledmanager.app.DrawerItems.CustomUrlPrimaryDrawerItem;
 import com.clt.ledmanager.app.Fragment.ConnectRelationActivity;
 import com.clt.ledmanager.app.Fragment.MainFragment;
 import com.clt.ledmanager.app.Fragment.ReceiverCardFragment;
@@ -219,9 +218,9 @@ public class AdvancedActivity extends AppCompatActivity {
                 .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(R.drawable.btn_home_selector),
-                        new CustomPrimaryDrawerItem().withName(R.string.drawer_item_send_card).withIcon(R.drawable.btn_sending_selector),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_receive_card).withIcon(R.drawable.btn_receiving_selector),
-                        new CustomUrlPrimaryDrawerItem().withName(R.string.drawer_item_fragment_linking).withIcon(R.drawable.btn_linking_selector)
+                        new CustomPrimaryDrawerItem().withName(R.string.drawer_item_send_card).withIcon(R.drawable.btn_sending_selector)
+//                        new PrimaryDrawerItem().withName(R.string.drawer_item_receive_card).withIcon(R.drawable.btn_receiving_selector),
+//                        new CustomUrlPrimaryDrawerItem().withName(R.string.drawer_item_fragment_linking).withIcon(R.drawable.btn_linking_selector)
                 ) // add the items we want to use with our Drawer
                 .withOnDrawerNavigationListener(new Drawer.OnDrawerNavigationListener() {
                     @Override
@@ -280,6 +279,8 @@ public class AdvancedActivity extends AppCompatActivity {
                     }
                 })
                 .build();
+
+//      添加fragment
         fragmentController.add(false, FRAGMENT_TAG_SEND_CARD, R.id.fragment_container, new SenderCardFragment());
         fragmentController.add(false,FRAGMENT_TAG_RECEIVE_CARD, R.id.fragment_container, new ReceiverCardFragment());
         fragmentController.add(false,FRAGMENT_TAG_LINKING, R.id.fragment_container, new ConnectRelationActivity());
@@ -353,34 +354,34 @@ public class AdvancedActivity extends AppCompatActivity {
                 profile2.withIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_android).backgroundColorRes(R.color.accent).sizeDp(48).paddingDp(4));
                 headerResult.updateProfileByIdentifier(profile2);
                 return true;
-            case R.id.menu_2:
-                //show the arrow icon
-                result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                return true;
-            case R.id.menu_3:
-                //show the hamburger icon
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
-                return true;
-            case R.id.menu_4:
-                //we want to replace our current header with a compact header
-                //build the new compact header
-                buildHeader(true, null);
-                //set the view to the result
-                result.setHeader(headerResult.getView());
-                //set the drawer to the header (so it will manage the profile list correctly)
-                headerResult.setDrawer(result);
-                return true;
-            case R.id.menu_5:
-                //we want to replace our current header with a normal header
-                //build the new compact header
-                buildHeader(false, null);
-                //set the view to the result
-                result.setHeader(headerResult.getView());
-                //set the drawer to the header (so it will manage the profile list correctly)
-                headerResult.setDrawer(result);
-                return true;
+//            case R.id.menu_2:
+//                //show the arrow icon
+//                result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(false);
+//                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                return true;
+//            case R.id.menu_3:
+//                //show the hamburger icon
+//                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+//                return true;
+//            case R.id.menu_4:
+//                //we want to replace our current header with a compact header
+//                //build the new compact header
+//                buildHeader(true, null);
+//                //set the view to the result
+//                result.setHeader(headerResult.getView());
+//                //set the drawer to the header (so it will manage the profile list correctly)
+//                headerResult.setDrawer(result);
+//                return true;
+//            case R.id.menu_5:
+//                //we want to replace our current header with a normal header
+//                //build the new compact header
+//                buildHeader(false, null);
+//                //set the view to the result
+//                result.setHeader(headerResult.getView());
+//                //set the drawer to the header (so it will manage the profile list correctly)
+//                headerResult.setDrawer(result);
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
