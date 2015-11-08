@@ -54,12 +54,12 @@ public abstract class BaseFragment extends Fragment
 					toast(getResources().getString(
 							R.string.fail_connect_to_server), 1000);
 				break;
-			
+
 			}
 			dealHandlerMessage(msg);
 		}
 	};
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{

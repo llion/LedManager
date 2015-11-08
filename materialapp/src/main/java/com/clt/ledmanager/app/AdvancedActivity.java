@@ -12,8 +12,8 @@ import android.view.View;
 import com.clt.ledmanager.app.DrawerItems.CustomPrimaryDrawerItem;
 import com.clt.ledmanager.app.DrawerItems.CustomUrlPrimaryDrawerItem;
 import com.clt.ledmanager.app.Fragment.ConnectRelationActivity;
-import com.clt.ledmanager.app.Fragment.MainActivity;
-import com.clt.ledmanager.app.Fragment.ReceiverCardActivity;
+import com.clt.ledmanager.app.Fragment.MainFragment;
+import com.clt.ledmanager.app.Fragment.ReceiverCardFragment;
 import com.clt.ledmanager.app.Fragment.SenderCardActivity;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -121,7 +121,7 @@ public class AdvancedActivity extends AppCompatActivity {
                                 case ITEM_POSITION_HOME:
 
                                     getSupportActionBar().setTitle(R.string.drawer_item_home);
-                                    f = new MainActivity();
+                                    f = new MainFragment();
                                     break;
                                 case ITEM_POSITION_FREE:
 
@@ -132,7 +132,7 @@ public class AdvancedActivity extends AppCompatActivity {
                                 case ITEM_POSITION_CUSTOM:
 
                                     getSupportActionBar().setTitle(R.string.drawer_item_custom);
-                                    f = new ReceiverCardActivity();
+                                    f = new ReceiverCardFragment();
                                     break;
                                 case ITEM_POSITION_DRAWER:
 
@@ -187,7 +187,7 @@ public class AdvancedActivity extends AppCompatActivity {
 //                .withDrawerGravity(Gravity.END)
 //                .append(result);
 //
-        Fragment f = new MainActivity();
+        Fragment f = new MainFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
 
     }

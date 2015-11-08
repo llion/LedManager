@@ -9,7 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.clt.ledmanager.app.Fragment.DrawerFragment;
-import com.clt.ledmanager.app.Fragment.MainActivity;
+import com.clt.ledmanager.app.Fragment.MainFragment;
 import com.clt.ledmanager.app.Fragment.SecondDrawerFragment;
 import com.mikepenz.materialdrawer.app.R;
 
@@ -45,8 +45,8 @@ public class FragmentActivity extends AppCompatActivity {
         //handle the click on the back arrow click
         switch (item.getItemId()) {
             case R.id.menu_1:
-//                Fragment f = new MainActivity.newInstance("Demo");
-                Fragment f = new MainActivity();
+//                Fragment f = new MainFragment.newInstance("Demo");
+                Fragment f = new MainFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 return true;
             case R.id.menu_2:

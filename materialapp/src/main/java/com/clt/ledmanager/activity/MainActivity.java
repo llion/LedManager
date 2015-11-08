@@ -88,7 +88,7 @@ import java.util.Locale;
 public class MainActivity extends BaseFragment implements
 		OnTabActivityResultListener, UploadPicListener, ChangeLanguageListener
 {
-	private static final String TAG = "MainActivity";
+	private static final String TAG = "MainFragment";
 
 	private Application app;
 	

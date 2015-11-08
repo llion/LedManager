@@ -15,7 +15,7 @@ import com.clt.ledmanager.activity.MainActivity;
 import com.clt.ledmanager.adapter.OnTabActivityResultListener;
 import com.clt.ledmanager.adapter.UploadPicListener;
 import com.clt.ledmanager.app.Fragment.ConnectRelationActivity;
-import com.clt.ledmanager.app.Fragment.ReceiverCardActivity;
+import com.clt.ledmanager.app.Fragment.ReceiverCardFragment;
 import com.clt.ledmanager.app.Fragment.SenderCardActivity;
 import com.clt.ledmanager.upload.UploadProgram;
 import com.mikepenz.materialdrawer.app.R;
@@ -25,9 +25,9 @@ import com.mikepenz.materialdrawer.app.R;
  */
 public class MyTabActivity extends TabActivity
 {
-    private static final String TAB1="MainActivity";
+    private static final String TAB1="MainFragment";
     private static final String TAB2="SenderCardActivity";
-    private static final String TAB3="ReceiverCardActivity";
+    private static final String TAB3="ReceiverCardFragment";
     private static final String TAB4="ConnectRelationActivity";
     private RadioGroup group;
     private RadioButton rbMain,rbScreenManager,rbReceiverSetting,rbProgram,rbSetting;
@@ -61,7 +61,7 @@ public class MyTabActivity extends TabActivity
         this.tabHost.addTab(this.tabHost.newTabSpec(TAB2)
                 .setIndicator(TAB2).setContent(new Intent(this, SenderCardActivity.class)));
         this.tabHost.addTab(this.tabHost.newTabSpec(TAB3)
-                .setIndicator(TAB3).setContent(new Intent(this, ReceiverCardActivity.class)));
+                .setIndicator(TAB3).setContent(new Intent(this, ReceiverCardFragment.class)));
         this.tabHost.addTab(this.tabHost.newTabSpec(TAB4)
                 .setIndicator(TAB4).setContent(new Intent(this, ConnectRelationActivity.class)));
         this.tabHost.setCurrentTab(0);

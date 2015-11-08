@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.clt.ledmanager.app.Fragment.ConnectRelationActivity;
-import com.clt.ledmanager.app.Fragment.MainActivity;
+import com.clt.ledmanager.app.Fragment.MainFragment;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -23,7 +23,7 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.clt.ledmanager.app.DrawerItems.CustomPrimaryDrawerItem;
 import com.clt.ledmanager.app.DrawerItems.CustomUrlPrimaryDrawerItem;
-import com.clt.ledmanager.app.Fragment.ReceiverCardActivity;
+import com.clt.ledmanager.app.Fragment.ReceiverCardFragment;
 import com.clt.ledmanager.app.Fragment.SenderCardActivity;
 import com.mikepenz.materialdrawer.app.R;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -126,14 +126,14 @@ public class AdvancedMainActivity extends AppCompatActivity {
 //                                    setSupportActionBar(mToolbar);
 //                                    getSupportActionBar().setTitle(R.string.drawer_item_home);
 
-                                    f = new MainActivity();
+                                    f = new MainFragment();
                                     break;
                                 case ITEM_POSITION_FREE:
                                     f = new SenderCardActivity();
                                     break;
 
                                 case ITEM_POSITION_CUSTOM:
-                                    f = new ReceiverCardActivity();
+                                    f = new ReceiverCardFragment();
                                     break;
                                 case ITEM_POSITION_DRAWER:
                                     f = new ConnectRelationActivity();
@@ -186,7 +186,7 @@ public class AdvancedMainActivity extends AppCompatActivity {
                 .withDrawerGravity(Gravity.END)
                 .append(result);
 
-        Fragment f = new MainActivity();
+        Fragment f = new MainFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
 
     }
