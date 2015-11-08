@@ -136,16 +136,13 @@ public class AdvancedActivity extends AppCompatActivity {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            try {
+
                mangerNetService = ((BaseService.LocalBinder) service).getService();
                 ((Application) getApplication()).mangerNetService = mangerNetService;
                 if (mangerNetService != null) {
                     terminateObservable.dealHandlerMessage(new MessageWrapper(MessageWrapper.TYPE_SERVICE_INIT,null));
                     mangerNetService.setNmHandler(nmHandler);
                 }
-            } catch (Exception e) {
-            }
-
         }
 
     };
