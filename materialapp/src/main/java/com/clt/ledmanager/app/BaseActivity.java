@@ -98,16 +98,10 @@ public abstract class BaseActivity extends Activity
 	 */
 	protected void skip(Class<?> activityClass)
 	{
-		try
-		{
+
 			Intent intent = new Intent();
 			intent.setClass(this, activityClass);
 			startActivity(intent);
-		}
-		catch (Exception e)
-		{
-		}
-		
 	}
 	
 	/**
@@ -121,7 +115,12 @@ public abstract class BaseActivity extends Activity
 	{
 		return getResources().getString(resId);
 	}
-	
+
+	/**
+	 * 注销广播接受者
+	 *
+	 */
+
 	@Override
 	protected void onDestroy()
 	{
@@ -155,8 +154,7 @@ public abstract class BaseActivity extends Activity
 	protected void showEnterPassDialog(final String rightPassword,
 			final OnPassDialogSubmitCallback callBack)
 	{
-		try
-		{
+
 			LayoutInflater inflater = LayoutInflater.from(this);
 			View view = inflater.inflate(R.layout.entry_password, null);
 			final EditText etPass = (EditText) view
@@ -202,11 +200,7 @@ public abstract class BaseActivity extends Activity
 			
 			enterPassDialog = DialogFactory.createDialog(this, view);
 			enterPassDialog.show();
-		}
-		catch (Exception e)
-		{
-		}
-		
+
 	}
 	
 	/**

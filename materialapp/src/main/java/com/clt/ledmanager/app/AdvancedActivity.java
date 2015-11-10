@@ -85,15 +85,18 @@ public class AdvancedActivity extends AppCompatActivity {
     private IService mangerNetService;// 通信服务
 
     public static class MessageWrapper{
-        public MessageWrapper(int type,Message msg){
-            this.type = type;
-            this.msg = msg;
-        }
 
         public final static int TYPE_SERVICE_INIT = 0;
         public final static int TYPE_SERVICE_UPDATE = 1;
         public Message msg;
         public int type;
+
+        public MessageWrapper(int type,Message msg){
+            this.type = type;
+            this.msg = msg;
+        }
+
+
     }
 
     /**
@@ -144,7 +147,6 @@ public class AdvancedActivity extends AppCompatActivity {
                     mangerNetService.setNmHandler(nmHandler);
                 }
         }
-
     };
 
     private Toolbar mToolbar;
@@ -186,6 +188,8 @@ public class AdvancedActivity extends AppCompatActivity {
 //        setContentView(R.layout.activity_sample);
         setContentView(R.layout.activity_sample_fragment_dark_toolbar);
         fragmentController = new FragmentController(this);
+
+//      全局主题者
         Application.getInstance().terminateObservable = terminateObservable = new TerminateObservable();
         receiver = new ConnectBreakBroadcastReceiver();
 
@@ -226,7 +230,6 @@ public class AdvancedActivity extends AppCompatActivity {
                         return true;
                     }
                 })
-
 
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -348,8 +351,10 @@ public class AdvancedActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_1:
                 //update the profile2 and set a new image.
-                profile2.withIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_android).backgroundColorRes(R.color.accent).sizeDp(48).paddingDp(4));
-                headerResult.updateProfileByIdentifier(profile2);
+//                profile2.withIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_android).backgroundColorRes(R.color.accent).sizeDp(48).paddingDp(4));
+//                headerResult.updateProfileByIdentifier(profile2);
+                startActivity(new Intent(AdvancedActivity.this,
+                        InfoActivity.class));
                 return true;
 //            case R.id.menu_2:
 //                //show the arrow icon

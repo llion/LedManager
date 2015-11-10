@@ -48,17 +48,22 @@
         <activity
             android:configChanges="locale"
             android:name="com.clt.ledmanager.app.FilesViewActivity"
-            android:screenOrientation="portrait" />
+        android:screenOrientation="portrait" />
+
         <!-- 选择终端页 -->
         <activity
             android:configChanges="locale"
             android:name="com.clt.ledmanager.app.LedSelectActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:configChanges="locale"
             android:name="com.clt.ledmanager.app.ScreenShotActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name="com.clt.ledmanager.app.InfoActivity"/>
 
         <service android:name="com.clt.ledmanager.service.NetService" />
 

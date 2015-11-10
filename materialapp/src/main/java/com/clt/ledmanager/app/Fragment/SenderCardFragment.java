@@ -176,7 +176,7 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
      * 初始化视图
      */
     private void initView() {
-        try {
+
             // 根容器
             llLayout = (LinearLayout) view.findViewById(R.id.ll_layout);
             llLayout.requestFocus();
@@ -250,10 +250,6 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
             etDHeight = (EditText) view.findViewById(R.id.et_d_4);
             btnSaveCtrArea = (Button) view.findViewById(R.id.btn_save_area);
 
-        } catch (Exception e) {
-
-        }
-
     }
 
     /**
@@ -274,34 +270,25 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
 
             @Override
             public void onClick(View v) {
-                try {
+
                     if (mangerNetService != null) {
                         mangerNetService.DetectSender();
                         if (detectWaittingDialog != null) {
                             detectWaittingDialog.show();
                         }
                     }
-                } catch (Exception e) {
-                }
-
             }
         });
+
         // 自动亮度调节
         spinnerAutoBright.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                try {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (mangerNetService != null) {
                         setAutoBright(position);
                     }
-                } catch (Exception e) {
-
-                }
-
             }
-
         });
         // 修改分辨率
         spinnerResolution.setOnItemClickListener(new OnItemClickListener() {
@@ -309,7 +296,7 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                try {
+
                     if (position == 0) {
                         view.findViewById(R.id.tr_res_custom).setVisibility(
                                 View.VISIBLE);
@@ -337,14 +324,10 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
                             detectWaittingDialog.show();
                         }
                     }
-
-                } catch (Exception e) {
-
-                }
-
             }
 
         });
+
         /**
          * 设置分辨率
          */
@@ -404,6 +387,8 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
             }
 
         });
+
+
         /**
          * 显示模式，2D/3D
          */
@@ -416,6 +401,8 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
             }
 
         });
+
+
         /**
          * 视频来源 HDMI/DVI/C1S
          */
@@ -424,7 +411,7 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                try {
+
                     if (position == 0) {
                         setVideoSource(0);
                     } else if (position == 1) {
@@ -432,16 +419,7 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
                     } else if (position == 2) {
                         setVideoSource(3);
                     }
-                } catch (Exception e) {
-
-                }
-
-                // if (detectWaittingDialog != null)
-                // {
-                // detectWaittingDialog.show();
-                // }
             }
-
         });
 
         /**
@@ -451,12 +429,14 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
 
             @Override
             public void onClick(View v) {
+
                 showEnterPassDialog(app.operationPassword,
                         new OnPassDialogSubmitCallback() {
 
                             @Override
                             public void onSubmit() {
                                 try {
+
                                     if (app.senderInfo == null) {
                                         return;
                                     }
