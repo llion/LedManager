@@ -71,18 +71,17 @@ public class AdvancedActivity extends AppCompatActivity {
     private static final String FRAGMENT_TAG_LINKING = "linking";
 
     private FragmentController fragmentController;
+    private BroadcastReceiver receiver;
+    private TerminateObservable terminateObservable;
+    private IService mangerNetService;// 通信服务
 
     public TerminateObservable getTerminateObservable() {
         return terminateObservable;
     }
 
-    private TerminateObservable terminateObservable;
-
     public IService getMangerNetService() {
         return mangerNetService;
     }
-
-    private IService mangerNetService;// 通信服务
 
     public static class MessageWrapper{
 
@@ -95,8 +94,6 @@ public class AdvancedActivity extends AppCompatActivity {
             this.type = type;
             this.msg = msg;
         }
-
-
     }
 
     /**
@@ -140,8 +137,7 @@ public class AdvancedActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
 
-               mangerNetService = ((BaseService.LocalBinder) service).getService();
-                ((Application) getApplication()).mangerNetService = mangerNetService;
+            ((Application) getApplication()).mangerNetService = mangerNetService = ((BaseService.LocalBinder) service).getService();
                 if (mangerNetService != null) {
                     terminateObservable.dealHandlerMessage(new MessageWrapper(MessageWrapper.TYPE_SERVICE_INIT,null));
                     mangerNetService.setNmHandler(nmHandler);
@@ -149,8 +145,8 @@ public class AdvancedActivity extends AppCompatActivity {
         }
     };
 
-    private Toolbar mToolbar;
-    private BroadcastReceiver receiver;
+
+
 
     @Override
     protected void onResume() {
@@ -198,9 +194,10 @@ public class AdvancedActivity extends AppCompatActivity {
         bindService(_intent1, mangerNetServiceConnection, Context.BIND_AUTO_CREATE);
 
         // Handle Toolbar
-        mToolbar= (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar  toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.drawer_item_advanced_drawer);
+        getSupportActionBar().setElevation(0);
 
         // Create a few sample profile
         profile = new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile));
@@ -215,7 +212,7 @@ public class AdvancedActivity extends AppCompatActivity {
         //Create the drawer
         result = new DrawerBuilder()
                 .withActivity(this)
-                .withToolbar(mToolbar)
+                .withToolbar(toolbar)
                 .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(R.drawable.btn_home_selector),
@@ -241,12 +238,15 @@ public class AdvancedActivity extends AppCompatActivity {
                                 case ITEM_POSITION_HOME:
 
                                     getSupportActionBar().setTitle(R.string.drawer_item_home);
+
                                     tag = FRAGMENT_TAG_HOME;
                                     break;
                                 case ITEM_POSITION_SEND_CARD:
 
                                     getSupportActionBar().setTitle(R.string.drawer_item_send_card);
-                                   tag = FRAGMENT_TAG_SEND_CARD;
+
+                                    tag = FRAGMENT_TAG_SEND_CARD;
+                                    invalidateOptionsMenu();
                                     break;
 
                                 case ITEM_POSITION_RECEIVE_CARD:
@@ -337,12 +337,13 @@ public class AdvancedActivity extends AppCompatActivity {
                 .withSavedInstance(savedInstanceState)
                 .build();
     }
-    //初始化
+
+    //添加Menu菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
-        return true;
+            return true;
     }
 
     @Override
@@ -353,8 +354,7 @@ public class AdvancedActivity extends AppCompatActivity {
                 //update the profile2 and set a new image.
 //                profile2.withIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_android).backgroundColorRes(R.color.accent).sizeDp(48).paddingDp(4));
 //                headerResult.updateProfileByIdentifier(profile2);
-                startActivity(new Intent(AdvancedActivity.this,
-                        InfoActivity.class));
+                startActivity(new Intent(AdvancedActivity.this, InfoActivity.class));
                 return true;
 //            case R.id.menu_2:
 //                //show the arrow icon

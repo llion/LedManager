@@ -212,6 +212,7 @@ public class LedSelectActivity extends BaseActivity implements Observer {
 
             @Override
             public void onClickRightImg(View v) {
+
                 progressBar.show();
                 findTerminal();
             }
@@ -325,6 +326,7 @@ public class LedSelectActivity extends BaseActivity implements Observer {
      * 查找服务端
      */
     private void findTerminal() {
+
         if (mangerNetService == null) {
             return;
         }

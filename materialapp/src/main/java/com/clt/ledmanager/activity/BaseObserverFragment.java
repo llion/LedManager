@@ -24,7 +24,7 @@ import java.util.Observer;
 
 /**
  * Activity基类
- * http://www.cs.dartmouth.edu/~campbell/cs65/lecture08/lecture08.html
+ *
  */
 public abstract class BaseObserverFragment extends Fragment implements Observer {
     Dialog enterPassDialog = null;
@@ -61,6 +61,8 @@ public abstract class BaseObserverFragment extends Fragment implements Observer 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+//        添加观察者
         fragmentActivity = (AdvancedActivity) getActivity();
         fragmentActivity.getTerminateObservable().addObserver(this);
     }
@@ -68,6 +70,8 @@ public abstract class BaseObserverFragment extends Fragment implements Observer 
     @Override
     public void onDetach() {
         super.onDetach();
+
+//        删除观察者
         fragmentActivity.getTerminateObservable().deleteObserver(this);
     }
 
@@ -96,13 +100,10 @@ public abstract class BaseObserverFragment extends Fragment implements Observer 
      * @param activityClass
      */
     protected void skip(Class<?> activityClass) {
-        try {
+
             Intent intent = new Intent();
             intent.setClass(getActivity(), activityClass);
             startActivity(intent);
-        } catch (Exception e) {
-        }
-
     }
 
     /**
@@ -115,12 +116,10 @@ public abstract class BaseObserverFragment extends Fragment implements Observer 
         return getResources().getString(resId);
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
         // 接收广播：心跳检测连接断开
-
     }
 
     /**

@@ -2,14 +2,11 @@ package com.clt.ledmanager.app;
 
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,11 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clt.commondata.SomeInfo;
-import com.clt.ledmanager.IService;
 import com.clt.ledmanager.activity.Application;
-import com.clt.ledmanager.app.Fragment.observable.TerminateObservable;
-import com.clt.ledmanager.service.BaseService.LocalBinder;
-import com.clt.ledmanager.service.BaseServiceFactory;
 import com.clt.ledmanager.service.Clock;
 import com.clt.ledmanager.ui.DialogFactory;
 import com.clt.ledmanager.ui.TitleBarView;
@@ -43,24 +36,12 @@ import com.mikepenz.materialdrawer.app.R;
 import java.util.Observable;
 import java.util.Observer;
 
-//import com.clt.ledmanager.ledmanagerservice.BaseServiceFactory;
-
 /**
  * 查看信息
  */
 public class InfoActivity extends BaseActivity implements Observer
 {
-	public void update(Observable observable, Object data) {
-		AdvancedActivity.MessageWrapper messageWrapper = (AdvancedActivity.MessageWrapper) data;
-		switch (messageWrapper.type) {
-			case AdvancedActivity.MessageWrapper.TYPE_SERVICE_INIT:
 
-				break;
-			case AdvancedActivity.MessageWrapper.TYPE_SERVICE_UPDATE:
-				dealHandlerMessage(messageWrapper.msg);
-				break;
-		}
-	}
 	private TextView tvTermName, tvTermIp, tvTermState, tvTermDuring;
 	
 	private Button btnModifTermName;
@@ -71,9 +52,7 @@ public class InfoActivity extends BaseActivity implements Observer
 			tvSenderVersion, tvColorLightVersion;
 	
 	private Dialog dialogTermName;
-	
-//	private IService mangerNetService;// 通信服务
-	
+
 	private Application app;
 	
 	private BroadcastReceiver receiver;
@@ -82,49 +61,6 @@ public class InfoActivity extends BaseActivity implements Observer
 	
 	// 标题栏视图
 	private TitleBarView titleBarView;
-	private TerminateObservable terminateObservable;
-
-	private IService mangerNetService;// 通信服务
-	public IService getMangerNetService() {
-		return mangerNetService;
-	}
-	public TerminateObservable getTerminateObservable() {
-		return terminateObservable;
-	}
-
-
-	/**
-	 * 绑定通信service
-	 */
-	private ServiceConnection mangerNetServiceConnection = new ServiceConnection()
-	{
-
-		@Override
-		public void onServiceDisconnected(ComponentName name)
-		{
-			
-			mangerNetService = null;
-			
-		}
-		
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service)
-		{
-			try
-			{
-				mangerNetService = ((LocalBinder) service).getService();
-				if (mangerNetService != null)
-				{
-					mangerNetService.setNmHandler(nmHandler);
-				}
-			}
-			catch (Exception e)
-			{
-			}
-			
-		}
-		
-	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -136,18 +72,17 @@ public class InfoActivity extends BaseActivity implements Observer
 		initView();
 		initListener();
 		initData();
+
 		
 	}
 	
 	private void init()
 	{
 		app = (Application) getApplication();
-		// 绑定mangerNetService
-		Intent _intent1 = new Intent(InfoActivity.this,
-				BaseServiceFactory.getBaseService());
-		this.getApplicationContext().bindService(_intent1,
-				mangerNetServiceConnection, Context.BIND_AUTO_CREATE);
-		
+
+//		全局主题者
+		Application.getInstance().terminateObservable.addObserver(InfoActivity.this);
+
 		// 连接时长
 		receiver = new MyBroadcastReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -177,10 +112,11 @@ public class InfoActivity extends BaseActivity implements Observer
 	
 	private void initListener()
 	{
-		// 标题
+		// 标题监听
 		titleBarView.setTitleBarListener(new TitleBarListener()
 		{
-			
+
+//			右边title图片
 			@Override
 			public void onClickRightImg(View v)
 			{
@@ -189,9 +125,11 @@ public class InfoActivity extends BaseActivity implements Observer
 			@Override
 			public void onClickLeftImg(View v)
 			{
-				finish();
+				InfoActivity.this.finish();
 			}
 		});
+
+
 		// 修改终端名
 		btnModifTermName.setOnClickListener(new OnClickListener()
 		{
@@ -239,9 +177,9 @@ public class InfoActivity extends BaseActivity implements Observer
 							etNewName.requestFocus();
 							return;
 						}
-						if (mangerNetService != null)
+						if (((Application) getApplication()).mangerNetService != null)
 						{
-							mangerNetService.modifyTermName(newTermName);
+							((Application) getApplication()).mangerNetService.modifyTermName(newTermName);
 						}
 						if (dialogTermName != null)
 						{
@@ -332,16 +270,26 @@ public class InfoActivity extends BaseActivity implements Observer
 					+ app.senderInfo.getMinorVersion());
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
-
-			unbindService(mangerNetServiceConnection);
-			unregisterReceiver(receiver);
 	}
-	
+
+	@Override
+	public void update(Observable observable, Object data) {
+		AdvancedActivity.MessageWrapper messageWrapper = (AdvancedActivity.MessageWrapper) data;
+		switch (messageWrapper.type) {
+			case AdvancedActivity.MessageWrapper.TYPE_SERVICE_INIT:
+
+				break;
+			case AdvancedActivity.MessageWrapper.TYPE_SERVICE_UPDATE:
+				dealHandlerMessage(messageWrapper.msg);
+				break;
+		}
+	}
+
     /*
 	 * 广播接收器
 	 * 
@@ -384,7 +332,6 @@ public class InfoActivity extends BaseActivity implements Observer
 					tvTermName.setText(newTermName);
 					
 					sendBroadcast(new Intent(Const.MODIF_TERM_NAME_ACTION));
-					
 				}
 				else
 				{

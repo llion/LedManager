@@ -67,7 +67,6 @@
 
         <service android:name="com.clt.ledmanager.service.NetService" />
 
-
     </application>
 
 </manifest>
