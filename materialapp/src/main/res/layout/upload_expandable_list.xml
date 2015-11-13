@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.clt.ledmanager.ui.TitleBarView
+<!--    <com.clt.ledmanager.ui.TitleBarView
         android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         clt:left_drawble="@drawable/btn_go_back"
         clt:left_text="@string/home_page"
         clt:right_drawble="@android:color/transparent"
-        clt:title_name="@string/upload_pic" />
+        clt:title_name="@string/upload_pic" />-->
 
 
     <!--上传节目的ExpandableListView-->

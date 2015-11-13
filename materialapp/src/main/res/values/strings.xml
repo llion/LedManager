@@ -39,6 +39,13 @@
     <string name="drawer_item_open_source">Open Source</string>
     <string name="drawer_item_contact">Contact</string>
 
+    <!-- 添加新的抽屉item-->
+    <string name="drawer_item_upload_program">Upload Program</string>
+    <string name="drawer_item_program_manager">Program Manager</string>
+    <string name="drawer_item_action_settings">Settings</string>
+    <string name="drawer_item_change_language">Language</string>
+
+
     <string name="hello_world">Hello world!</string>
     <string name="search_no_result">Do Not Find Terminal</string>
     <string name="back">Back</string>

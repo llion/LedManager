@@ -132,4 +132,6 @@ public class NetMessageType
     
     public static final int GetSomeInfoAnswer=3042;//获得一些信息
 
+    public static final int MSG_WHAT_PROGRAM_UPDATE =3043;//通知节目更新
+
 }

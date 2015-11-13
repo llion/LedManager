@@ -242,63 +242,63 @@
 
                     <!-- 节目管理 -->
 
-                    <TableRow
-                        android:id="@+id/tr_manager_program"
-                        android:layout_marginTop="10dp" >
+                    <!--<TableRow-->
+                        <!--android:id="@+id/tr_manager_program"-->
+                        <!--android:layout_marginTop="10dp" >-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/item_height"
-                            android:gravity="center_vertical|left"
-                            android:text="@string/program_manager" />
+                        <!--<TextView-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="@dimen/item_height"-->
+                            <!--android:gravity="center_vertical|left"-->
+                            <!--android:text="@string/program_manager" />-->
 
-                        <com.clt.ledmanager.ui.CustomerSpinner
-                            android:id="@+id/spinner_program_manager"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/item_height"
-                            android:layout_marginLeft="10dp"
-                            android:background="@drawable/spinner_selector"
-                            android:gravity="left|center_vertical"
-                            android:textSize="@dimen/font_14" />
-                    </TableRow>
+                        <!--<com.clt.ledmanager.ui.CustomerSpinner-->
+                            <!--android:id="@+id/spinner_program_manager"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="@dimen/item_height"-->
+                            <!--android:layout_marginLeft="10dp"-->
+                            <!--android:background="@drawable/spinner_selector"-->
+                            <!--android:gravity="left|center_vertical"-->
+                            <!--android:textSize="@dimen/font_14" />-->
+                    <!--</TableRow>-->
                     <!-- 节目上传 -->
 
-                    <TableRow
-                        android:id="@+id/tr_upload_program"
-                        android:layout_marginTop="10dp" 
-                        android:visibility="gone">
+                    <!--<TableRow-->
+                        <!--android:id="@+id/tr_upload_program"-->
+                        <!--android:layout_marginTop="10dp" -->
+                        <!--android:visibility="gone">-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/item_height"
-                            android:gravity="center_vertical"
-                            android:text="@string/upload_program"
-                            android:visibility="invisible" />
-						<LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_weight="1.0"
-                            android:layout_height="@dimen/item_height"
-                            android:gravity="center_vertical" >
+                        <!--<TextView-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="@dimen/item_height"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:text="@string/upload_program"-->
+                            <!--android:visibility="invisible" />-->
+						<!--<LinearLayout-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_weight="1.0"-->
+                            <!--android:layout_height="@dimen/item_height"-->
+                            <!--android:gravity="center_vertical" >-->
 
-                            <ProgressBar
-                                android:id="@+id/pb_upload_progress"
-                                style="@android:style/Widget.ProgressBar.Horizontal"
-                                android:layout_width="0dp"
-                                android:layout_height="20dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="1.0"
-                                android:max="100"
-                                android:progressDrawable="@drawable/pb_sdcard_percent" />
+                            <!--<ProgressBar-->
+                                <!--android:id="@+id/pb_upload_progress"-->
+                                <!--style="@android:style/Widget.ProgressBar.Horizontal"-->
+                                <!--android:layout_width="0dp"-->
+                                <!--android:layout_height="20dp"-->
+                                <!--android:layout_marginLeft="10dp"-->
+                                <!--android:layout_weight="1.0"-->
+                                <!--android:max="100"-->
+                                <!--android:progressDrawable="@drawable/pb_sdcard_percent" />-->
 
-                            <TextView
-                                android:id="@+id/tv_upload_progress"
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/item_height"
-                                android:gravity="center_vertical"
-                                android:singleLine="true"
-                                android:layout_marginLeft="10dp"/>
-                        </LinearLayout>
-                    </TableRow>
+                            <!--<TextView-->
+                                <!--android:id="@+id/tv_upload_progress"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="@dimen/item_height"-->
+                                <!--android:gravity="center_vertical"-->
+                                <!--android:singleLine="true"-->
+                                <!--android:layout_marginLeft="10dp"/>-->
+                        <!--</LinearLayout>-->
+                    <!--</TableRow>-->
                     <!-- 语言切换 -->
 
                     <TableRow android:layout_marginTop="10dp" >
@@ -383,18 +383,18 @@
                     />
 
 
-                <!-- 上传节目按钮 -->
+                <!--&lt;!&ndash; 上传节目按钮 &ndash;&gt;-->
 
-                <Button
-                    android:id="@+id/btn_upload_program"
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/item_height"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/btn_search_terminal_selector"
-                    android:text="@string/upload_program"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_14" />
+                <!--<Button-->
+                    <!--android:id="@+id/btn_upload_program"-->
+                    <!--style="?android:attr/buttonStyleSmall"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="@dimen/item_height"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:background="@drawable/btn_search_terminal_selector"-->
+                    <!--android:text="@string/upload_program"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="@dimen/font_14" />-->
 
                 <TextView
                     android:layout_width="match_parent"

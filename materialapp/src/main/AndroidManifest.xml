@@ -35,7 +35,7 @@
 
         <!--节目上传-->
         <activity
-            android:name="com.clt.ledmanager.app.UploadProgramAcitvity">
+            android:name="com.clt.ledmanager.app.UploadProgramActivity">
         </activity>
         <activity
             android:label="@string/app_name"

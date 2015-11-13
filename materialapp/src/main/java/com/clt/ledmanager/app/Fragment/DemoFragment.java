@@ -38,7 +38,7 @@ public class DemoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         // don't look at this layout it's just a listView to show how to handle the keyboard
-        View view = inflater.inflate(R.layout.fragment_sample, container, false);
+        View view = inflater.inflate(R.layout.fragment_upload_program, container, false);
 
         TextView textView = (TextView) view.findViewById(R.id.title);
         textView.setText(getArguments().getString(KEY_TITLE));

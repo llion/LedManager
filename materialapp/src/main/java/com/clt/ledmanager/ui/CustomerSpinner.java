@@ -120,7 +120,6 @@ public class CustomerSpinner extends Button implements OnItemClickListener,OnIte
         setText(list.get(index));
         
     }
-    
 
     public void setOnItemLongClickListener(OnItemLongClickListener listener){
         
@@ -154,9 +153,7 @@ public class CustomerSpinner extends Button implements OnItemClickListener,OnIte
 		{
 			return false;
 		}
-        
     }
-
 
 
     @Override
@@ -180,7 +177,5 @@ public class CustomerSpinner extends Button implements OnItemClickListener,OnIte
 		{
 			e.printStackTrace();
 		}
-    	
     }
-    
 }

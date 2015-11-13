@@ -9,16 +9,16 @@ import android.widget.TextView;
 
 import com.mikepenz.materialdrawer.app.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class SpinnerAdapter extends BaseAdapter
 {
     private Context context;
 
-    private ArrayList<String> list;
+    private List<String> list;
 
-    public SpinnerAdapter(Context context, ArrayList<String> arrayList)
+    public SpinnerAdapter(Context context, List<String> arrayList)
     {
         this.context = context;
         this.list = arrayList;

@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical" >
+
+
 	<com.clt.ledmanager.ui.TitleBarView
         android:id="@+id/titlebar"
         android:layout_width="fill_parent"
@@ -20,7 +22,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="1.0" >
+        android:layout_weight="1.0">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -36,7 +38,8 @@
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:text="@string/term_info"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="@color/black"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -57,20 +60,23 @@
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="@string/conn_state" />
+                        android:text="@string/conn_state"
+                        android:textColor="@color/black"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1.0"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal"
+                        android:textColor="@color/black">
 
                         <TextView
                             android:id="@+id/tv_term_name"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:textColor="@color/black"/>
 
                         <TextView
                             android:id="@+id/tv_term_ip"
@@ -78,7 +84,8 @@
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:singleLine="true"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            android:textColor="@color/black"/>
 
                         <TextView
                             android:id="@+id/tv_term_state"
@@ -95,7 +102,8 @@
                             android:layout_marginLeft="10dp"
                             android:gravity="center_vertical"
                             android:singleLine="true"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            android:textColor="@color/black"/>
                     </LinearLayout>
 
                     <Button
@@ -122,7 +130,8 @@
                         android:layout_width="100dp"
                         android:layout_height="48dp"
                         android:gravity="center_vertical"
-                        android:text="@string/sdcard_room_state" />
+                        android:text="@string/sdcard_room_state"
+                        android:textColor="@color/black"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -143,7 +152,8 @@
                             android:id="@+id/tv_sdcard_room"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:gravity="center_vertical" />
+                            android:gravity="center_vertical"
+                            android:textColor="@color/black"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -154,7 +164,8 @@
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:text="@string/version_info"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="@color/black"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -172,7 +183,8 @@
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="LedManager" />
+                        android:text="LedManager"
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:id="@+id/tv_version_ledmanager"
@@ -180,7 +192,8 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1.0"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -194,7 +207,8 @@
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="@string/version_ledServer" />
+                        android:text="@string/version_ledServer"
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:id="@+id/tv_version_ledserver"
@@ -202,7 +216,8 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1.0"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -210,13 +225,15 @@
                     android:layout_height="48dp"
                     android:background="@drawable/page_list_middle"
                     android:orientation="horizontal"
-                    android:padding="10dp" >
+                    android:padding="10dp"
+                    android:textColor="@color/black">
 
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="@string/version_colorlight" />
+                        android:text="@string/version_colorlight"
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:id="@+id/tv_version_img"
@@ -224,7 +241,8 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1.0"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -238,7 +256,8 @@
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="@string/version_sender_card" />
+                        android:text="@string/version_sender_card"
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:id="@+id/tv_version_sender"
@@ -246,7 +265,8 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1.0"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -257,7 +277,8 @@
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:text="@string/net_setting"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="@color/black"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -275,7 +296,8 @@
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="@string/net_setting" />
+                        android:text="@string/net_setting"
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:id="@+id/tv_net_setting"
@@ -283,10 +305,11 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1.0"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+   </ScrollView>
 
 </LinearLayout>

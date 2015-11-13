@@ -22,29 +22,28 @@ import com.clt.ledmanager.IService;
 import com.clt.ledmanager.activity.Application;
 import com.clt.ledmanager.activity.FragmentController;
 import com.clt.ledmanager.app.DrawerItems.CustomPrimaryDrawerItem;
-import com.clt.ledmanager.app.Fragment.ConnectRelationActivity;
+import com.clt.ledmanager.app.DrawerItems.CustomUrlPrimaryDrawerItem;
 import com.clt.ledmanager.app.Fragment.MainFragment;
-import com.clt.ledmanager.app.Fragment.ReceiverCardFragment;
+import com.clt.ledmanager.app.Fragment.ProgramManagerFragment;
 import com.clt.ledmanager.app.Fragment.SenderCardFragment;
+import com.clt.ledmanager.app.Fragment.UploadProgramFragment;
 import com.clt.ledmanager.app.Fragment.observable.TerminateObservable;
 import com.clt.ledmanager.service.BaseService;
 import com.clt.ledmanager.service.BaseServiceFactory;
 import com.clt.ledmanager.util.Const;
 import com.clt.ledmanager.util.DialogUtil;
 import com.clt.netmessage.NetMessageType;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.app.R;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Badgeable;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 public class AdvancedActivity extends AppCompatActivity {
     private static final int PROFILE_SETTING = 1;
@@ -53,22 +52,29 @@ public class AdvancedActivity extends AppCompatActivity {
     private AccountHeader headerResult = null;
     private Drawer result = null;
     private Drawer resultAppended = null;
-    private IProfile profile;
-    private IProfile profile2;
-    private IProfile profile3;
-    private IProfile profile4;
-    private IProfile profile5;
+
+
+
+//    private IProfile profile;
+//    private IProfile profile2;
+//    private IProfile profile3;
+//    private IProfile profile4;
+//    private IProfile profile5;
 
 //  Fragment切换标记
     private static final int ITEM_POSITION_HOME = 1;
     private static final int ITEM_POSITION_SEND_CARD = 2;
-    private static final int ITEM_POSITION_RECEIVE_CARD = 3;
-    private static final int ITEM_POSITION_LINKING = 4;
+//    private static final int ITEM_POSITION_RECEIVE_CARD = 3;
+//    private static final int ITEM_POSITION_LINKING = 4;
+    private static final int ITEM_POSITION_UPLOADPROGRAM=3;
+    private static final int ITEM_POSITION_PROGRAM_MANAGER=4;
 
     private static final String FRAGMENT_TAG_HOME = "home";
     private static final String FRAGMENT_TAG_SEND_CARD = "send_card";
-    private static final String FRAGMENT_TAG_RECEIVE_CARD= "receive_card";
-    private static final String FRAGMENT_TAG_LINKING = "linking";
+//    private static final String FRAGMENT_TAG_RECEIVE_CARD= "receive_card";
+//    private static final String FRAGMENT_TAG_LINKING = "linking";
+    private static final String FRAGMENT_TAG_UPLOADPROGRAM = "uploadprogram";
+    private static final String FRAGMENT_TAG_PROGRAM_MANAGER = "program_manager";
 
     private FragmentController fragmentController;
     private BroadcastReceiver receiver;
@@ -116,7 +122,6 @@ public class AdvancedActivity extends AppCompatActivity {
                 case Const.connnectFail:// 连接失败
                     Toast.makeText(AdvancedActivity.this, getResources().getString(R.string.fail_connect_to_server), Toast.LENGTH_SHORT).show();
                     break;
-
             }
             terminateObservable.dealHandlerMessage(new MessageWrapper(MessageWrapper.TYPE_SERVICE_UPDATE,msg));
         }
@@ -144,9 +149,6 @@ public class AdvancedActivity extends AppCompatActivity {
                 }
         }
     };
-
-
-
 
     @Override
     protected void onResume() {
@@ -200,11 +202,11 @@ public class AdvancedActivity extends AppCompatActivity {
         getSupportActionBar().setElevation(0);
 
         // Create a few sample profile
-        profile = new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile));
-        profile2 = new ProfileDrawerItem().withName("Max Muster").withEmail("max.mustermann@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile2)).withIdentifier(2);
-        profile3 = new ProfileDrawerItem().withName("Felix House").withEmail("felix.house@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile3));
-        profile4 = new ProfileDrawerItem().withName("Mr. X").withEmail("mister.x.super@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile4)).withIdentifier(4);
-        profile5 = new ProfileDrawerItem().withName("Batman").withEmail("batman@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile5));
+//        profile = new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile));
+//        profile2 = new ProfileDrawerItem().withName("Max Muster").withEmail("max.mustermann@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile2)).withIdentifier(2);
+//        profile3 = new ProfileDrawerItem().withName("Felix House").withEmail("felix.house@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile3));
+//        profile4 = new ProfileDrawerItem().withName("Mr. X").withEmail("mister.x.super@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile4)).withIdentifier(4);
+//        profile5 = new ProfileDrawerItem().withName("Batman").withEmail("batman@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile5));
 
         // Create the AccountHeader
         buildHeader(false, savedInstanceState);
@@ -215,10 +217,21 @@ public class AdvancedActivity extends AppCompatActivity {
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                 .addDrawerItems(
+
+//                        TODO 图片需要修改
+//                        添加home页
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(R.drawable.btn_home_selector),
-                        new CustomPrimaryDrawerItem().withName(R.string.drawer_item_send_card).withIcon(R.drawable.btn_sending_selector)
-//                        new PrimaryDrawerItem().withName(R.string.drawer_item_receive_card).withIcon(R.drawable.btn_receiving_selector),
-//                        new CustomUrlPrimaryDrawerItem().withName(R.string.drawer_item_fragment_linking).withIcon(R.drawable.btn_linking_selector)
+//                        添加sending card页
+                        new CustomPrimaryDrawerItem().withName(R.string.drawer_item_send_card).withIcon(R.drawable.btn_sending_selector),
+//                        添加节目上传
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_upload_program).withIcon(R.drawable.btn_receiving_selector),
+//                        添加节目管理
+                        new CustomUrlPrimaryDrawerItem().withName(R.string.drawer_item_program_manager).withIcon(R.drawable.btn_linking_selector),
+
+//                        添加第二模块
+                        new SectionDrawerItem().withName(R.string.drawer_item_action_settings),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_change_language).withIcon(FontAwesome.Icon.faw_cart_plus)
+
                 ) // add the items we want to use with our Drawer
                 .withOnDrawerNavigationListener(new Drawer.OnDrawerNavigationListener() {
                     @Override
@@ -249,7 +262,7 @@ public class AdvancedActivity extends AppCompatActivity {
                                     invalidateOptionsMenu();
                                     break;
 
-                                case ITEM_POSITION_RECEIVE_CARD:
+          /*                      case ITEM_POSITION_RECEIVE_CARD:
 
                                     getSupportActionBar().setTitle(R.string.drawer_item_receive_card);
                                     tag = FRAGMENT_TAG_RECEIVE_CARD;
@@ -258,8 +271,17 @@ public class AdvancedActivity extends AppCompatActivity {
 
                                     getSupportActionBar().setTitle(R.string.drawer_item_fragment_linking);
                                     tag = FRAGMENT_TAG_LINKING;
+                                    break;*/
+                                case ITEM_POSITION_UPLOADPROGRAM:
+                                    getSupportActionBar().setTitle("Upload Program");
+                                    tag = FRAGMENT_TAG_UPLOADPROGRAM;
+                                    break;
+                                case ITEM_POSITION_PROGRAM_MANAGER:
+                                    getSupportActionBar().setTitle("Program Manager");
+                                    tag = FRAGMENT_TAG_PROGRAM_MANAGER;
                                     break;
                             }
+
                             fragmentController.changeFragment(tag);
 
                             if (drawerItem instanceof Badgeable) {
@@ -282,10 +304,18 @@ public class AdvancedActivity extends AppCompatActivity {
 
 //      添加fragment
         fragmentController.add(false, FRAGMENT_TAG_SEND_CARD, R.id.fragment_container, new SenderCardFragment());
-        fragmentController.add(false,FRAGMENT_TAG_RECEIVE_CARD, R.id.fragment_container, new ReceiverCardFragment());
-        fragmentController.add(false,FRAGMENT_TAG_LINKING, R.id.fragment_container, new ConnectRelationActivity());
+
+//        fragmentController.add(false,FRAGMENT_TAG_RECEIVE_CARD, R.id.fragment_container, new ReceiverCardFragment());
+//        fragmentController.add(false,FRAGMENT_TAG_LINKING, R.id.fragment_container, new ConnectRelationActivity());
+
+//        添加UploadProgramFragment
+        fragmentController.add(false,FRAGMENT_TAG_UPLOADPROGRAM,R.id.fragment_container,new UploadProgramFragment());
+
+        fragmentController.add(false,FRAGMENT_TAG_PROGRAM_MANAGER, R.id.fragment_container, new ProgramManagerFragment());
+
         fragmentController.add(true,FRAGMENT_TAG_HOME, R.id.fragment_container, new MainFragment());
 
+//
 //        Fragment f = new MainFragment();
 //        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
 
@@ -305,7 +335,9 @@ public class AdvancedActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.header)
                 .withCompactStyle(compact)
-                .addProfiles(//增加加head的数据
+
+//                  增加header头的用户
+                /*.addProfiles(//增加加head的数据
                         profile,
                         profile2,
                         profile3,
@@ -314,8 +346,10 @@ public class AdvancedActivity extends AppCompatActivity {
                         //don't ask but google uses 14dp for the add account icon in gmail but 20dp for the normal icons (like manage account)
                         new ProfileSettingDrawerItem().withName("Add Account").withDescription("Add new GitHub Account").withIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_add).actionBarSize().paddingDp(5).colorRes(R.color.material_drawer_dark_primary_text)).withIdentifier(PROFILE_SETTING),
                         new ProfileSettingDrawerItem().withName("Manage Account").withIcon(GoogleMaterial.Icon.gmd_settings)
-                )
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                )*/
+
+//                  header头的监听
+              /*  .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
                         //sample usage of the onProfileChanged listener
@@ -333,17 +367,22 @@ public class AdvancedActivity extends AppCompatActivity {
                         //false if you have not consumed the event and it should close the drawer
                         return false;
                     }
-                })
+                })*/
+
                 .withSavedInstance(savedInstanceState)
                 .build();
     }
-
     //添加Menu菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
             return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

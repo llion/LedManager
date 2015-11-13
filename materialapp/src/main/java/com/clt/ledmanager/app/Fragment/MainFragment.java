@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -23,14 +22,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,32 +34,23 @@ import com.clt.commondata.LedTerminateInfo;
 import com.clt.commondata.SenderInfo;
 import com.clt.commondata.SenderParameters;
 import com.clt.commondata.SomeInfo;
-import com.clt.entity.Program;
 import com.clt.ledmanager.activity.Application;
 import com.clt.ledmanager.activity.BaseObserverFragment;
 import com.clt.ledmanager.adapter.ChangeLanguageListener;
 import com.clt.ledmanager.app.LedSelectActivity;
 import com.clt.ledmanager.app.ScreenShotActivity;
-import com.clt.ledmanager.app.UploadProgramAcitvity;
 import com.clt.ledmanager.service.Clock;
 import com.clt.ledmanager.ui.CustomerSpinner;
-import com.clt.ledmanager.ui.DialogFactory;
 import com.clt.ledmanager.ui.SwitchView;
 import com.clt.ledmanager.ui.SwitchView.OnSwitchChangeListener;
-import com.clt.ledmanager.upload.OnUploadListener;
-import com.clt.ledmanager.upload.UploadManager;
-import com.clt.ledmanager.upload.UploadProgram;
 import com.clt.ledmanager.util.Const;
 import com.clt.ledmanager.util.DialogUtil;
-import com.clt.ledmanager.util.FileUtil;
 import com.clt.ledmanager.util.NetUtil;
 import com.clt.ledmanager.util.SendingCardFunctionHelper;
 import com.clt.ledmanager.util.SharedPreferenceUtil;
 import com.clt.ledmanager.util.SharedPreferenceUtil.ShareKey;
 import com.clt.ledmanager.util.Tools;
-import com.clt.netmessage.NMDeleteProgramAnswer;
 import com.clt.netmessage.NMDetectSenderAnswer;
-import com.clt.netmessage.NMGetProgramsNamesAnswer;
 import com.clt.netmessage.NMGetSomeInfoAnswer;
 import com.clt.netmessage.NMSaveBrightAndColorTempAnswer;
 import com.clt.netmessage.NetMessageType;
@@ -71,7 +58,6 @@ import com.google.gson.Gson;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.app.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -140,15 +126,15 @@ public class MainFragment extends BaseObserverFragment implements
     /**
      * 视图：节目管理
      */
-    private CustomerSpinner spinnerProgramManager;// 节目切换下来菜单
+//    private CustomerSpinner spinnerProgramManager;// 节目切换下来菜单
 
     private Button btnUploadProgram;// 上传节目按钮
 
-    private TableRow trUploadProgress;// 上传进度视图容器
+//    private TableRow trUploadProgress;// 上传进度视图容器
 
-    private ProgressBar pbUploadProgress;// 上传进度条
+//    private ProgressBar pbUploadProgress;// 上传进度条
 
-    private TextView tvUploadProgress;// 上传进度文字
+//    private TextView tvUploadProgress;// 上传进度文字
 
     private Dialog deleteProgramDialog = null;// 删除节目提示框
 
@@ -243,7 +229,7 @@ public class MainFragment extends BaseObserverFragment implements
      */
     private void initView(LinearLayout layout) {
 
-        try {
+
 //           调用扫描
             Button scan = (Button) layout.findViewById(R.id.btn_scan_ap);
             scan.setOnClickListener(new OnClickListener() {
@@ -307,17 +293,16 @@ public class MainFragment extends BaseObserverFragment implements
             spinnerLanguage.setSelection(languageIndex, true);
 
 
-            /** 节目管理 **/
-            spinnerProgramManager = (CustomerSpinner) layout.findViewById(R.id.spinner_program_manager);
-            spinnerProgramManager.setText(getString(R.string.none));
+//            /** 节目管理 **/
+//            spinnerProgramManager = (CustomerSpinner) layout.findViewById(R.id.spinner_program_manager);
+//            spinnerProgramManager.setText(getString(R.string.none));
 
 //            节目上传
-            btnUploadProgram = (Button) layout.findViewById(R.id.btn_upload_program);
+//            btnUploadProgram = (Button) layout.findViewById(R.id.btn_upload_program);
 
-            trUploadProgress = (TableRow) layout.findViewById(R.id.tr_upload_program);
-            tvUploadProgress = (TextView) layout.findViewById(R.id.tv_upload_progress);
-            pbUploadProgress = (ProgressBar) trUploadProgress
-                    .findViewById(R.id.pb_upload_progress);
+//            trUploadProgress = (TableRow) layout.findViewById(R.id.tr_upload_program);
+//            tvUploadProgress = (TextView) layout.findViewById(R.id.tv_upload_progress);
+//            pbUploadProgress = (ProgressBar) trUploadProgress.findViewById(R.id.pb_upload_progress);
 
             /**
              * 屏幕截图
@@ -327,9 +312,9 @@ public class MainFragment extends BaseObserverFragment implements
 
             trTestMode = layout.findViewById(R.id.tr_test_mode);
             btnEmpTestmode = layout.findViewById(R.id.btn_emp_tesmode);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+
+
     }
 
 
@@ -514,143 +499,22 @@ public class MainFragment extends BaseObserverFragment implements
         /**
          * 节目上传监听
          */
-        btnUploadProgram.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                if (mangerNetService == null || !mangerNetService.isConnecting()) {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.fail_connect_to_server), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-//              发送请求
-                Intent intent = new Intent(getActivity(), UploadProgramAcitvity.class);
-                startActivityForResult(intent, 0);
-
-            }
-        });
-        /**
-         * 节目切换
-         */
-        spinnerProgramManager.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                if (app.programs != null && app.programs.size() >= 1) {
-                    mangerNetService.setPlayProgram(app.programs.get(position));
-                }
-            }
-
-        });
-        /**
-         * 节目详情
-         */
-        spinnerProgramManager
-                .setOnItemLongClickListener(new OnItemLongClickListener() {
-
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent,
-                                                   View view, final int position, long id) {
-
-                        deleteProgramIndex = position;
-                        final Program program = app.programs.get(position);
-                        if (program == null) {
-                            return false;
-                        }
-
-                        // Builder builder = new Builder(fragmentActivity);
-                        // builder.setTitle(getString(R.string.delete_program)
-                        // + app.programs.get(position).getFileName());
-                        // builder.setMessage(getString(R.string.path) + ":"
-                        // + app.programs.get(position).getPath());
-                        // builder.setPositiveButton(
-                        // getString(R.string.submit),
-                        // new DialogInterface.OnClickListener()
-                        // {
-                        //
-                        // @Override
-                        // public void onClick(DialogInterface dialog,
-                        // int which)
-                        // {
-                        // if (app.programs != null
-                        // && app.programs.size() >= 1)
-                        // {
-                        // mangerNetService
-                        // .deletePlayProgram(app.programs
-                        // .get(position));
-                        // }
-                        // }
-                        // });
-                        // builder.setNegativeButton(
-                        // getString(R.string.cancel),
-                        // new DialogInterface.OnClickListener()
-                        // {
-                        //
-                        // @Override
-                        // public void onClick(DialogInterface dialog,
-                        // int which)
-                        // {
-                        // if (deleteProgramDialog.isShowing())
-                        // {
-                        // deleteProgramDialog.dismiss();
-                        // }
-                        // }
-                        //
-                        // });
-                        // deleteProgramDialog = builder.create();
-                        // deleteProgramDialog.show();
-
-                        LayoutInflater inflater = LayoutInflater.from(fragmentActivity);
-                        View mView = inflater.inflate(R.layout.program_delete, null);
-                        Button btnSubmit = (Button) mView.findViewById(R.id.btn_submit);
-                        Button btnCancel = (Button) mView.findViewById(R.id.btn_cancel);
-                        TextView tvName = (TextView) mView.findViewById(R.id.tv_program_name);
-                        TextView tvSize = (TextView) mView.findViewById(R.id.tv_program_size);
-                        TextView tvPath = (TextView) mView.findViewById(R.id.tv_program_path);
-                        TextView tvFullPath = (TextView) mView.findViewById(R.id.tv_program_full_path);
-                        tvSize.setText(Tools.byte2KbOrMb(program.getSize()) + "");
-
-                        switch (program.getPathType()) {
-                            case Program.UDISK:// U盘
-                                tvPath.setText(getString(R.string.from_usb_disk));
-                                break;
-                            case Program.SDCARD:
-                                tvPath.setText(getString(R.string.from_sd_card));
-                                break;
-                        }
-                        tvName.setText(program.getFileName().substring(0, program.getFileName().lastIndexOf(".")));
-                        tvFullPath.setText(program.getPath());
-
-                        btnSubmit.setOnClickListener(new OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-
-                                if (program != null) {
-                                    mangerNetService.deletePlayProgram(program);
-                                }
-                                if (deleteProgramDialog != null) {
-                                    deleteProgramDialog.dismiss();
-                                }
-                            }
-                        });
-
-                        btnCancel.setOnClickListener(new OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-                                if (deleteProgramDialog != null) {
-                                    deleteProgramDialog.dismiss();
-                                }
-                            }
-                        });
-                        deleteProgramDialog = DialogFactory.createDialog(fragmentActivity, mView);
-                        deleteProgramDialog.show();
-                        return true;
-                    }
-                });
+//        btnUploadProgram.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//                if (mangerNetService == null || !mangerNetService.isConnecting()) {
+//                    Toast.makeText(getActivity(), getResources().getString(R.string.fail_connect_to_server), Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+////              发送请求
+//                Intent intent = new Intent(getActivity(), UploadProgramActivity.class);
+//                startActivityForResult(intent, 0);
+//
+//            }
+//        });
 
         // 语言切换
         spinnerLanguage.setOnItemClickListener(new OnItemClickListener() {
@@ -979,38 +843,38 @@ public class MainFragment extends BaseObserverFragment implements
                     }
                 }
                 break;
-                case NetMessageType.getProgramsNamesAnswer:// 获得节目信息
-                {
-                    String str = (String) netMessage.obj;
-                    Gson gsons = new Gson();
-                    NMGetProgramsNamesAnswer nmGetProgramsNamesAnswer = gsons
-                            .fromJson(str, NMGetProgramsNamesAnswer.class);
-                    app.programs = nmGetProgramsNamesAnswer.getProgramsNames();
-                    updateProgreamsView();
-                }
-                break;
-                case NetMessageType.deleteProgramAnswer:// 删除节目结果
-                {
-                    String reslut = (String) netMessage.obj;
-                    Gson mGson = new Gson();
-                    NMDeleteProgramAnswer nmDeleteProgramAnswer = mGson
-                            .fromJson(reslut, NMDeleteProgramAnswer.class);
-                    if (nmDeleteProgramAnswer.getErrorCode() == 1) {
-                        app.programs.remove(deleteProgramIndex);
-                        updateProgreamsView();
-                        Toast.makeText(
-                                fragmentActivity,
-                                getResources().getString(
-                                        R.string.delete_success), Toast.LENGTH_SHORT).show();
-
-                    } else {
-                        Toast.makeText(fragmentActivity,
-                                getResources().getString(R.string.delete_fail),
-                                Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-                break;
+//                case NetMessageType.getProgramsNamesAnswer:// 获得节目信息
+//                {
+//                    String str = (String) netMessage.obj;
+//                    Gson gsons = new Gson();
+//                    NMGetProgramsNamesAnswer nmGetProgramsNamesAnswer = gsons
+//                            .fromJson(str, NMGetProgramsNamesAnswer.class);
+//                    app.programs = nmGetProgramsNamesAnswer.getProgramsNames();
+//                    updateProgreamsView();
+//                }
+//                break;
+//                case NetMessageType.deleteProgramAnswer:// 删除节目结果
+//                {
+//                    String reslut = (String) netMessage.obj;
+//                    Gson mGson = new Gson();
+//                    NMDeleteProgramAnswer nmDeleteProgramAnswer = mGson
+//                            .fromJson(reslut, NMDeleteProgramAnswer.class);
+//                    if (nmDeleteProgramAnswer.getErrorCode() == 1) {
+//                        app.programs.remove(deleteProgramIndex);
+//                        updateProgreamsView();
+//                        Toast.makeText(
+//                                fragmentActivity,
+//                                getResources().getString(
+//                                        R.string.delete_success), Toast.LENGTH_SHORT).show();
+//
+//                    } else {
+//                        Toast.makeText(fragmentActivity,
+//                                getResources().getString(R.string.delete_fail),
+//                                Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                }
+//                break;
                 case NetMessageType.GetSomeInfoAnswer: {
                     String reslut = (String) netMessage.obj;
                     Gson mGson = new Gson();
@@ -1034,44 +898,44 @@ public class MainFragment extends BaseObserverFragment implements
     /**
      * 获取节目清单后更新
      */
-    private void updateProgreamsView() {
-        try {
-            if (app.programs != null && !app.programs.isEmpty()) {
-                int size = app.programs.size();
-                arrProgramsNames = new String[size];
-                Program program = null;
-                for (int i = 0; i < size; i++) {
-                    program = app.programs.get(i);
-                    String fileName = program.getFileName();
-                    String from = null;
-                    if (program.getPathType() == Program.SDCARD) {
-                        from = getString(R.string.from_sd_card);
-                    } else if (program.getPathType() == Program.UDISK) {
-                        from = getString(R.string.from_usb_disk);
-                    } else if (program.getPathType() == Program.INTERNAL_STORAGE) {
-                        from = getString(R.string.from_internal_storage);
-                    }
-                    arrProgramsNames[i] = getProgramName(fileName);
-                }
-                spinnerProgramManager.initView(arrProgramsNames);
-                // spinnerProgramManager.setSelection(0, true);
-                if (arrProgramsNames.length == 0) {
-                    spinnerProgramManager.setText(getString(R.string.none));
-
-                } else {
-                    spinnerProgramManager
-                            .setText(getString(R.string.please_select));
-
-                }
-
-            } else {
-                spinnerProgramManager.setText(getString(R.string.none));
-            }
-        } catch (Exception e) {
-
-        }
-
-    }
+//    private void updateProgreamsView() {
+//        try {
+//            if (app.programs != null && !app.programs.isEmpty()) {
+//                int size = app.programs.size();
+//                arrProgramsNames = new String[size];
+//                Program program = null;
+//                for (int i = 0; i < size; i++) {
+//                    program = app.programs.get(i);
+//                    String fileName = program.getFileName();
+//                    String from = null;
+//                    if (program.getPathType() == Program.SDCARD) {
+//                        from = getString(R.string.from_sd_card);
+//                    } else if (program.getPathType() == Program.UDISK) {
+//                        from = getString(R.string.from_usb_disk);
+//                    } else if (program.getPathType() == Program.INTERNAL_STORAGE) {
+//                        from = getString(R.string.from_internal_storage);
+//                    }
+//                    arrProgramsNames[i] = getProgramName(fileName);
+//                }
+//                spinnerProgramManager.initView(arrProgramsNames);
+//                // spinnerProgramManager.setSelection(0, true);
+//                if (arrProgramsNames.length == 0) {
+//                    spinnerProgramManager.setText(getString(R.string.none));
+//
+//                } else {
+//                    spinnerProgramManager
+//                            .setText(getString(R.string.please_select));
+//
+//                }
+//
+//            } else {
+//                spinnerProgramManager.setText(getString(R.string.none));
+//            }
+//        } catch (Exception e) {
+//
+//        }
+//
+////    }
 
     /**
      * 探测发送卡成功后更新UI
@@ -1174,142 +1038,144 @@ public class MainFragment extends BaseObserverFragment implements
                 handlerSelectedServer(data);
             } else if (type.equalsIgnoreCase("selectProgram")) {// 选择节目
                 handlerSelectedUploadProgram(data);
-            } else if (type.equalsIgnoreCase("uploadProgram")) {
-                UploadProgram uploadProgram = (UploadProgram) data.getSerializableExtra("ProgramInfo");
-                onUploadPic(uploadProgram);
             }
+
+//            else if (type.equalsIgnoreCase("uploadProgram")) {
+//                UploadProgram uploadProgram = (UploadProgram) data.getSerializableExtra("ProgramInfo");
+//                onUploadPic(uploadProgram);
+//            }
 
         }
     }
 
-    /**
-     * 上传节目
-     *
-     * @author Administrator
-     */
-    private class UploadAsyncTask extends AsyncTask<Object, Object, Object> {
+//    /**
+//     * 上传节目
+//     *
+//     * @author Administrator
+//     */
+//    private class UploadAsyncTask extends AsyncTask<Object, Object, Object> {
+//
+//        private UploadProgram uploadProgram;
+//
+//        private static final int PROGRESS = 1;
+//
+//        private boolean uploadSuccess;
+//
+//        private long totalSize;
+//
+//        // private long percentSize;
+//
+//        private Program program;
+//
+//        private long createTime;
+//
+//        public UploadAsyncTask(UploadProgram uploadProgram) {
+//            uploadSuccess = false;
+//            this.uploadProgram = uploadProgram;
+//            this.totalSize = uploadProgram.getTotalSize();
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            trUploadProgress.setVisibility(View.VISIBLE);
+//            pbUploadProgress.setProgress(0);
+//            tvUploadProgress.setText("0");
+//
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(Object... values) {
+//            super.onProgressUpdate(values);
+//            int flag = (Integer) values[0];
+//            if (flag == PROGRESS) {
+//                long precentSize = (Long) values[1];
+//                //long totalSize = (Long) values[2];
+//                pbUploadProgress
+//                        .setProgress((int) (precentSize * 100 / totalSize));
+//                String progressStr = Tools.byte2KbOrMb(precentSize) + "/"
+//                        + Tools.byte2KbOrMb(totalSize);
+//                tvUploadProgress.setText((int) (precentSize * 100 / totalSize)
+//                        + "%");
+//
+//
+//            }
+//
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Object result) {
+//            super.onPostExecute(result);
+//            trUploadProgress.setVisibility(View.GONE);
+//            if (uploadSuccess) {
+//                Toast.makeText(fragmentActivity,
+//                        getString(R.string.upload_sucessful), Toast.LENGTH_LONG).show();
+//
+//
+//                if (program != null) {
+//                    app.programs.add(program);
+//                    updateProgreamsView();
+//                    spinnerProgramManager.setText(getProgramName(program.getFileName()));
+//                    mangerNetService.setPlayProgram(program);
+//                }
+//
+//            } else {
+//                Toast.makeText(fragmentActivity,
+//                        getString(R.string.upload_fail), Toast.LENGTH_LONG).show();
+//
+//            }
+//        }
+//
+//        @Override
+//        protected Object doInBackground(Object... params) {
+//            UploadManager uploadManager = new UploadManager(uploadProgram);
+//            uploadSuccess = uploadManager.executeUpload(
+//                    app.ledTerminateInfo.getIpAddress(), new OnUploadListener() {
+//                        @Override
+//                        public void onUploadprogress(long percentSize,
+//                                                     long totalSize) {
+//                            publishProgress(new Object[]{PROGRESS,
+//                                    percentSize, totalSize});
+//                        }
+//                    });
+//            if (!uploadSuccess) {
+//                return null;
+//            }
+//            program = new Program();
+//            program.setFileName(uploadProgram.getVsnFileTask().getLocalFile()
+//                    .getName());
+//            program.setPath("/mnt/sdcard/Android/data/com.color.home/files/Ftp/program");
+//            program.setPathType(Program.SDCARD);
+//            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//            program.setCreateTime(format.format(createTime));
+//
+//            // /**
+//            // * 3.删除本地节目文件
+//            // */
+//            FileUtil.deleteLocalFile(uploadProgram.getVsnFileTask()
+//                    .getLocalFile());
+//            return null;
+//        }
+//    }
 
-        private UploadProgram uploadProgram;
-
-        private static final int PROGRESS = 1;
-
-        private boolean uploadSuccess;
-
-        private long totalSize;
-
-        // private long percentSize;
-
-        private Program program;
-
-        private long createTime;
-
-        public UploadAsyncTask(UploadProgram uploadProgram) {
-            uploadSuccess = false;
-            this.uploadProgram = uploadProgram;
-            this.totalSize = uploadProgram.getTotalSize();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            trUploadProgress.setVisibility(View.VISIBLE);
-            pbUploadProgress.setProgress(0);
-            tvUploadProgress.setText("0");
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Object... values) {
-            super.onProgressUpdate(values);
-            int flag = (Integer) values[0];
-            if (flag == PROGRESS) {
-                long precentSize = (Long) values[1];
-                //long totalSize = (Long) values[2];
-                pbUploadProgress
-                        .setProgress((int) (precentSize * 100 / totalSize));
-                String progressStr = Tools.byte2KbOrMb(precentSize) + "/"
-                        + Tools.byte2KbOrMb(totalSize);
-                tvUploadProgress.setText((int) (precentSize * 100 / totalSize)
-                        + "%");
-
-
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            super.onPostExecute(result);
-            trUploadProgress.setVisibility(View.GONE);
-            if (uploadSuccess) {
-                Toast.makeText(fragmentActivity,
-                        getString(R.string.upload_sucessful), Toast.LENGTH_LONG).show();
-
-
-                if (program != null) {
-                    app.programs.add(program);
-                    updateProgreamsView();
-                    spinnerProgramManager.setText(getProgramName(program.getFileName()));
-                    mangerNetService.setPlayProgram(program);
-                }
-
-            } else {
-                Toast.makeText(fragmentActivity,
-                        getString(R.string.upload_fail), Toast.LENGTH_LONG).show();
-
-            }
-        }
-
-        @Override
-        protected Object doInBackground(Object... params) {
-            UploadManager uploadManager = new UploadManager(uploadProgram);
-            uploadSuccess = uploadManager.executeUpload(
-                    app.ledTerminateInfo.getIpAddress(), new OnUploadListener() {
-                        @Override
-                        public void onUploadprogress(long percentSize,
-                                                     long totalSize) {
-                            publishProgress(new Object[]{PROGRESS,
-                                    percentSize, totalSize});
-                        }
-                    });
-            if (!uploadSuccess) {
-                return null;
-            }
-            program = new Program();
-            program.setFileName(uploadProgram.getVsnFileTask().getLocalFile()
-                    .getName());
-            program.setPath("/mnt/sdcard/Android/data/com.color.home/files/Ftp/program");
-            program.setPathType(Program.SDCARD);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            program.setCreateTime(format.format(createTime));
-
-            // /**
-            // * 3.删除本地节目文件
-            // */
-            FileUtil.deleteLocalFile(uploadProgram.getVsnFileTask()
-                    .getLocalFile());
-            return null;
-        }
-    }
-
-    /**
-     * 上传节目
-     */
-    public void onUploadPic(UploadProgram uploadProgram) {
-        if (mangerNetService == null || !mangerNetService.isConnecting()) {
-            Toast.makeText(fragmentActivity,
-                    getResources().getString(R.string.fail_connect_to_server),
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (uploadProgram == null) {
-            Toast.makeText(fragmentActivity,
-                    getString(R.string.upload_fail), Toast.LENGTH_LONG).show();
-            return;
-        }
-        UploadAsyncTask task = new UploadAsyncTask(uploadProgram);
-        task.execute();
-    }
+//    /**
+//     * 上传节目
+//     */
+//    public void onUploadPic(UploadProgram uploadProgram) {
+//        if (mangerNetService == null || !mangerNetService.isConnecting()) {
+//            Toast.makeText(fragmentActivity,
+//                    getResources().getString(R.string.fail_connect_to_server),
+//                    Toast.LENGTH_LONG).show();
+//            return;
+//        }
+//        if (uploadProgram == null) {
+//            Toast.makeText(fragmentActivity,
+//                    getString(R.string.upload_fail), Toast.LENGTH_LONG).show();
+//            return;
+//        }
+//        UploadAsyncTask task = new UploadAsyncTask(uploadProgram);
+//        task.execute();
+//    }
 
     @Override
     public void OnChangeLanager() {

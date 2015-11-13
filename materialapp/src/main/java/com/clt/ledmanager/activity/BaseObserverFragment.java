@@ -23,7 +23,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * Activity基类
+ * BaseObserverFragment基类
  *
  */
 public abstract class BaseObserverFragment extends Fragment implements Observer {
