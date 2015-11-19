@@ -30,7 +30,7 @@
     <string name="drawer_item_fragment_linking">Linking</string>
     <string name="drawer_item_fragment_drawer_desc">Use drawer within fragments</string>
 
-    <string name="drawer_item_home">Home</string>
+    <string name="drawer_item_home">Terminals control</string>
     <string name="drawer_item_send_card">Sending Card</string>
     <string name="drawer_item_receive_card">Receiving Card</string>
     <string name="drawer_item_section_header">Section Header</string>
@@ -43,13 +43,15 @@
     <string name="drawer_item_upload_program">Upload Program</string>
     <string name="drawer_item_program_manager">Program Manager</string>
     <string name="drawer_item_action_settings">Settings</string>
-    <string name="drawer_item_change_language">Language</string>
+    <string name="drawer_item_change_language">Language Switcher</string>
 
 
     <string name="hello_world">Hello world!</string>
     <string name="search_no_result">Do Not Find Terminal</string>
     <string name="back">Back</string>
     <string name="second">Second</string>
+
+
     <!-- 底部菜单 -->
     <string name="home_page">HomePage</string>
     <string name="sender_card">Sender Card</string>

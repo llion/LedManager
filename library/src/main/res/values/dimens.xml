@@ -60,4 +60,12 @@
 
     <!-- Definition for the section item -->
     <dimen name="material_drawer_item_section_text">14sp</dimen>
+
+
+    <!--标配dp-->
+    <dimen name="dp_0">0px</dimen>
+    <dimen name="dp_1">1px</dimen>
+    <dimen name="dp_2">2px</dimen>
+
+
 </resources>

@@ -97,6 +97,7 @@ public class CustomerSpinner extends Button implements OnItemClickListener,OnIte
      * @param resArrId 数组资源id
      */
     public void initView(int resArrId){
+
         String [] testModes = getResources().getStringArray(resArrId);
         ArrayList<String> testModesList = new ArrayList<String>(
                 Arrays.asList(testModes));

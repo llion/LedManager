@@ -18,6 +18,10 @@ public class SpinnerAdapter extends BaseAdapter
 
     private List<String> list;
 
+    public void setData(List<String> list){
+        this.list = list;
+    }
+
     public SpinnerAdapter(Context context, List<String> arrayList)
     {
         this.context = context;

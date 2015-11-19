@@ -82,20 +82,14 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 	{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		try
-		{
+
 			Application.getInstance().setSystemLanguage();
 			setContentView(R.layout.file_view);
 			init();
 			initView();
 			initListener();
 			initData();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
+
 	}
 	
 	private void init()
@@ -182,6 +176,7 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 				
 			}
 		});
+
 		/**
 		 * 提交
 		 */
@@ -194,6 +189,7 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 				if(mSelectedFilesMaps.isEmpty()){
 					return;
 				}
+
 				ArrayList<FileSortModel> list=new ArrayList<>();
 				Set<Entry<String, FileSortModel>> set = mSelectedFilesMaps.entrySet();
 				for (Entry<String, FileSortModel> entry : set)
@@ -208,6 +204,7 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 				finish();
 			}
 		});
+
 		/**
 		 * listview点击
 		 */
@@ -217,9 +214,11 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
+
 				String filePath = dataList.get(position).getFilePath();
 				String fileName = dataList.get(position).getFileName();
 				File file = new File(filePath);
+
 //				int fileType=-1;
 //				if(isFileImage(file)){
 //					fileType=Const.PICTURE;
@@ -357,31 +356,16 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 		
 		public GetFileAsyncTask(String selectedPath)
 		{
-			try
-			{
 				this.selectedPath = selectedPath;
 				filesLists = new ArrayList<FileSortModel>();
 				dirLists = new ArrayList<FileSortModel>();
-			}
-			catch (Exception e)
-			{
-			}
-			
 		}
 		
 		@Override
 		protected void onPreExecute()
 		{
-			try
-			{
 				super.onPreExecute();
 				dataList.clear();
-			}
-			catch (Exception e)
-			{
-				
-			}
-			
 		}
 		
 		@Override
@@ -395,8 +379,8 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
 			}
-			
 		}
 		
 		@Override
@@ -410,7 +394,6 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 				Collections.sort(filesLists, pinyinComparator);
 				dataList.addAll(dirLists);
 				dataList.addAll(filesLists);
-
 
 			return null;
 		}
@@ -459,7 +442,6 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 								continue;
 							}
 							
-							
 						}
 						else
 						{
@@ -493,8 +475,8 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
 			}
-			
 		}
 	}
 
@@ -525,7 +507,4 @@ public class FilesViewActivity extends com.clt.ledmanager.activity.BaseActivity 
 			tvSelectedFiles.setText(String.format(s,mSelectedFilesMaps.size()));
 		}
 	}
-	
-	
-	
 }

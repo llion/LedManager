@@ -23,10 +23,12 @@ import com.clt.ledmanager.activity.Application;
 import com.clt.ledmanager.activity.FragmentController;
 import com.clt.ledmanager.app.DrawerItems.CustomPrimaryDrawerItem;
 import com.clt.ledmanager.app.DrawerItems.CustomUrlPrimaryDrawerItem;
-import com.clt.ledmanager.app.Fragment.MainFragment;
-import com.clt.ledmanager.app.Fragment.ProgramManagerFragment;
+import com.clt.ledmanager.app.Fragment.EditProgramFragment;
+import com.clt.ledmanager.app.Fragment.LanguageFragment;
 import com.clt.ledmanager.app.Fragment.SenderCardFragment;
-import com.clt.ledmanager.app.Fragment.UploadProgramFragment;
+import com.clt.ledmanager.app.Fragment.TerminalControlFragment;
+import com.clt.ledmanager.app.Fragment.TerminalListFragment;
+import com.clt.ledmanager.app.Fragment.TerminalProgramFragment;
 import com.clt.ledmanager.app.Fragment.observable.TerminateObservable;
 import com.clt.ledmanager.service.BaseService;
 import com.clt.ledmanager.service.BaseServiceFactory;
@@ -40,7 +42,6 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.app.R;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Badgeable;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -62,19 +63,23 @@ public class AdvancedActivity extends AppCompatActivity {
 //    private IProfile profile5;
 
 //  Fragment切换标记
-    private static final int ITEM_POSITION_HOME = 1;
-    private static final int ITEM_POSITION_SEND_CARD = 2;
-//    private static final int ITEM_POSITION_RECEIVE_CARD = 3;
-//    private static final int ITEM_POSITION_LINKING = 4;
-    private static final int ITEM_POSITION_UPLOADPROGRAM=3;
-    private static final int ITEM_POSITION_PROGRAM_MANAGER=4;
+    private static final int ITEM_POSITION_TERMINAL_LIST = 2;
+    private static final int ITEM_POSITION_TERMINAL_CONTROL = 4;
+    private static final int ITEM_POSITION_SEND_CARD=5;
+    private static final int ITEM_POSITION_TERMINAL_PROGRAM=6;
+    private static final int ITEM_POSITION_EDIT_PROGRAM=8;
+    private static final int ITEM_POSITION_LANGUAGE=10;
 
-    private static final String FRAGMENT_TAG_HOME = "home";
+
+
+    private static final String FRAGMENT_TAG_TERMINAL_LIST ="terminal_list";
+    private static final String FRAGMENT_TAG_TERMINAL_CONTROL ="terminal_control";
     private static final String FRAGMENT_TAG_SEND_CARD = "send_card";
-//    private static final String FRAGMENT_TAG_RECEIVE_CARD= "receive_card";
-//    private static final String FRAGMENT_TAG_LINKING = "linking";
-    private static final String FRAGMENT_TAG_UPLOADPROGRAM = "uploadprogram";
-    private static final String FRAGMENT_TAG_PROGRAM_MANAGER = "program_manager";
+    private static final String FRAGMENT_TAG_TERMINAL_PROGRAM = "terminal_program";
+    private static final String FRAGMENT_TAG_EDIT_PROGRAM = "edit_program";
+    private static final String FRAGMENT_TAG_LANGUAGE ="language";
+
+
 
     private FragmentController fragmentController;
     private BroadcastReceiver receiver;
@@ -195,6 +200,11 @@ public class AdvancedActivity extends AppCompatActivity {
         Intent _intent1 = new Intent(this, BaseServiceFactory.getBaseService());
         bindService(_intent1, mangerNetServiceConnection, Context.BIND_AUTO_CREATE);
 
+        if (mangerNetService != null) {
+            Intent intent = new Intent(this, LedSelectActivity.class);
+            startActivityForResult(intent, 0);
+        }
+
         // Handle Toolbar
         Toolbar  toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -218,21 +228,30 @@ public class AdvancedActivity extends AppCompatActivity {
                 .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                 .addDrawerItems(
 
+                        new SectionDrawerItem().withName("Terminals"),
+                        new PrimaryDrawerItem().withName("终端列表").withIcon(R.drawable.btn_receiving_selector),
 //                        TODO 图片需要修改
 //                        添加home页
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(R.drawable.btn_home_selector),
+                        new SectionDrawerItem().withName("Terminals Functions"),
+                        new PrimaryDrawerItem().withName("终端控制").withIcon(R.drawable.btn_home_selector),
+
 //                        添加sending card页
-                        new CustomPrimaryDrawerItem().withName(R.string.drawer_item_send_card).withIcon(R.drawable.btn_sending_selector),
+                        new CustomPrimaryDrawerItem().withName("发送卡").withIcon(R.drawable.btn_sending_selector),
 //                        添加节目上传
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_upload_program).withIcon(R.drawable.btn_receiving_selector),
+                        new PrimaryDrawerItem().withName("终端节目").withIcon(R.drawable.btn_receiving_selector),
+
 //                        添加节目管理
-                        new CustomUrlPrimaryDrawerItem().withName(R.string.drawer_item_program_manager).withIcon(R.drawable.btn_linking_selector),
+                        new SectionDrawerItem().withName("Local Programs"),
+                        new CustomUrlPrimaryDrawerItem().withName("编辑节目").withIcon(R.drawable.btn_linking_selector),
 
 //                        添加第二模块
                         new SectionDrawerItem().withName(R.string.drawer_item_action_settings),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_change_language).withIcon(FontAwesome.Icon.faw_cart_plus)
+//                        new SecondaryDrawerItem().withName("语言选择").withIcon(FontAwesome.Icon.faw_cart_plus)
+                        new PrimaryDrawerItem().withName("语言选择").withIcon(FontAwesome.Icon.faw_cart_plus)
 
-                ) // add the items we want to use with our Drawer
+                )
+
+                 // add the items we want to use with our Drawer
                 .withOnDrawerNavigationListener(new Drawer.OnDrawerNavigationListener() {
                     @Override
                     public boolean onNavigationClickListener(View clickedView) {
@@ -248,37 +267,34 @@ public class AdvancedActivity extends AppCompatActivity {
                         if (drawerItem != null) {
                             String tag = null;
                             switch (position) {
-                                case ITEM_POSITION_HOME:
-
-                                    getSupportActionBar().setTitle(R.string.drawer_item_home);
-
-                                    tag = FRAGMENT_TAG_HOME;
+                                case ITEM_POSITION_TERMINAL_LIST:
+                                    getSupportActionBar().setTitle("终端列表");
+                                    tag = FRAGMENT_TAG_TERMINAL_LIST;
                                     break;
+
+                                case ITEM_POSITION_TERMINAL_CONTROL:
+                                    getSupportActionBar().setTitle("终端控制");
+                                    tag = FRAGMENT_TAG_TERMINAL_CONTROL;
+                                    break;
+
                                 case ITEM_POSITION_SEND_CARD:
-
-                                    getSupportActionBar().setTitle(R.string.drawer_item_send_card);
-
+                                    getSupportActionBar().setTitle("发送卡");
                                     tag = FRAGMENT_TAG_SEND_CARD;
-                                    invalidateOptionsMenu();
                                     break;
 
-          /*                      case ITEM_POSITION_RECEIVE_CARD:
-
-                                    getSupportActionBar().setTitle(R.string.drawer_item_receive_card);
-                                    tag = FRAGMENT_TAG_RECEIVE_CARD;
+                                case ITEM_POSITION_TERMINAL_PROGRAM:
+                                    getSupportActionBar().setTitle("终端节目");
+                                    tag = FRAGMENT_TAG_TERMINAL_PROGRAM;
                                     break;
-                                case ITEM_POSITION_LINKING:
 
-                                    getSupportActionBar().setTitle(R.string.drawer_item_fragment_linking);
-                                    tag = FRAGMENT_TAG_LINKING;
-                                    break;*/
-                                case ITEM_POSITION_UPLOADPROGRAM:
-                                    getSupportActionBar().setTitle("Upload Program");
-                                    tag = FRAGMENT_TAG_UPLOADPROGRAM;
+                                case ITEM_POSITION_EDIT_PROGRAM:
+                                    getSupportActionBar().setTitle("编辑节目");
+                                    tag = FRAGMENT_TAG_EDIT_PROGRAM;
                                     break;
-                                case ITEM_POSITION_PROGRAM_MANAGER:
-                                    getSupportActionBar().setTitle("Program Manager");
-                                    tag = FRAGMENT_TAG_PROGRAM_MANAGER;
+
+                                case ITEM_POSITION_LANGUAGE:
+                                    getSupportActionBar().setTitle("语言选择");
+                                    tag = FRAGMENT_TAG_LANGUAGE;
                                     break;
                             }
 
@@ -302,18 +318,16 @@ public class AdvancedActivity extends AppCompatActivity {
                 })
                 .build();
 
+
 //      添加fragment
+        fragmentController.add(false, FRAGMENT_TAG_TERMINAL_CONTROL, R.id.fragment_container, new TerminalControlFragment());
         fragmentController.add(false, FRAGMENT_TAG_SEND_CARD, R.id.fragment_container, new SenderCardFragment());
+        fragmentController.add(false,FRAGMENT_TAG_TERMINAL_PROGRAM,R.id.fragment_container,new TerminalProgramFragment());
+        fragmentController.add(false,FRAGMENT_TAG_EDIT_PROGRAM, R.id.fragment_container, new EditProgramFragment());
+        fragmentController.add(false,FRAGMENT_TAG_LANGUAGE,R.id.fragment_container,new LanguageFragment());
+        fragmentController.add(true, FRAGMENT_TAG_TERMINAL_LIST, R.id.fragment_container, new TerminalListFragment());
 
-//        fragmentController.add(false,FRAGMENT_TAG_RECEIVE_CARD, R.id.fragment_container, new ReceiverCardFragment());
-//        fragmentController.add(false,FRAGMENT_TAG_LINKING, R.id.fragment_container, new ConnectRelationActivity());
 
-//        添加UploadProgramFragment
-        fragmentController.add(false,FRAGMENT_TAG_UPLOADPROGRAM,R.id.fragment_container,new UploadProgramFragment());
-
-        fragmentController.add(false,FRAGMENT_TAG_PROGRAM_MANAGER, R.id.fragment_container, new ProgramManagerFragment());
-
-        fragmentController.add(true,FRAGMENT_TAG_HOME, R.id.fragment_container, new MainFragment());
 
 //
 //        Fragment f = new MainFragment();
@@ -372,6 +386,8 @@ public class AdvancedActivity extends AppCompatActivity {
                 .withSavedInstance(savedInstanceState)
                 .build();
     }
+
+
     //添加Menu菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -385,6 +401,8 @@ public class AdvancedActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+//    溢出菜单的监听
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection

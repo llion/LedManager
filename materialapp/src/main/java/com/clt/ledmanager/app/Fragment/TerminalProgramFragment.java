@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,65 +32,79 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProgramManagerFragment extends BaseObserverFragment {
+
+public class TerminalProgramFragment extends BaseObserverFragment  {
 
     private LinearLayout view;
     private ListView listView;
 
     private int deleteProgramIndex;
     private Dialog deleteProgramDialog;
-    private String[] arrProgramsNames;
     private List<String> list;
     private SpinnerAdapter spinnerAdapter;
+    private View mView;
+    private TextView tvSize;
+
+    private static final boolean DBG = true;
+    private static final String TAG = "ProgramManagerFragment";
+
+
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();
         updateProgreamsView();
+        initListener();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Replace LinearLayout by the type of the root element of the layout you're trying to load
+
         view = (LinearLayout) inflater.inflate(R.layout.fragment_program_manager, container, false);
         listView = (ListView) view.findViewById(R.id.program_manager_list_view);
-        /**
-         * 节目切换
-         */
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+        return view;
+    }
+
+    public void initListener(){
+
+        updateProgreamsView();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (Application.getInstance().programs != null && Application.getInstance().programs.size() >= 1) {
                     mangerNetService.setPlayProgram(Application.getInstance().programs.get(position));
+
+                    if (DBG){
+                        Log.d(TAG,"programs = " + Application.getInstance().programs);
+                    }
                 }
             }
 
         });
-
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 deleteProgramIndex = position;
-                final Program program = Application.getInstance().programs.get(position);
-                if (program == null) {
+                if (Application.getInstance().programs.get(position) == null) {
                     return false;
                 }
 
                 LayoutInflater inflater = LayoutInflater.from(fragmentActivity);
-                View mView = inflater.inflate(R.layout.program_delete, null);
+                mView = inflater.inflate(R.layout.program_delete, null);
                 Button btnSubmit = (Button) mView.findViewById(R.id.btn_submit);
                 Button btnCancel = (Button) mView.findViewById(R.id.btn_cancel);
                 TextView tvName = (TextView) mView.findViewById(R.id.tv_program_name);
-                TextView tvSize = (TextView) mView.findViewById(R.id.tv_program_size);
+                tvSize = (TextView) mView.findViewById(R.id.tv_program_size);
                 TextView tvPath = (TextView) mView.findViewById(R.id.tv_program_path);
                 TextView tvFullPath = (TextView) mView.findViewById(R.id.tv_program_full_path);
-                tvSize.setText(Tools.byte2KbOrMb(program.getSize()) + "");
+                tvSize.setText(Tools.byte2KbOrMb(Application.getInstance().programs.get(position).getSize()) + "");
 
-                switch (program.getPathType()) {
+                switch (Application.getInstance().programs.get(position).getPathType()) {
                     case Program.UDISK:// U盘
                         tvPath.setText(getString(R.string.from_usb_disk));
                         break;
@@ -97,16 +112,19 @@ public class ProgramManagerFragment extends BaseObserverFragment {
                         tvPath.setText(getString(R.string.from_sd_card));
                         break;
                 }
-                tvName.setText(program.getFileName().substring(0, program.getFileName().lastIndexOf(".")));
-                tvFullPath.setText(program.getPath());
+                tvName.setText(Application.getInstance().programs.get(position).getFileName().substring(0, Application.getInstance().programs.get(position).getFileName().lastIndexOf(".")));
+                tvFullPath.setText(Application.getInstance().programs.get(position).getPath());
 
                 btnSubmit.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
 
-                        if (program != null) {
-                            mangerNetService.deletePlayProgram(program);
+                        if (Application.getInstance().programs.get(position) != null) {
+                            mangerNetService.deletePlayProgram(Application.getInstance().programs.get(position));
+//                            更新数据
+                            updateProgreamsView();
+
                         }
                         if (deleteProgramDialog != null) {
                             deleteProgramDialog.dismiss();
@@ -123,25 +141,28 @@ public class ProgramManagerFragment extends BaseObserverFragment {
                         }
                     }
                 });
+
                 deleteProgramDialog = DialogFactory.createDialog(fragmentActivity, mView);
                 deleteProgramDialog.show();
                 return true;
             }
         });
-        return view;
     }
-
     /**
      * 获取节目清单后更新
      */
     private void updateProgreamsView() {
+
         if (Application.getInstance().programs != null && !Application.getInstance().programs.isEmpty()) {
             int size = Application.getInstance().programs.size();
             list = new ArrayList<>();
             Program program = null;
             for (int i = 0; i < size; i++) {
+
                 program = Application.getInstance().programs.get(i);
+
                 String fileName = program.getFileName();
+
                 String from = null;
                 if (program.getPathType() == Program.SDCARD) {
                     from = getString(R.string.from_sd_card);
@@ -150,13 +171,17 @@ public class ProgramManagerFragment extends BaseObserverFragment {
                 } else if (program.getPathType() == Program.INTERNAL_STORAGE) {
                     from = getString(R.string.from_internal_storage);
                 }
+
                 list.add(getProgramName(fileName));
+
             }
             if (spinnerAdapter == null) {
                 spinnerAdapter = new SpinnerAdapter(getActivity(), list);
-                listView.setAdapter(new SpinnerAdapter(getActivity(), list));
+                listView.setAdapter(spinnerAdapter);
             } else {
+                spinnerAdapter.setData(list);
                 spinnerAdapter.notifyDataSetChanged();
+
             }
         } else {
             if (list != null && spinnerAdapter != null) {
@@ -164,11 +189,6 @@ public class ProgramManagerFragment extends BaseObserverFragment {
                 spinnerAdapter.notifyDataSetChanged();
             }
         }
-    }
-
-    private void init() {
-
-
     }
 
     @Override
@@ -180,39 +200,40 @@ public class ProgramManagerFragment extends BaseObserverFragment {
     @Override
     protected void dealHandlerMessage(Message netMessage) {
         switch (netMessage.what) {
+
             case NetMessageType.getProgramsNamesAnswer:// 获得节目信息
             {
                 String str = (String) netMessage.obj;
                 Gson gsons = new Gson();
                 NMGetProgramsNamesAnswer nmGetProgramsNamesAnswer = gsons.fromJson(str, NMGetProgramsNamesAnswer.class);
                 Application.getInstance().programs = nmGetProgramsNamesAnswer.getProgramsNames();
+
                 updateProgreamsView();
+
             }
             break;
+
             case NetMessageType.deleteProgramAnswer:// 删除节目结果
             {
                 String reslut = (String) netMessage.obj;
                 Gson mGson = new Gson();
-                NMDeleteProgramAnswer nmDeleteProgramAnswer = mGson
-                        .fromJson(reslut, NMDeleteProgramAnswer.class);
+                NMDeleteProgramAnswer nmDeleteProgramAnswer = mGson.fromJson(reslut, NMDeleteProgramAnswer.class);
                 if (nmDeleteProgramAnswer.getErrorCode() == 1) {
                     Application.getInstance().programs.remove(deleteProgramIndex);
+
                     updateProgreamsView();
-                    Toast.makeText(
-                            fragmentActivity,
-                            getResources().getString(
-                                    R.string.delete_success), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(fragmentActivity, getResources().getString(R.string.delete_success), Toast.LENGTH_SHORT).show();
 
                 } else {
                     Toast.makeText(fragmentActivity, getResources().getString(R.string.delete_fail), Toast.LENGTH_SHORT).show();
                 }
             }
             break;
+
             case NetMessageType.MSG_WHAT_PROGRAM_UPDATE:
+
                 updateProgreamsView();
                 break;
-
-
         }
     }
 
@@ -230,6 +251,4 @@ public class ProgramManagerFragment extends BaseObserverFragment {
         }
         return null;
     }
-
-
 }

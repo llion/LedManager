@@ -17,6 +17,8 @@
     <uses-permission android:name="com.android.email.permission.READ_ATTACHMENT" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name="com.clt.ledmanager.app.CustomApplication"
         android:icon="@drawable/ic_launcher"

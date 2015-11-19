@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/fragment_uploadprogram">
 	
     <!-- button -->
 
@@ -13,7 +14,7 @@
         android:layout_height="@dimen/item_height"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_creat_upload"

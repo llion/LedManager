@@ -75,7 +75,7 @@ public class UploadProgram implements Serializable
 	 * @return
 	 */
 	public boolean deleteVsnFile(){
-		File file=null;
+		File file= null;
 		if(vsnFileTask!=null){
 			file=vsnFileTask.getLocalFile();
 			if(file.exists()){

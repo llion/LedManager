@@ -2,6 +2,7 @@ package com.clt.ledmanager.app.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,11 +12,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,10 +37,12 @@ import android.widget.Toast;
 
 import com.clt.entity.Program;
 import com.clt.ledmanager.activity.Application;
+import com.clt.ledmanager.activity.FragmentController;
 import com.clt.ledmanager.adapter.ExpandableListAdapter;
 import com.clt.ledmanager.app.AdvancedActivity;
 import com.clt.ledmanager.app.FilesViewActivity;
 import com.clt.ledmanager.entity.FileSortModel;
+import com.clt.ledmanager.ui.SelectFilePopupWindow;
 import com.clt.ledmanager.ui.TitleBarView;
 import com.clt.ledmanager.upload.OnUploadListener;
 import com.clt.ledmanager.upload.PropertyCommon;
@@ -65,7 +71,7 @@ import java.util.ArrayList;
 /**
  * 上传节目
  */
-public class UploadProgramFragment extends Fragment {
+public class EditProgramFragment extends Fragment {
 
     // 字体
     public static final String[] fontFamily = {"宋体", "黑体", "楷体", "隶书", "仿宋"};
@@ -80,8 +86,16 @@ public class UploadProgramFragment extends Fragment {
             Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA
 
     };
+    private static final boolean DBG = true;
+    private static final String TAG = "UploadProgramFragment";
 
-    private ArrayList<ExpandableListAdapter.ProgramItem> mSelectFiles = new ArrayList<>();
+//    private ArrayList<ExpandableListAdapter.ProgramItem> mSelectFiles = new ArrayList<ExpandableListAdapter.ProgramItem>();
+
+    private FragmentController fragmentController;
+    private static final String FRAGMENT_TAG_HOME = "home";
+
+    public ArrayList<Program> programs;
+
 
     /**
      * UI控件
@@ -97,7 +111,7 @@ public class UploadProgramFragment extends Fragment {
     private EditText etStartX, etStartY, etWidth, etHeight;
 
 
-    // 添加上传节目的ListView和数据Adapter
+
     private ExpandableListView elvItemList;
     private ExpandableListAdapter adapter;
 
@@ -140,6 +154,8 @@ public class UploadProgramFragment extends Fragment {
     private TextView tvUploadProgress;
     private ProgressBar pbUploadProgress;
 
+    private SelectFilePopupWindow selectFilePopupWindow;
+
     public void toast(String msg, int time)
     {
         Toast.makeText(getActivity(), msg, time).show();
@@ -178,6 +194,8 @@ public class UploadProgramFragment extends Fragment {
 //		初始化的添加文件的全部数据
         mFileItemList = new ArrayList<>();
         currentSelectedIndex = -1;
+
+        fragmentController = new FragmentController(getActivity());
 
     }
 
@@ -310,6 +328,7 @@ public class UploadProgramFragment extends Fragment {
         /**
          * 可扩展列表,ListViewItem的监听
          */
+
         elvItemList.setOnItemClickListener(new OnItemClickListener() {
             //			设置可扩展的列表监听
             @Override
@@ -332,9 +351,35 @@ public class UploadProgramFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-//				??参数
-                skipToFileSelectAcitivty(0);
+
+                //实例化SelectPicPopupWindow
+                selectFilePopupWindow = new SelectFilePopupWindow(getActivity(), itemsOnClick);
+
+                //显示窗口及PopupWindow显示位置
+                selectFilePopupWindow.showAtLocation(getActivity().findViewById(R.id.fragment_uploadprogram),
+                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
             }
+
+            //为弹出窗口实现监听类
+            private OnClickListener itemsOnClick = new OnClickListener() {
+
+                public void onClick(View v) {
+
+                    selectFilePopupWindow.dismiss();
+                    switch (v.getId()) {
+                        case R.id.btn_pick_album:
+                            getImageFromAlbum();
+                            break;
+                        case R.id.btn_pick_other:
+                            skipToFileSelectAcitivty(0);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            };
+
         });
 
         /**
@@ -348,18 +393,18 @@ public class UploadProgramFragment extends Fragment {
                     return;
                 }
                 if (mFileItemList == null || mFileItemList.size() == 0) {
+
+                    Toast.makeText(getActivity(), "亲,没有添加节目哦", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 UploadProgram uploadProgram = createUploadProgram();
                 if (uploadProgram != null) {
-//                    Intent intent = new Intent();
-//                    intent.putExtra("type", "uploadProgram");
-//                    intent.putExtra("ProgramInfo", uploadProgram);
-//
-//
-//                    getActivity().setResult(Activity.RESULT_OK, intent);//添加了 getActivity()
-//                    getActivity().finish();// 添加了getActivity()
                     onUploadPic(uploadProgram);
+
+//                    跳转页面和情况
+                    mFileItemList.clear();
+                    adapter.updateView(mFileItemList);
+                    etProgramName.setText("");
 
                 } else {
                     Toast.makeText(getActivity(), "构建节目失败", Toast.LENGTH_SHORT);
@@ -369,13 +414,26 @@ public class UploadProgramFragment extends Fragment {
     }
 
     /**
-     * 上传节目
+     * 连接本地相册
      */
+
+    private static final int RESULT_LOAD_IMAGE =1001;
+
+    protected void getImageFromAlbum() {
+
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/video");
+        startActivityForResult(intent, RESULT_LOAD_IMAGE);
+    }
+
+        /**
+         * 上传节目
+         *
+         */
     public void onUploadPic(UploadProgram uploadProgram) {
+
         if (Application.getInstance().mangerNetService == null || !Application.getInstance().mangerNetService.isConnecting()) {
-            Toast.makeText(getActivity(),
-                    getResources().getString(R.string.fail_connect_to_server),
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.fail_connect_to_server), Toast.LENGTH_LONG).show();
             return;
         }
         if (uploadProgram == null) {
@@ -388,7 +446,7 @@ public class UploadProgramFragment extends Fragment {
 
 
     /**
-     * 上传节目
+     * 异步加载节目
      *
      * @author Administrator
      */
@@ -430,16 +488,11 @@ public class UploadProgramFragment extends Fragment {
             if (flag == PROGRESS) {
                 long precentSize = (Long) values[1];
                 //long totalSize = (Long) values[2];
-                pbUploadProgress
-                        .setProgress((int) (precentSize * 100 / totalSize));
-                String progressStr = Tools.byte2KbOrMb(precentSize) + "/"
-                        + Tools.byte2KbOrMb(totalSize);
-                tvUploadProgress.setText((int) (precentSize * 100 / totalSize)
-                        + "%");
-
+                pbUploadProgress.setProgress((int) (precentSize * 100 / totalSize));
+                String progressStr = Tools.byte2KbOrMb(precentSize) + "/" + Tools.byte2KbOrMb(totalSize);
+                tvUploadProgress.setText((int) (precentSize * 100 / totalSize) + "%");
 
             }
-
         }
 
         @Override
@@ -451,32 +504,33 @@ public class UploadProgramFragment extends Fragment {
                 if (program != null) {
                     Application.getInstance().programs.add(program);
                     Application.getInstance().mangerNetService.setPlayProgram(program);
+
                     Message msg = new Message();
                     msg.what = NetMessageType.MSG_WHAT_PROGRAM_UPDATE;
                     AdvancedActivity.MessageWrapper messageWrapper = new AdvancedActivity.MessageWrapper(AdvancedActivity.MessageWrapper.TYPE_SERVICE_UPDATE, msg);
                     Application.getInstance().terminateObservable.dealHandlerMessage(messageWrapper);
+
                 }
             } else {
                 Toast.makeText(getActivity(), getString(R.string.upload_fail), Toast.LENGTH_LONG).show();
             }
         }
 
+//        上传图片的核心逻辑
         @Override
         protected Object doInBackground(Object... params) {
             UploadManager uploadManager = new UploadManager(uploadProgram);
             uploadSuccess = uploadManager.executeUpload(
                     Application.getInstance().ledTerminateInfo.getIpAddress(), new OnUploadListener() {
                         @Override
-                        public void onUploadprogress(long percentSize, long totalSize) {
-                            publishProgress(new Object[]{PROGRESS, percentSize, totalSize});
+                        public void onUploadprogress(long percentSize, long totalSize) {publishProgress(new Object[]{PROGRESS, percentSize, totalSize});
                         }
                     });
             if (!uploadSuccess) {
                 return null;
             }
             program = new Program();
-            program.setFileName(uploadProgram.getVsnFileTask().getLocalFile()
-                    .getName());
+            program.setFileName(uploadProgram.getVsnFileTask().getLocalFile().getName());
             program.setPath("/mnt/sdcard/Android/data/com.color.home/files/Ftp/program");
             program.setPathType(Program.SDCARD);
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -485,6 +539,7 @@ public class UploadProgramFragment extends Fragment {
             // /**
             // * 3.删除本地节目文件
             // */
+
             FileUtil.deleteLocalFile(uploadProgram.getVsnFileTask().getLocalFile());
             return null;
         }
@@ -538,10 +593,8 @@ public class UploadProgramFragment extends Fragment {
 
             switch (programItem.fileType) {
                 case Const.PICTURE: {
-                    ((PropertyPicture) p).pictureName = new File(
-                            programItem.filePath).getName();
-                    ((PropertyPicture) p).fsFilePath = "./" + this.programName
-                            + ".files/" + ((PropertyPicture) p).pictureName;
+                    ((PropertyPicture) p).pictureName = new File(programItem.filePath).getName();
+                    ((PropertyPicture) p).fsFilePath = "./" + this.programName + ".files/" + ((PropertyPicture) p).pictureName;
                     p.materialName = ((PropertyPicture) p).pictureName;
                 }
                 break;
@@ -560,12 +613,14 @@ public class UploadProgramFragment extends Fragment {
             }
         }
         UploadProgram uploadProgram = new UploadProgram();
+
         // 创建vsn文件
         VsnFileFactory factory = new VsnFileFactoryImpl();
         String vsnPath = "/mnt/sdcard/" + this.programName + ".vsn";
 
         ArrayList<PropertyItem> ptlist = new ArrayList<PropertyItem>();
-        for (int i = 0; i < mFileItemList.size(); i++) {
+
+        {for (int i = 0; i < mFileItemList.size(); i++)
             ptlist.add(mFileItemList.get(i).property);
         }
 
@@ -603,7 +658,7 @@ public class UploadProgramFragment extends Fragment {
 
 
         mFileItemList = new ArrayList<>();
-        mFileItemList.addAll(programItems);
+        mFileItemList.addAll(programItems);//把选好的节目都添加到mFileItemList
 
 
         adapter.updateView(mFileItemList);
@@ -617,45 +672,84 @@ public class UploadProgramFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        try {
-            if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
-                // 一个或多个
-                ArrayList<FileSortModel> list = (ArrayList<FileSortModel>) data.getSerializableExtra("selectedFiles");
-                ExpandableListAdapter.ProgramItem pt = null;
-                FileSortModel fsm = null;
-                for (int i = 0; i < list.size(); i++) {
-                    pt = new ExpandableListAdapter.ProgramItem();
-                    fsm = list.get(i);
-                    pt.fileName = fsm.getFileName();
-                    pt.filePath = fsm.getFilePath();
-                    pt.fileType = fsm.getFileType();
-                    switch (pt.fileType) {
-                        case Const.PICTURE:
-                            pt.property = new PropertyPicture();
-                            break;
 
-                        case Const.VIDEO:
-                            pt.property = new PropertyVedio();
-                            break;
-                        case Const.TXT:
-                            pt.property = new PropertyMultiLineText();
-                            break;
-                    }
-                    mSelectFiles.add(pt);
-                }
-                onSelectProgramItems(mSelectFiles);
-
+            if(resultCode != Activity.RESULT_OK){
+                return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+                if (requestCode == 0) {
+                    // 一个或多个
+                    ArrayList<FileSortModel> list = (ArrayList<FileSortModel>) data.getSerializableExtra("selectedFiles");
+                    ExpandableListAdapter.ProgramItem proItem = null;
+
+                    for (int i = 0; i < list.size(); i++) {
+                        proItem = new ExpandableListAdapter.ProgramItem();
+                        FileSortModel fsm = list.get(i);
+                        proItem.fileName = fsm.getFileName();
+                        proItem.filePath = fsm.getFilePath();
+                        proItem.fileType = fsm.getFileType();
+                        switch (proItem.fileType) {
+                            case Const.PICTURE:
+                                proItem.property = new PropertyPicture();
+                                break;
+
+                            case Const.VIDEO:
+                                proItem.property = new PropertyVedio();
+                                break;
+
+                            case Const.TXT:
+                                proItem.property = new PropertyMultiLineText();
+                                break;
+                        }
+                        mFileItemList.add(proItem);
+                    }
+                    onSelectProgramItems(mFileItemList);
+
+                }else if (requestCode == RESULT_LOAD_IMAGE ){
+
+                    ExpandableListAdapter.ProgramItem proItem = new ExpandableListAdapter.ProgramItem();
+
+                    if (DBG) {
+                        Log.d(TAG, "getData = " +data.getData());
+                    }
+
+                        Uri selectedFile = data.getData();
+                        String [] filePathColumn = { MediaStore.Images.Media.DATA };
+                        Cursor cursor = getActivity().getContentResolver().query(selectedFile, filePathColumn, null, null, null);
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        String filePath = cursor.getString(columnIndex);
+                        cursor.close();
+
+                        if (DBG) {
+                         Log.d(TAG, "picturePath = " + filePath);
+                        }
+
+//                    图片/视频属性设置
+                        File file = new File(filePath);
+                        proItem.fileName = file.getName();
+                        proItem.filePath = filePath;
+
+                    if(file.getName().endsWith(".jpg") || file.getName().endsWith(".png")){
+
+                        proItem.fileType = Const.PICTURE;
+                        proItem.property = new PropertyPicture();
+
+                    }else if(file.getName().endsWith(".3gp") || file.getName().endsWith(".mp4")
+                            || file.getName().endsWith(".rm") || file.getName().endsWith(".avi")
+                            || file.getName().endsWith(".rmvb") || file.getName().endsWith(".wmv")) {
+
+                        proItem.fileType = Const.VIDEO;
+                        proItem.property = new PropertyVedio();
+                    }
+                        mFileItemList.add(proItem);
+                        onSelectProgramItems(mFileItemList);
+                    }
+            }
 
     /**
      * 异步获取文件的属性
      */
-    private class AsyncGetFilePropertyTask extends
-            AsyncTask<Object, Object, Object> {
+    private class AsyncGetFilePropertyTask extends AsyncTask<Object, Object, Object> {
         private boolean isFinish;
 
         private ArrayList<ExpandableListAdapter.ProgramItem> selectFiles;
@@ -695,12 +789,10 @@ public class UploadProgramFragment extends Fragment {
             pt = selectFiles.get(i);
             switch (pt.fileType) {
                 case Const.PICTURE:
-                    getImageProperty((PropertyPicture) pt.property,
-                            pt.filePath);
+                    getImageProperty((PropertyPicture) pt.property, pt.filePath);
                     break;
                 case Const.VIDEO:
-                    getVedioProperty((PropertyVedio) pt.property,
-                            pt.filePath);
+                    getVedioProperty((PropertyVedio) pt.property, pt.filePath);
                     break;
             }
         }
@@ -712,6 +804,7 @@ public class UploadProgramFragment extends Fragment {
             p.pictureWidth = String.valueOf(bf.getWidth());
             p.pictureHeight = String.valueOf(bf.getHeight());
         } catch (Exception e) {
+            e.printStackTrace();
             return;
         }
     }
@@ -792,7 +885,8 @@ public class UploadProgramFragment extends Fragment {
      * 跳转到选择文件的页面
      */
     public void skipToFileSelectAcitivty(int fileType) {
-        Intent intent = new Intent(getActivity(), FilesViewActivity.class);//修改了getActivity()
+        Intent intent = new
+                Intent(getActivity(), FilesViewActivity.class);//修改了getActivity()
         intent.putExtra("fileType", fileType);
         startActivityForResult(intent, 0);//修改了getActivity()
     }
@@ -840,8 +934,26 @@ public class UploadProgramFragment extends Fragment {
             toast(getResString(R.string.please_input_program_name), Toast.LENGTH_SHORT);
             etProgramName.requestFocus();
             return false;
-        }
 
+        }else{
+
+            if (Application.getInstance().programs == null){
+                    return false;
+
+            }/*else {
+                int size = Application.getInstance().programs.size();
+                Program program = null;
+                for (int i = 0; i < size; i++){
+                    program = Application.getInstance().programs.get(i);
+                    if (program.getFileName().equals(etProgramName.getText().toString().trim())){
+
+                        etProgramName.setText("");
+                        Toast.makeText(getActivity(), "亲,您输入的节目名称,已经存在了哦,需要重新输入哦", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                }
+            }*/
+        }
         return true;
 
     }

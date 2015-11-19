@@ -7,7 +7,17 @@
     android:paddingEnd="@dimen/material_drawer_vertical_padding"
     android:paddingLeft="@dimen/material_drawer_vertical_padding"
     android:paddingRight="@dimen/material_drawer_vertical_padding"
-    android:paddingStart="@dimen/material_drawer_vertical_padding">
+    android:paddingStart="@dimen/material_drawer_vertical_padding"
+    android:dividerHeight="@dimen/dp_2"
+    >
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/material_drawer_divider"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="2dp"-->
+        <!--android:background="@color/md_grey_500" />-->
+
 
     <ImageView
         android:id="@+id/material_drawer_icon"
@@ -77,4 +87,5 @@
             android:textSize="@dimen/material_drawer_item_primary_text"
             tools:text="99" />
     </LinearLayout>
+
 </LinearLayout>

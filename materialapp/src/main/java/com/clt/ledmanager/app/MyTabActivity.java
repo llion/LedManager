@@ -14,7 +14,7 @@ import com.clt.ledmanager.activity.Application;
 import com.clt.ledmanager.adapter.OnTabActivityResultListener;
 import com.clt.ledmanager.adapter.UploadPicListener;
 import com.clt.ledmanager.app.Fragment.ConnectRelationActivity;
-import com.clt.ledmanager.app.Fragment.MainFragment;
+import com.clt.ledmanager.app.Fragment.TerminalControlFragment;
 import com.clt.ledmanager.app.Fragment.ReceiverCardFragment;
 import com.clt.ledmanager.app.Fragment.SenderCardFragment;
 import com.clt.ledmanager.upload.UploadProgram;
@@ -57,7 +57,7 @@ public class MyTabActivity extends TabActivity
         group=(RadioGroup) findViewById(R.id.rg_bottom_menu);
         tabHost=getTabHost();
         this.tabHost.addTab(this.tabHost.newTabSpec(TAB1)
-                .setIndicator(TAB1).setContent(new Intent(this, MainFragment.class)));
+                .setIndicator(TAB1).setContent(new Intent(this, TerminalControlFragment.class)));
         this.tabHost.addTab(this.tabHost.newTabSpec(TAB2)
                 .setIndicator(TAB2).setContent(new Intent(this, SenderCardFragment.class)));
         this.tabHost.addTab(this.tabHost.newTabSpec(TAB3)

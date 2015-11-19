@@ -9,7 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.clt.ledmanager.app.Fragment.DrawerFragment;
-import com.clt.ledmanager.app.Fragment.MainFragment;
+import com.clt.ledmanager.app.Fragment.TerminalControlFragment;
 import com.clt.ledmanager.app.Fragment.SecondDrawerFragment;
 import com.mikepenz.materialdrawer.app.R;
 
@@ -46,7 +46,7 @@ public class FragmentActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_1:
 //                Fragment f = new MainFragment.newInstance("Demo");
-                Fragment f = new MainFragment();
+                Fragment f = new TerminalControlFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 return true;
             case R.id.menu_2:

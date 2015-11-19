@@ -9,6 +9,7 @@
     android:paddingRight="@dimen/material_drawer_vertical_padding"
     android:paddingStart="@dimen/material_drawer_vertical_padding">
 
+
     <ImageView
         android:id="@+id/material_drawer_icon"
         android:layout_width="@dimen/material_drawer_item_secondary_icon"
