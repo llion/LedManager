@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.clt.ledmanager.debug.DemoActivity"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+        android:id="@+id/pop_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        >
+
+        <!--本地相册中提取文件-->
+        <Button
+            android:id="@+id/btn_pick_album"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"
+            android:layout_marginTop="15dip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="相册文件"
+            android:background="@color/gray"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            />
+
+        <!--其它文件中提取文件-->
+        <Button
+            android:id="@+id/btn_pick_other"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"
+            android:layout_marginTop="15dip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="其它文件"
+            android:background="@color/gray"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            />
+
+        <!--取消提取文件-->
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"
+            android:layout_marginTop="15dip"
+            android:layout_marginBottom="15dip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="取消"
+            android:background="@color/gray"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+</RelativeLayout>
