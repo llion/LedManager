@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -20,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,6 +90,9 @@ public class TerminalListFragment extends BaseObserverFragment {
 
     private AsyncFindByTCP asyncFindByTCP;
 
+    private AnimationDrawable tmAnimationDrawable;
+    private ImageView imageView;
+
 
     //	private Handler nmHandler = new Handler()
 //	{
@@ -135,7 +140,6 @@ public class TerminalListFragment extends BaseObserverFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         fragmentView = inflater.inflate(R.layout.led_select, container, false);
-
         setHasOptionsMenu(true);
         return fragmentView;
     }
@@ -202,6 +206,53 @@ public class TerminalListFragment extends BaseObserverFragment {
      * 初始化参数
      */
     private void init() {
+
+//        查找终端图片轮播效果
+//        imageView = (ImageView)fragmentView.findViewById(R.id.terminal_seek);
+//
+//        tmAnimationDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.terminal_seacher);
+//        imageView.setBackgroundDrawable(tmAnimationDrawable);
+//
+//        tmAnimationDrawable.start();
+//
+//
+//        int duration = 0;//动画时间 调去每帧的时间 累加起来得到总的动画时间
+//        for (int i = 0; i < tmAnimationDrawable .getNumberOfFrames(); i++) {
+//            duration += tmAnimationDrawable .getDuration(i);
+//        }
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                tmAnimationDrawable .stop();
+//                tmAnimationDrawable =null; //这句话为解决内存溢出的关键，开始没有添加
+//                imageView.setVisibility(View.INVISIBLE);
+//            }
+//        }, duration+2000);
+
+
+
+
+
+
+
+
+
+
+//        tmAnimationDrawable.getDuration(3);//停留的时间
+
+
+//        new Handler() {
+//            public void handleMessage(android.os.Message msg) {
+//                if (msg.what == 1) {
+//
+//                    //干掉图像
+//                    imageView.setVisibility(View.INVISIBLE);
+//                }
+//            };
+//        }.sendEmptyMessageDelayed(1, 3000);//三秒
+
+
+
 
         if(ledList == null) {
 

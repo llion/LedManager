@@ -8,6 +8,8 @@
     android:orientation="vertical"
     >
 
+
+
     <!--<com.clt.ledmanager.ui.TitleBarView-->
         <!--android:id="@+id/titlebar"-->
         <!--android:layout_width="fill_parent"-->
@@ -99,6 +101,13 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:visibility="gone" />
+
+        <!--<ImageView-->
+            <!--android:id="@+id/terminal_seek"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="630dp"-->
+            <!--android:background="#5CACEE"/>-->
+
     </FrameLayout>
 
 </LinearLayout>

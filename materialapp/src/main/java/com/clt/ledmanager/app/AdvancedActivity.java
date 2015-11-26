@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.clt.ledmanager.IService;
@@ -82,6 +84,9 @@ public class AdvancedActivity extends BaseObservableActivity {
     private static final String TAG = "AdvancedActivity";
 
     private IService mangerNetService;// 通信服务
+
+    private AnimationDrawable tmAnimationDrawable;
+    private ImageView imageView;
 
     public static class MessageWrapper {
 
@@ -182,6 +187,33 @@ public class AdvancedActivity extends BaseObservableActivity {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_sample);
         setContentView(R.layout.activity_sample_fragment_dark_toolbar);
+
+
+
+//        查找终端图片轮播效果
+        imageView = (ImageView)findViewById(R.id.terminal_seek);
+
+        tmAnimationDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.terminal_seacher);
+        imageView.setBackgroundDrawable(tmAnimationDrawable);
+
+        tmAnimationDrawable.start();
+
+//      动画时间 调去每帧的时间 累加起来得到总的动画时间
+        int duration = 0;
+        for (int i = 0; i < tmAnimationDrawable .getNumberOfFrames(); i++) {
+            duration += tmAnimationDrawable .getDuration(i);
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tmAnimationDrawable .stop();
+                tmAnimationDrawable =null;
+                imageView.setVisibility(View.INVISIBLE);
+            }
+        }, duration+2500);
+
+
+
         fragmentController = new FragmentController(this);
 
 //      全局主题者
