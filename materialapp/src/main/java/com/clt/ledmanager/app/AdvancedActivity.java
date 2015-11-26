@@ -192,7 +192,7 @@ public class AdvancedActivity extends BaseObservableActivity {
 
 //        查找终端图片轮播效果
         imageView = (ImageView)findViewById(R.id.terminal_seek);
-
+        imageView.bringToFront();
         tmAnimationDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.terminal_seacher);
         imageView.setBackgroundDrawable(tmAnimationDrawable);
 
@@ -206,12 +206,11 @@ public class AdvancedActivity extends BaseObservableActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                tmAnimationDrawable .stop();
-                tmAnimationDrawable =null;
+                tmAnimationDrawable.stop();
+                tmAnimationDrawable = null;
                 imageView.setVisibility(View.INVISIBLE);
             }
-        }, duration+2500);
-
+        }, duration+3000);
 
 
         fragmentController = new FragmentController(this);

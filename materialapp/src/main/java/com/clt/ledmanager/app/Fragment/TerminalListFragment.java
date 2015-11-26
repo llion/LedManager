@@ -1,10 +1,12 @@
 package com.clt.ledmanager.app.Fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -152,7 +154,6 @@ public class TerminalListFragment extends BaseObserverFragment {
     }
 
     private static final int RESULT_SCANN =3001;
-//    private static final int RESULT_OPERATION =3002;
 
     public boolean onOptionsItemSelected(MenuItem item){
 
@@ -164,26 +165,11 @@ public class TerminalListFragment extends BaseObserverFragment {
                 startActivityForResult(upload_program,RESULT_SCANN) ;
                 break;
 
-//            case R.id.menu_operation:
-//
-//                Intent save_program = new Intent(getActivity(),SaveProgramFragment.class);
-//                startActivityForResult(save_program,RESULT_OPERATION) ;
-//                break;
-
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
-
-
-
-
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -197,6 +183,19 @@ public class TerminalListFragment extends BaseObserverFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+        if (requestCode == RESULT_SCANN) {
+            Uri terminalInfo = data.getData();
+            Toast.makeText(getActivity(), "亲亲,等待我们下一个版本哦,信息暂时为:" + terminalInfo, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
     protected void dealHandlerMessage(Message msg) {
         handleMessage(msg);
     }
@@ -206,53 +205,6 @@ public class TerminalListFragment extends BaseObserverFragment {
      * 初始化参数
      */
     private void init() {
-
-//        查找终端图片轮播效果
-//        imageView = (ImageView)fragmentView.findViewById(R.id.terminal_seek);
-//
-//        tmAnimationDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.terminal_seacher);
-//        imageView.setBackgroundDrawable(tmAnimationDrawable);
-//
-//        tmAnimationDrawable.start();
-//
-//
-//        int duration = 0;//动画时间 调去每帧的时间 累加起来得到总的动画时间
-//        for (int i = 0; i < tmAnimationDrawable .getNumberOfFrames(); i++) {
-//            duration += tmAnimationDrawable .getDuration(i);
-//        }
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                tmAnimationDrawable .stop();
-//                tmAnimationDrawable =null; //这句话为解决内存溢出的关键，开始没有添加
-//                imageView.setVisibility(View.INVISIBLE);
-//            }
-//        }, duration+2000);
-
-
-
-
-
-
-
-
-
-
-//        tmAnimationDrawable.getDuration(3);//停留的时间
-
-
-//        new Handler() {
-//            public void handleMessage(android.os.Message msg) {
-//                if (msg.what == 1) {
-//
-//                    //干掉图像
-//                    imageView.setVisibility(View.INVISIBLE);
-//                }
-//            };
-//        }.sendEmptyMessageDelayed(1, 3000);//三秒
-
-
-
 
         if(ledList == null) {
 
@@ -268,7 +220,7 @@ public class TerminalListFragment extends BaseObserverFragment {
             tvSearchNoResult = (TextView) fragmentView.findViewById(R.id.tv_search_no_result);
             // progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
             progressBar = new DialogProgressBar(getActivity(), getString(R.string.search_server));
-            progressBar.show();
+//            progressBar.show();
 
             listView = (ListView) fragmentView.findViewById(R.id.lv_ledinfos);
             adapter = new LedSelectAdapter(getActivity(), ledList);
@@ -319,7 +271,6 @@ public class TerminalListFragment extends BaseObserverFragment {
             }
         });
 
-
         //查找客户端
         btnFindTerminal.setOnClickListener(new OnClickListener() {
 
@@ -347,8 +298,6 @@ public class TerminalListFragment extends BaseObserverFragment {
                     return;
                 }
 
-
-//                输入密码
                 LayoutInflater password_inflater = LayoutInflater.from(getActivity());
                 final View password_view = password_inflater.inflate(R.layout.password, null);
 
@@ -414,7 +363,6 @@ public class TerminalListFragment extends BaseObserverFragment {
             } else {
                 holder.ivSelected.setImageResource(R.color.transparent);
             }
-
         }
     }
 
@@ -451,7 +399,7 @@ public class TerminalListFragment extends BaseObserverFragment {
             return;
         }
         adapter.clearData();
-        progressBar.show();
+//        progressBar.show();
         switch (findType) {
             case Type.UDP_Broadcast: {
 
