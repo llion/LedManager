@@ -1,29 +1,28 @@
 package com.clt.ledmanager.app.Fragment;
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +36,6 @@ import com.clt.ledmanager.app.SelectListActivity;
 import com.clt.ledmanager.app.TerminalScannActivity;
 import com.clt.ledmanager.service.TCPFindTerminal;
 import com.clt.ledmanager.service.TCPFindTerminal.OnCallBack;
-import com.clt.ledmanager.ui.CustomerSpinner;
 import com.clt.ledmanager.ui.DialogProgressBar;
 import com.clt.ledmanager.util.Const;
 import com.clt.ledmanager.util.NetUtil;
@@ -78,7 +76,7 @@ public class TerminalListFragment extends BaseObserverFragment {
     //进度条
     private DialogProgressBar progressBar;
 
-    private CustomerSpinner spinnerFindType;// 查找方式
+    //private CustomerSpinner spinnerFindType;// 查找方式
 
     // private String terminateAddress;// 已经选中的终端ip
     //对话框
@@ -86,15 +84,15 @@ public class TerminalListFragment extends BaseObserverFragment {
 
     private Application app;
     //查找终端按钮
-    private Button btnFindTerminal;
+    //private Button btnFindTerminal;
 
     private int findType = Type.UDP_Broadcast;
 
     private AsyncFindByTCP asyncFindByTCP;
+    private AsyncFindByTCPTwo asyncFindByTCPTwo;
 
-    private AnimationDrawable tmAnimationDrawable;
-    private ImageView imageView;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
+    public static final boolean DBG = false;
 
     //	private Handler nmHandler = new Handler()
 //	{
@@ -114,6 +112,11 @@ public class TerminalListFragment extends BaseObserverFragment {
                     // {
                     // progressBar.setVisibility(View.GONE);
                     // }
+                    if (DBG) {
+                        Log.i("TerminalListFragment02", "handleMessage");
+                        Log.i("handleMessage00", "handleMessage(Message msg)");
+                    }
+
                     if (progressBar != null) {
                         progressBar.dismiss();
                     }
@@ -123,6 +126,9 @@ public class TerminalListFragment extends BaseObserverFragment {
                     if (ledList.isEmpty()) {
                         listView.setVisibility(View.GONE);
                         tvSearchNoResult.setVisibility(View.VISIBLE);
+                        if (DBG) {
+                            Log.i("handleMessage00", "handleMessage(Message msg)");
+                        }
                         if (progressBar != null) {
                             progressBar.dismiss();
                         }
@@ -141,12 +147,12 @@ public class TerminalListFragment extends BaseObserverFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        fragmentView = inflater.inflate(R.layout.led_select, container, false);
         setHasOptionsMenu(true);
+        fragmentView = inflater.inflate(R.layout.led_select, container, false);
         return fragmentView;
     }
 
-//    添加溢出菜单
+    //    添加溢出菜单
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         menu.clear();
@@ -174,7 +180,10 @@ public class TerminalListFragment extends BaseObserverFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        app = (Application)getActivity().getApplication();
+        if (DBG) {
+            Log.i("TerminalListFragment02", "-------------------------onActivityCreated()-----------------------------");
+        }
+        app = (Application) getActivity().getApplication();
         app.setSystemLanguage();
         init();
         initView();
@@ -197,6 +206,9 @@ public class TerminalListFragment extends BaseObserverFragment {
 
     @Override
     protected void dealHandlerMessage(Message msg) {
+        if (DBG) {
+            Log.i("handleMessage00", "dealHandlerMessage(Message msg)");
+        }
         handleMessage(msg);
     }
 
@@ -205,9 +217,11 @@ public class TerminalListFragment extends BaseObserverFragment {
      * 初始化参数
      */
     private void init() {
+        if (DBG) {
+            Log.i("TerminalListFragment02", "-------------------------init()-----------------------------");
+        }
 
-        if(ledList == null) {
-
+        if (ledList == null) {
             ledList = new ArrayList<>();
         }
     }
@@ -216,11 +230,22 @@ public class TerminalListFragment extends BaseObserverFragment {
      * 初始化控件
      */
     private void initView() {
+
+        if (DBG) {
+            Log.i("TerminalListFragment02", "-------------------------initView()-----------------------------");
+        }
         try {
             tvSearchNoResult = (TextView) fragmentView.findViewById(R.id.tv_search_no_result);
             // progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
             progressBar = new DialogProgressBar(getActivity(), getString(R.string.search_server));
-//            progressBar.show();
+            progressBar.show();
+
+            swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.swipeRefreshLayout);
+
+            swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_green_dark, android.R.color.holo_green_light,
+                    android.R.color.holo_orange_light, android.R.color.holo_red_light);
+            swipeRefreshLayout.setHorizontalFadingEdgeEnabled(true);
+            swipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.holo_blue_dark);
 
             listView = (ListView) fragmentView.findViewById(R.id.lv_ledinfos);
             adapter = new LedSelectAdapter(getActivity(), ledList);
@@ -230,15 +255,19 @@ public class TerminalListFragment extends BaseObserverFragment {
             if (app.ledTerminateInfo != null) {
                 terminateAddress = app.ledTerminateInfo.getIpAddress();
             }
+            if (DBG) {
+                Log.i("TerminalListFragment02", "---------------------initView() ----------------------terminateAddress-------------" + terminateAddress);
+
+            }
             adapter.setIpAddress(terminateAddress);
             listView.setAdapter(adapter);
 
 
-            spinnerFindType = (CustomerSpinner) fragmentView.findViewById(R.id.spinner_search_type);
+            /*spinnerFindType = (CustomerSpinner) fragmentView.findViewById(R.id.spinner_search_type);
             spinnerFindType.initView(R.array.find_term_type);
-            spinnerFindType.setSelection(0, true);
+            spinnerFindType.setSelection(0, true);*/
 
-            btnFindTerminal = (Button) fragmentView.findViewById(R.id.btn_search_terminal);
+            //btnFindTerminal = (Button) fragmentView.findViewById(R.id.btn_search_terminal);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -249,47 +278,25 @@ public class TerminalListFragment extends BaseObserverFragment {
      * 初始化监听器
      */
     private void initListener() {
-        //标题
-        btnFindTerminal.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findTerminal();
-            }
-        });
 
-        //查找方式
-        spinnerFindType.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                if (position == 0) {
-                    findType = Type.UDP_Broadcast;
-                } else {
-                    findType = Type.TCP_Poll;
-                }
-            }
-        });
-
-        //查找客户端
-        btnFindTerminal.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                findTerminal();
-            }
-        });
-
+        if (DBG) {
+            Log.i("TerminalListFragment02", "-------------------------initListener()-----------------------------");
+        }
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0,final View arg1, final int position, long arg3) {
+            public void onItemClick(AdapterView<?> arg0, final View arg1, final int position, long arg3) {
                 // 查看密码是否已经输入过
                 final String ip = adapter.getItem(position).getIpAddress();
                 Application.Terminate terminate = app.getIp2TerminateMap().get(ip);
 
                 final Intent intent = new Intent(getActivity(), SelectListActivity.class);
+
                 String desc = ledList.get(position).getStrName() + "(" + ledList.get(position).getIpAddress() + ")";
                 intent.putExtra("data",desc);
+
+                if (DBG) {
+                    Log.i("initListener", "-------------------------listView.setOnItemClickListener()-----------------------------");
+                }
                 if (terminate.isHasEnteredPass()) {
                     updateImageViewSelector(arg1);
                     adapter.setIpAddress(ip);
@@ -301,10 +308,10 @@ public class TerminalListFragment extends BaseObserverFragment {
                 LayoutInflater password_inflater = LayoutInflater.from(getActivity());
                 final View password_view = password_inflater.inflate(R.layout.password, null);
 
-               dialog =new AlertDialog.Builder(getActivity()).setTitle("亲亲,要输入密码哦")
-                       .setIcon(android.R.drawable.btn_star)
-                       .setView(password_view)
-                       .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                dialog =new AlertDialog.Builder(getActivity()).setTitle("亲亲,要有密码哦")
+                        .setIcon(android.R.drawable.btn_star)
+                        .setView(password_view)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 //                                终端的设定密码和目前密码
@@ -338,8 +345,8 @@ public class TerminalListFragment extends BaseObserverFragment {
                                     new EditText(getActivity()).setSelection(0);
                                 }
                             }
-                       })
-                       .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -349,9 +356,17 @@ public class TerminalListFragment extends BaseObserverFragment {
                                 }
                             }
                         }).show();
-
             }
         });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listView.setVisibility(View.INVISIBLE);
+                findTerminalTwo();
+            }
+        });
+
     }
 
     private void updateImageViewSelector(View arg1) {
@@ -363,6 +378,7 @@ public class TerminalListFragment extends BaseObserverFragment {
             } else {
                 holder.ivSelected.setImageResource(R.color.transparent);
             }
+
         }
     }
 
@@ -372,12 +388,59 @@ public class TerminalListFragment extends BaseObserverFragment {
      * @param
      */
     private void handlerSelectedServer(LedTerminateInfo ledTerminateInfo) {
+
+        if (DBG) {
+            Log.i("handleMessage00", "handlerSelectedServer(LedTerminateInfo ledTerminateInfo)");
+        }
         app.ledTerminateInfo = ledTerminateInfo;
         if (app.ledTerminateInfo != null) {
             if (mangerNetService != null) {
                 mangerNetService.onSeverAddressChanged(app.ledTerminateInfo.getIpAddress());
             }
         }
+    }
+
+    /**
+     * 下拉刷新 查找服务端
+     */
+    private void findTerminalTwo() {
+
+        if (mangerNetService == null) {
+            return;
+        }
+
+        if (DBG) {
+            Log.i("TerminalListFragment02", "findTerminalTwo()" + "-----------------------------");
+        }
+        // 网络没连接
+        if (!NetUtil.isConnnected(getActivity())) {
+            toast(getResString(R.string.network_not_connected), 1000);
+            /*if (progressBar != null) {
+                progressBar.dismiss();
+            }*/
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+            return;
+        }
+        adapter.clearData();
+//        progressBar.show();
+        /*switch (findType) {
+            case Type.UDP_Broadcast: {
+                Log.i("TerminalListFragment02", "findTerminalTwo()" + "------------Type.UDP_Broadcast-----------------");
+                findTerinalsByUdp();
+            }
+
+            break;
+
+            case Type.TCP_Poll: {
+                Log.i("TerminalListFragment02", "findTerminalTwo()" + "------------Type.TCP_Poll-----------------");
+                findTerminalsByTcpTwo();
+            }
+
+            break;
+        }*/
+        findTerminalsByTcpTwo();
     }
 
 
@@ -399,7 +462,7 @@ public class TerminalListFragment extends BaseObserverFragment {
             return;
         }
         adapter.clearData();
-//        progressBar.show();
+        progressBar.show();
         switch (findType) {
             case Type.UDP_Broadcast: {
 
@@ -417,9 +480,25 @@ public class TerminalListFragment extends BaseObserverFragment {
     }
 
     /**
+     * 下拉刷新  TCP方式查找服务端
+     */
+    private void findTerminalsByTcpTwo() {
+        if (DBG) {
+            Log.i("TerminalListFragment02", "--------下拉刷新  TCP方式查找服务端-------------findTerminalsByTcpTwo()-------------");
+        }
+        asyncFindByTCPTwo = new AsyncFindByTCPTwo();
+        asyncFindByTCPTwo.execute();
+    }
+
+
+    /**
      * TCP方式查找服务端
      */
     private void findTerminalsByTcp() {
+
+        if (DBG) {
+            Log.i("AsyncFindByTCP", "------------111111111111111111111111111-------------findTerminalsByTcp()----------");
+        }
         asyncFindByTCP = new AsyncFindByTCP();
         asyncFindByTCP.execute();
     }
@@ -428,7 +507,122 @@ public class TerminalListFragment extends BaseObserverFragment {
      * UDP方式查找服务端
      */
     private void findTerinalsByUdp() {
+        if (DBG) {
+            Log.i("AsyncFindByTCP", "------------111111111111111111111111111-------------findTerinalsByUdp()----------");
+        }
         mangerNetService.searchTerminate();
+    }
+
+
+    /**
+     * 下拉刷新   TCP轮询查找
+     */
+    class AsyncFindByTCPTwo extends AsyncTask<Object, Object, Object> {
+
+        private static final int Update_ProgressBar = 1;
+
+        private static final int Update_FindTerm = 2;
+
+        private static final int Update_Done = 3;
+
+        private TCPFindTerminal tcpFindTerminal;
+
+        private ArrayList<LedTerminateInfo> mLedlists;
+
+        public AsyncFindByTCPTwo() {
+            tcpFindTerminal = new TCPFindTerminal(getActivity(), 9043);
+            mLedlists = new ArrayList<>();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Object... values) {
+            super.onProgressUpdate(values);
+            int type = (Integer) (values[0]);
+            switch (type) {
+                case Update_ProgressBar: {
+                }
+                break;
+
+                case Update_FindTerm: {
+                    adapter.updateView(mLedlists);
+                    /*if (progressBar != null) {
+                    progressBar.dismiss();
+                }*/
+
+                if (swipeRefreshLayout != null) {
+
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                    listView.setVisibility(View.VISIBLE);
+                }
+                break;
+                case Update_Done: {
+                    if (mLedlists.isEmpty()) {
+                        listView.setVisibility(View.GONE);
+                        tvSearchNoResult.setVisibility(View.VISIBLE);
+                        /*if (progressBar != null) {
+                            progressBar.dismiss();
+                        }*/
+                        if (DBG) {
+                            Log.i("TerminalListFragment02", "------------33333333333333333-----------------");
+                        }
+                        if (swipeRefreshLayout != null) {
+                            if (DBG) {
+                                Log.i("TerminalListFragment02", "swipeRefreshLayout------------onRefresh()-----------------3333333333333");
+                            }
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            super.onPostExecute(result);
+        }
+
+        @Override
+        protected Object doInBackground(Object... params) {
+            if (mangerNetService == null) {
+                return null;
+            }
+            mangerNetService.searchTerminateByTcpLoop(new OnCallBack() {
+
+                @Override
+                public void onFindSucess(LedTerminateInfo ledTerminateInfo) {
+                    try {
+                        LedTerminateInfo ledTerInfo = new LedTerminateInfo();
+                        ledTerInfo.setIpAddress(ledTerminateInfo.getIpAddress());
+                        ledTerInfo.setPassword(ledTerminateInfo.getPassword());
+                        ledTerInfo.setStrName(ledTerminateInfo.getStrName());
+                        mLedlists.add(ledTerInfo);
+                        app.setIp2TerminateMap(mLedlists);
+                        publishProgress(Update_FindTerm);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFindDone() {
+                    publishProgress(Update_Done);
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+
+            });
+            return null;
+        }
+
     }
 
 
@@ -472,6 +666,9 @@ public class TerminalListFragment extends BaseObserverFragment {
                     adapter.updateView(mLedlists);
                     if (progressBar != null) {
                         progressBar.dismiss();
+                    }
+                    if (DBG) {
+                        Log.i("AsyncFindByTCP", "------------111111111111111111111111111-----------------------");
                     }
                 }
                 break;

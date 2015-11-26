@@ -210,7 +210,7 @@ public class AdvancedActivity extends BaseObservableActivity {
                 tmAnimationDrawable = null;
                 imageView.setVisibility(View.INVISIBLE);
             }
-        }, duration+3000);
+        }, duration + 3000);
 
 
         fragmentController = new FragmentController(this);

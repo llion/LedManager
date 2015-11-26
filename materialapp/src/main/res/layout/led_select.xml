@@ -8,17 +8,6 @@
     android:orientation="vertical"
     >
 
-
-
-    <!--<com.clt.ledmanager.ui.TitleBarView-->
-        <!--android:id="@+id/titlebar"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="48dp"-->
-        <!--clt:left_drawble="@drawable/btn_go_back"-->
-        <!--clt:right_drawble="@drawable/ic_update"-->
-        <!--clt:right_text="@string/update"-->
-        <!--clt:title_name="@string/search_server" />-->
-
     <!-- TCP查找方式，废弃 -->
     <LinearLayout
         android:id="@+id/ll_go_back_step"
@@ -77,6 +66,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
             <ListView
                 android:id="@+id/lv_ledinfos"
                 android:layout_width="fill_parent"
@@ -84,6 +79,9 @@
                 android:layout_weight="1.0"
                 android:footerDividersEnabled="true"
                 android:scrollbars="none" />
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
 
             <TextView
                 android:id="@+id/tv_search_no_result"
@@ -102,11 +100,6 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <!--<ImageView-->
-            <!--android:id="@+id/terminal_seek"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="630dp"-->
-            <!--android:background="#5CACEE"/>-->
 
     </FrameLayout>
 
