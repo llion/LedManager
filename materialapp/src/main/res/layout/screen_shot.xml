@@ -8,12 +8,21 @@
     <com.clt.ledmanager.ui.TitleBarView
         android:id="@+id/titlebar"
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="56dp"
         clt:left_drawble="@drawable/btn_go_back"
         clt:right_drawble="@drawable/ic_update"
-        clt:title_name="@string/screenshots" 
-        clt:left_text="@string/home_page"
-        clt:right_text="@string/update"/>
+        clt:title_name="@string/screenshots" />
+
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/activity_select_list_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?attr/actionBarSize"-->
+        <!--android:background="?attr/colorPrimary"-->
+        <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+        <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
+        <!--android:elevation="4dp" />-->
+
+
     <!-- 服务端信息 -->
 
     <ScrollView

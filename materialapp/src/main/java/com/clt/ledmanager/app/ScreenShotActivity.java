@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -30,33 +31,55 @@ public class ScreenShotActivity extends BaseActivity
 	private Application app;
 	
 	private DialogProgressBar progressBar;
+
+
+
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
 		super.onCreate(savedInstanceState);
-		try
-		{
+
 			setContentView(R.layout.screen_shot);
+//			ActionBar actionBar = getActionBar();
+//
+////			actionBar.hide();
+//			actionBar.show();
+
+
 			init();
 			initView();
 			initListener();
 			initData();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
 	}
-	/**
-	 * 
-	 */
+
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.screenshot_menu, menu);
+//		return true;
+//	}
+
+	//  对home icon返回
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch(item.getItemId()){
+			case android.R.id.home:
+				finish();
+				return true;
+			default:
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	private void init()
 	{
 		progressBar = new DialogProgressBar(this,null);
 		app = (Application) getApplication();
+
 	}
 	
 	private void initView()
@@ -65,7 +88,7 @@ public class ScreenShotActivity extends BaseActivity
 		ivImage = (ImageView) findViewById(R.id.iv_screen_shot);
 	}
 	/**
-	 * 
+	 *
 	 */
 	private void initListener()
 	{
@@ -76,8 +99,7 @@ public class ScreenShotActivity extends BaseActivity
 			public void onClickRightImg(View v)
 			{
 				String ipAddress = app.ledTerminateInfo.getIpAddress();
-				String imageUrl = "http://" + ipAddress
-						+ "/transmission/ftp/config/screenshot";
+				String imageUrl = "http://" + ipAddress + "/transmission/ftp/config/screenshot";
 				getImageTask = new GetImageTask(imageUrl);
 				getImageTask.execute();
 			}
@@ -95,8 +117,7 @@ public class ScreenShotActivity extends BaseActivity
 	private void initData()
 	{
 		String ipAddress = app.ledTerminateInfo.getIpAddress();
-		String imageUrl = "http://" + ipAddress
-				+ "/transmission/ftp/config/screenshot";
+		String imageUrl = "http://" + ipAddress + "/transmission/ftp/config/screenshot";
 		getImageTask = new GetImageTask(imageUrl);
 		getImageTask.execute();
 	}

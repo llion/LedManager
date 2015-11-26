@@ -30,7 +30,6 @@ import com.clt.ledmanager.ui.CustomerSpinner;
 import com.clt.ledmanager.ui.DialogFactory;
 import com.clt.ledmanager.ui.DialogProgressBar;
 import com.clt.ledmanager.ui.TitleBarView;
-import com.clt.ledmanager.ui.TitleBarView.TitleBarListener;
 import com.clt.ledmanager.util.Const;
 import com.clt.ledmanager.util.NetUtil;
 import com.google.gson.Gson;
@@ -160,12 +159,11 @@ public class LedSelectActivity extends BaseActivity implements Observer {
      * 初始化参数
      */
     private void init() {
-        try {
-            ledList = new ArrayList<>();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
+        if(ledList == null) {
+
+            ledList = new ArrayList<>();
+        }
     }
 
     /**
@@ -208,21 +206,21 @@ public class LedSelectActivity extends BaseActivity implements Observer {
      */
     private void initListener() {
         //标题
-        titleBarView.setTitleBarListener(new TitleBarListener() {
-
-            @Override
-            public void onClickRightImg(View v) {
-
-                progressBar.show();
-                findTerminal();
-            }
-
-            @Override
-            public void onClickLeftImg(View v) {
-                finish();
-
-            }
-        });
+//        titleBarView.setTitleBarListener(new TitleBarListener() {
+//
+//            @Override
+//            public void onClickRightImg(View v) {
+//
+//                progressBar.show();
+//                findTerminal();
+//            }
+//
+//            @Override
+//            public void onClickLeftImg(View v) {
+//                finish();
+//
+//            }
+//        });
 
         //查找方式
         spinnerFindType.setOnItemClickListener(new OnItemClickListener() {
@@ -254,7 +252,6 @@ public class LedSelectActivity extends BaseActivity implements Observer {
                 // 查看密码是否已经输入过
                 final String ip = adapter.getItem(position).getIpAddress();
                 Application.Terminate terminate = app.getIp2TerminateMap().get(ip);
-
 
                 if (terminate.isHasEnteredPass()) {
                     Log.e("Tag", ip);

@@ -1,25 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:clt="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-
-    <Button
-            android:id="@+id/album_upload"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="从相册上传节目"
-            android:textSize="20dp"
-        android:layout_marginTop="9dp" />
-
-    <Button
-        android:id="@+id/other_upload"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="从其它上传节目"
-        android:textSize="20dp"
-        android:layout_marginTop="5dp" />
-
-
-    </LinearLayout>
+</LinearLayout>

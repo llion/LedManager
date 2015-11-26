@@ -14,7 +14,7 @@ import com.mikepenz.materialdrawer.app.R;
  */
 public class DialogFactory{
 	
-	private static final int WIDTH=400;
+	private static final int WIDTH=760;
 	private static final int HEIGHT=300;
 	
 	public static Dialog createDialog(Context context,View view){

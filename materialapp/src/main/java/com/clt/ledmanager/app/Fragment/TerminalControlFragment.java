@@ -15,6 +15,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -35,7 +38,6 @@ import com.clt.commondata.SomeInfo;
 import com.clt.ledmanager.activity.Application;
 import com.clt.ledmanager.activity.BaseObserverFragment;
 import com.clt.ledmanager.adapter.ChangeLanguageListener;
-import com.clt.ledmanager.app.LedSelectActivity;
 import com.clt.ledmanager.app.ScreenShotActivity;
 import com.clt.ledmanager.service.Clock;
 import com.clt.ledmanager.ui.CustomerSpinner;
@@ -67,7 +69,6 @@ public class TerminalControlFragment extends BaseObserverFragment implements
     private static final String TAG = "MainFragment";
 
     private Application app;
-
 
     private ArrayList<LedTerminateInfo> ledList = new ArrayList<LedTerminateInfo>();// 服务端列表
 
@@ -164,8 +165,36 @@ public class TerminalControlFragment extends BaseObserverFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Replace LinearLayout by the type of the root element of the layout you're trying to load
         llLayout = (LinearLayout) inflater.inflate(R.layout.main, container, false);
+
+        setHasOptionsMenu(true);
         return llLayout; // We must return the loaded Layout
 
+    }
+
+
+    private static final int RESULT_SCREEN_SHOT =3001;
+
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.fragment_terminalcontrol, menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        switch (item.getItemId()) {
+
+            case R.id.menu_screenshot:
+
+                Intent screen_shot = new Intent(getActivity(),ScreenShotActivity.class);
+                startActivity(screen_shot) ;
+                break;
+
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -228,14 +257,14 @@ public class TerminalControlFragment extends BaseObserverFragment implements
 
 
 //           调用扫描
-            Button scan = (Button) layout.findViewById(R.id.btn_scan_ap);
-            scan.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent scan = new Intent("com.color.android.SCAN");
-                    startActivity(scan);
-                }
-            });
+//            Button scan = (Button) layout.findViewById(R.id.btn_scan_ap);
+//            scan.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent scan = new Intent("com.color.android.SCAN");
+//                    startActivity(scan);
+//                }
+//            });
 
             /** 服务端信息 **/
             tvTerminateConInfo = (TextView) layout.findViewById(R.id.tv_terminate_coninfo);
@@ -245,6 +274,8 @@ public class TerminalControlFragment extends BaseObserverFragment implements
             showConnectInfo();
             searchTerminateDialog = new DialogUtil().createDownloadDialog(getActivity());
             searchButton = (Button) layout.findViewById(R.id.btnSearch);
+            searchButton.setVisibility(View.GONE);
+
 
             /** 亮度 ***/
             tvBrightValue = (TextView) layout.findViewById(R.id.tvBrightValue);
@@ -307,8 +338,8 @@ public class TerminalControlFragment extends BaseObserverFragment implements
             btnScreenShot = (Button) layout.findViewById(R.id.btn_screen_shot);
 
 
-            trTestMode = layout.findViewById(R.id.tr_test_mode);
-            btnEmpTestmode = layout.findViewById(R.id.btn_emp_tesmode);
+//            trTestMode = layout.findViewById(R.id.tr_test_mode);
+//            btnEmpTestmode = layout.findViewById(R.id.btn_emp_tesmode);
 
 
 
@@ -320,18 +351,18 @@ public class TerminalControlFragment extends BaseObserverFragment implements
      */
     private void initListener() {
         // 查找按钮
-        searchButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //Home页查找button
-                if (mangerNetService != null) {
-
-                    Intent intent = new Intent(getActivity(), LedSelectActivity.class);
-                    startActivityForResult(intent, 0);
-                }
-            }
-        });
+//        searchButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                //Home页查找button
+//                if (mangerNetService != null) {
+//
+//                    Intent intent = new Intent(getActivity(), TerminalControlFragment.class);
+//                    startActivityForResult(intent, 0);
+//                }
+//            }
+//        });
 
         /**
          * 亮度和色温保存
@@ -553,7 +584,6 @@ public class TerminalControlFragment extends BaseObserverFragment implements
 //
 //        });
 
-
         //屏幕截图
         btnScreenShot.setOnClickListener(new OnClickListener() {
 
@@ -613,6 +643,7 @@ public class TerminalControlFragment extends BaseObserverFragment implements
 
 //          设置TextView 查找终端的服务器
             tvTerminateConInfo.setText(strTerminateConInfo);
+            tvTerminateConInfo.setVisibility(View.GONE);
         }
         // strTerminateConInfo = sharedPreferenceUtil.getString(
         // ShareKey.TerminateName,
@@ -658,6 +689,7 @@ public class TerminalControlFragment extends BaseObserverFragment implements
             // ShareKey.TerminateAddress, "");
 
             tvTerminateConInfo.setText(strTerminateConInfo);
+            tvTerminateConInfo.setVisibility(View.GONE);
             // 设置与服务器的链接状态
         } catch (Exception e) {
             e.printStackTrace();
@@ -671,7 +703,7 @@ public class TerminalControlFragment extends BaseObserverFragment implements
                 return;
 
             this.ledList = ledList;
-            Intent intent = new Intent(getActivity(), LedSelectActivity.class);
+            Intent intent = new Intent(getActivity(), TerminalControlFragment.class);
             intent.putExtra("ledList", ledList);
             startActivityForResult(intent, 0);
         } catch (Exception e) {
@@ -701,22 +733,22 @@ public class TerminalControlFragment extends BaseObserverFragment implements
 
     }
 
-    /**
-     * onActivityResult处理选择服务端
-     *
-     * @param data
-     */
-    private void handlerSelectedServer(Intent data) {
-
-        app.ledTerminateInfo = (LedTerminateInfo) data.getExtras().get("terminateInfo");
-        if (app.ledTerminateInfo != null) {
-
-            if (mangerNetService != null) {
-                mangerNetService.onSeverAddressChanged(app.ledTerminateInfo
-                        .getIpAddress());
-            }
-        }
-    }
+//    /**
+//     * onActivityResult处理选择服务端
+//     *
+//     * @param data
+//     */
+//    private void handlerSelectedServer(Intent data) {
+//
+//        app.ledTerminateInfo = (LedTerminateInfo) data.getExtras().get("terminateInfo");
+//        if (app.ledTerminateInfo != null) {
+//
+//            if (mangerNetService != null) {
+//                mangerNetService.onSeverAddressChanged(app.ledTerminateInfo
+//                        .getIpAddress());
+//            }
+//        }
+//    }
 
     /**
      * 返回来的发送者
@@ -781,6 +813,9 @@ public class TerminalControlFragment extends BaseObserverFragment implements
                     app.setOnline(true);
                     showConnectInfo(true);
                     tvConnTime.setText(Tools.formatDuring(Clock.pastTime));
+                    tvConnTime.setVisibility(View.GONE);//隐藏连接时间
+
+
                     /**
                      * 如果已经连接上， 1.立即探测发送卡 2.返回节目列表
                      */
@@ -1034,9 +1069,11 @@ public class TerminalControlFragment extends BaseObserverFragment implements
     public void handleActivityForResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             String type = data.getStringExtra("type");
-            if (type.equalsIgnoreCase("selectServer")) {// 选择服务端
-                handlerSelectedServer(data);
-            } else if (type.equalsIgnoreCase("selectProgram")) {// 选择节目
+//            if (type.equalsIgnoreCase("selectServer")) {// 选择服务端
+//                handlerSelectedServer(data);
+//            } else
+
+            if (type.equalsIgnoreCase("selectProgram")) {// 选择节目
                 handlerSelectedUploadProgram(data);
             }
 
@@ -1196,6 +1233,7 @@ public class TerminalControlFragment extends BaseObserverFragment implements
 
                 long time = intent.getLongExtra("connTime", 0);
                 tvConnTime.setText(Tools.formatDuring(time));
+                tvConnTime.setVisibility(View.GONE);//隐藏连接时间
             } else if (action.equalsIgnoreCase(Const.MODIF_TERM_NAME_ACTION)) {
 
                 showConnectInfo(app.isOnline);

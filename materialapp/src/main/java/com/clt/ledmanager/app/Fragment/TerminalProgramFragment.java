@@ -1,12 +1,16 @@
 package com.clt.ledmanager.app.Fragment;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -65,7 +69,34 @@ public class TerminalProgramFragment extends BaseObserverFragment  {
         view = (LinearLayout) inflater.inflate(R.layout.fragment_program_manager, container, false);
         listView = (ListView) view.findViewById(R.id.program_manager_list_view);
 
+        setHasOptionsMenu(true);
+
         return view;
+    }
+
+    private static final int RESULT_UPLOAD_PROGRAM =4001;
+
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.fragment_terminalprogram, menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        switch (item.getItemId()) {
+
+            case R.id.menu_upload_program:
+
+                Intent upload_program = new Intent(getActivity(),EditProgramFragment.class);
+                startActivityForResult(upload_program,RESULT_UPLOAD_PROGRAM) ;
+                break;
+
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void initListener(){

@@ -21,7 +21,7 @@
     <string name="screen_manager">屏幕管理</string>
     <string name="video_play_control">节目播放控制</string>
     <string name="set_port_area">设置网口面积</string>
-    <string name="search_server">查找服务端</string>
+    <string name="search_server">终端列表</string>
     <string name="search_server_type">查找方式</string>
     <string name="select_upload_program">选择节目</string>
     <string name="delete_program">删除节目</string>
@@ -373,6 +373,14 @@
     <string name="from">从</string>
     <string name="save_to_receiver_cards">保存到接收卡</string>
     <string name="to">到</string>
+
+
+    <!-- 功能模块名字 -->
+    <string-array name="main_titles">
+        <item>终端控制</item>
+        <item>发送卡</item>
+        <item>终端节目</item>
+    </string-array>
 
 
 </resources>

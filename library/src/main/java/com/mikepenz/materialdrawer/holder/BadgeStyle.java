@@ -23,7 +23,8 @@ public class BadgeStyle {
     private ColorHolder mTextColor;
     private DimenHolder mCorners;
     private DimenHolder mPaddingTopBottom = DimenHolder.fromDp(2); //2 looks best
-    private DimenHolder mPaddingLeftRight = DimenHolder.fromDp(3); //3 looks best
+   // ############################### 改动了一下由 3dp 变成了 0dp
+    private DimenHolder mPaddingLeftRight = DimenHolder.fromDp(0); //3 looks best
     private DimenHolder mMinWidth = DimenHolder.fromDp(20); //20 looks nice
 
     public int getGradientDrawable() {

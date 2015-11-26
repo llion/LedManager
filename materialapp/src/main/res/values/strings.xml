@@ -68,7 +68,7 @@
     <string name="screen_manager">Screen Management</string>
     <string name="video_play_control">Video Player Management</string>
     <string name="set_port_area">Net Port Area Setting</string>
-    <string name="search_server">Search Server</string>
+    <string name="search_server">Terminal Table</string>
     <string name="search_server_type">Search Method</string>
     <string name="select_upload_program">Select Program</string>
     <string name="detect_sender_card">Detect Sender Card</string>
@@ -444,4 +444,9 @@
     <string name="off">off</string>
     <string name="on">on</string>
     <string name="onoff">Switch</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_select_list">SelectListActivity</string>
+    <string name="terminal_list">终端列表</string>
 </resources>

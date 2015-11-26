@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mikepenz.materialdrawer.app">
 
@@ -23,52 +24,53 @@
         android:name="com.clt.ledmanager.app.CustomApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
+
         <!-- android:supportsRtl="true" -->
         <activity
             android:name="com.clt.ledmanager.app.AdvancedActivity"
             android:label="@string/app_name"
-            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus"
-           >
+            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!--节目上传-->
+        <!-- 节目上传 -->
+        <activity android:name="com.clt.ledmanager.app.UploadProgramActivity"></activity>
         <activity
-            android:name="com.clt.ledmanager.app.UploadProgramActivity">
-        </activity>
-        <activity
+            android:name="com.clt.ledmanager.app.MyTabActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:name="com.clt.ledmanager.app.MyTabActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <!-- 选择上传节目页面 -->
         <activity
-            android:configChanges="locale"
             android:name="com.clt.ledmanager.app.FilesViewActivity"
-        android:screenOrientation="portrait" />
+            android:configChanges="locale"
+            android:screenOrientation="portrait" />
 
         <!-- 选择终端页 -->
         <activity
-            android:configChanges="locale"
             android:name="com.clt.ledmanager.app.LedSelectActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:configChanges="locale"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.clt.ledmanager.app.ScreenShotActivity"
+            android:configChanges="locale"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-
-        <activity
-            android:name="com.clt.ledmanager.app.InfoActivity"/>
+        <activity android:name="com.clt.ledmanager.app.InfoActivity" />
 
         <service android:name="com.clt.ledmanager.service.NetService" />
 
+        <activity android:name="com.clt.ledmanager.app.TerminalScannActivity"></activity>
+        <activity android:name="com.clt.ledmanager.app.TerminalmanualActivity"></activity>
+        <activity android:name="com.clt.ledmanager.app.TerminalrefreshActivity"></activity>
+        <activity
+            android:name="com.clt.ledmanager.app.SelectListActivity"
+            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus"></activity>
     </application>
 
 </manifest>

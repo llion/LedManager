@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_new_program"
+        android:orderInCategory="100"
+        android:title="新建节目"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_upload_program"
+        android:orderInCategory="100"
+        android:title="上传终端"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_save_program"
+        android:orderInCategory="100"
+        android:title="保存节目"
+        app:showAsAction="never" />
+</menu>

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.clt.ledmanager.IService;
 import com.clt.ledmanager.app.AdvancedActivity;
+import com.clt.ledmanager.app.BaseObservableActivity;
 import com.clt.ledmanager.ui.DialogFactory;
 import com.mikepenz.materialdrawer.app.R;
 
@@ -27,50 +28,23 @@ import java.util.Observer;
  *
  */
 public abstract class BaseObserverFragment extends Fragment implements Observer {
+
     Dialog enterPassDialog = null;
     protected IService mangerNetService;
-
-    //	/**
-//	 * 异步处理消息
-//	 */
-//	protected Handler nmHandler = new Handler()
-//	{
-//		public void handleMessage(android.os.Message msg)
-//		{
-//			switch (msg.what)
-//			{
-//				case Const.connectBreak:// 连接断开
-//					// DialogUtil.createConnBreakDialog(BaseActivity.this).show();
-//				break;
-//				case NetMessageType.KickOutOf:// 被踢
-//					Application app = (Application) (getActivity().getApplication());
-//					app.setOnline(false);
-//					DialogUtil.createKickOfDialog(getActivity()).show();
-//				break;
-//				case Const.connnectFail:// 连接失败
-//					toast(getResources().getString(
-//							R.string.fail_connect_to_server), 1000);
-//				break;
-//
-//			}
-//			dealHandlerMessage(msg);
-//		}
-//	};
-    protected AdvancedActivity fragmentActivity;
+    protected BaseObservableActivity fragmentActivity;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
 //        添加观察者
-        fragmentActivity = (AdvancedActivity) getActivity();
+        fragmentActivity = (BaseObservableActivity) getActivity();
         fragmentActivity.getTerminateObservable().addObserver(this);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
 //        删除观察者
         fragmentActivity.getTerminateObservable().deleteObserver(this);
     }
@@ -183,7 +157,7 @@ public abstract class BaseObserverFragment extends Fragment implements Observer 
         AdvancedActivity.MessageWrapper messageWrapper = (AdvancedActivity.MessageWrapper) data;
         switch (messageWrapper.type) {
             case AdvancedActivity.MessageWrapper.TYPE_SERVICE_INIT:
-                mangerNetService = fragmentActivity.getMangerNetService();
+                mangerNetService =((Application)fragmentActivity.getApplication()).mangerNetService;
                 break;
             case AdvancedActivity.MessageWrapper.TYPE_SERVICE_UPDATE:
                 dealHandlerMessage(messageWrapper.msg);

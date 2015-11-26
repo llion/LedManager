@@ -17,6 +17,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
+            android:indeterminateDuration="5000"
             android:indeterminateDrawable="@drawable/img_progressbar" />
 
         <TextView

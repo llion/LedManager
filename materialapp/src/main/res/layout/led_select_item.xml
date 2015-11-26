@@ -5,7 +5,8 @@
     android:layout_height="48dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:orientation="horizontal" 
+    android:orientation="horizontal"
+	android:duplicateParentState="true"
     >
 	<TextView
 	    android:id="@+id/tv_led_name" 
@@ -16,6 +17,7 @@
 	    android:clickable="false"
 	    android:focusable="false"/>
 	<ImageView
+		android:duplicateParentState="true"
 	    android:id="@+id/iv_led_selected"
 	    android:layout_width="48dp"
 	    android:layout_height="48dp"

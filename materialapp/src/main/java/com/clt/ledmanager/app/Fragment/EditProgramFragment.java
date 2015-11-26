@@ -21,6 +21,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -86,8 +89,9 @@ public class EditProgramFragment extends Fragment {
             Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA
 
     };
+
     private static final boolean DBG = true;
-    private static final String TAG = "UploadProgramFragment";
+    private static final String TAG = "EditProgramFragment";
 
 //    private ArrayList<ExpandableListAdapter.ProgramItem> mSelectFiles = new ArrayList<ExpandableListAdapter.ProgramItem>();
 
@@ -171,8 +175,55 @@ public class EditProgramFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         ulproLayout  = (LinearLayout)inflater.inflate(R.layout.upload_expandable_list, container, false);
+
+        setHasOptionsMenu(true);
         return ulproLayout;
     }
+
+    private static final int RESULT_NEW_PROGRAM =5001;
+    private static final int RESULT_UPLOAD_PROGRAM =5002;
+    private static final int RESULT_SAVE_PROGRAM =5003;
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.fragment_editprogram, menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        switch (item.getItemId()) {
+
+            case R.id.menu_new_program:
+
+                Intent new_program = new Intent(getActivity(),NewProgramFragment.class);
+                startActivityForResult(new_program,RESULT_NEW_PROGRAM) ;
+                break;
+
+            case R.id.menu_upload_program:
+
+                Intent upload_program = new Intent(getActivity(),TerminalControlFragment.class);
+                startActivityForResult(upload_program,RESULT_UPLOAD_PROGRAM) ;
+                break;
+
+            case R.id.menu_save_program:
+
+                Intent save_program = new Intent(getActivity(),SaveProgramFragment.class);
+                startActivityForResult(save_program,RESULT_SAVE_PROGRAM) ;
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
+
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

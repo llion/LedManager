@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,19 +20,17 @@ import android.widget.Toast;
 import com.clt.ledmanager.IService;
 import com.clt.ledmanager.activity.Application;
 import com.clt.ledmanager.activity.FragmentController;
-import com.clt.ledmanager.app.DrawerItems.CustomPrimaryDrawerItem;
-import com.clt.ledmanager.app.DrawerItems.CustomUrlPrimaryDrawerItem;
 import com.clt.ledmanager.app.Fragment.EditProgramFragment;
 import com.clt.ledmanager.app.Fragment.LanguageFragment;
 import com.clt.ledmanager.app.Fragment.SenderCardFragment;
 import com.clt.ledmanager.app.Fragment.TerminalControlFragment;
 import com.clt.ledmanager.app.Fragment.TerminalListFragment;
 import com.clt.ledmanager.app.Fragment.TerminalProgramFragment;
-import com.clt.ledmanager.app.Fragment.observable.TerminateObservable;
 import com.clt.ledmanager.service.BaseService;
 import com.clt.ledmanager.service.BaseServiceFactory;
 import com.clt.ledmanager.util.Const;
 import com.clt.ledmanager.util.DialogUtil;
+import com.clt.ledmanager.util.NetUtil;
 import com.clt.netmessage.NetMessageType;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -42,11 +39,12 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.app.R;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Badgeable;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-public class AdvancedActivity extends AppCompatActivity {
+public class AdvancedActivity extends BaseObservableActivity {
     private static final int PROFILE_SETTING = 1;
 
     //save our header or result
@@ -54,54 +52,46 @@ public class AdvancedActivity extends AppCompatActivity {
     private Drawer result = null;
     private Drawer resultAppended = null;
 
-
-
 //    private IProfile profile;
 //    private IProfile profile2;
 //    private IProfile profile3;
 //    private IProfile profile4;
 //    private IProfile profile5;
 
-//  Fragment切换标记
-    private static final int ITEM_POSITION_TERMINAL_LIST = 2;
-    private static final int ITEM_POSITION_TERMINAL_CONTROL = 4;
-    private static final int ITEM_POSITION_SEND_CARD=5;
-    private static final int ITEM_POSITION_TERMINAL_PROGRAM=6;
-    private static final int ITEM_POSITION_EDIT_PROGRAM=8;
-    private static final int ITEM_POSITION_LANGUAGE=10;
+    //  Fragment切换标记
+    private static final int ITEM_POSITION_TERMINAL_LIST = 1;
+    private static final int ITEM_POSITION_TERMINAL_CONTROL = 2;
+    private static final int ITEM_POSITION_SEND_CARD = 3;
+    private static final int ITEM_POSITION_TERMINAL_PROGRAM = 4;
+    private static final int ITEM_POSITION_EDIT_PROGRAM = 5;
+    private static final int ITEM_POSITION_LANGUAGE = 7;
 
 
-
-    private static final String FRAGMENT_TAG_TERMINAL_LIST ="terminal_list";
-    private static final String FRAGMENT_TAG_TERMINAL_CONTROL ="terminal_control";
+    private static final String FRAGMENT_TAG_TERMINAL_LIST = "terminal_list";
+    private static final String FRAGMENT_TAG_TERMINAL_CONTROL = "terminal_control";
     private static final String FRAGMENT_TAG_SEND_CARD = "send_card";
     private static final String FRAGMENT_TAG_TERMINAL_PROGRAM = "terminal_program";
     private static final String FRAGMENT_TAG_EDIT_PROGRAM = "edit_program";
-    private static final String FRAGMENT_TAG_LANGUAGE ="language";
-
+    private static final String FRAGMENT_TAG_LANGUAGE = "language";
 
 
     private FragmentController fragmentController;
     private BroadcastReceiver receiver;
-    private TerminateObservable terminateObservable;
+
+    private static final boolean DBG = true;
+    private static final String TAG = "AdvancedActivity";
+
     private IService mangerNetService;// 通信服务
 
-    public TerminateObservable getTerminateObservable() {
-        return terminateObservable;
-    }
-
-    public IService getMangerNetService() {
-        return mangerNetService;
-    }
-
-    public static class MessageWrapper{
+    public static class MessageWrapper {
 
         public final static int TYPE_SERVICE_INIT = 0;
         public final static int TYPE_SERVICE_UPDATE = 1;
+        public final static int TYPE_FIND_TERMINAL = 2;
         public Message msg;
         public int type;
 
-        public MessageWrapper(int type,Message msg){
+        public MessageWrapper(int type, Message msg) {
             this.type = type;
             this.msg = msg;
         }
@@ -110,17 +100,14 @@ public class AdvancedActivity extends AppCompatActivity {
     /**
      * 异步处理消息
      */
-    protected Handler nmHandler = new Handler()
-    {
-        public void handleMessage(android.os.Message msg)
-        {
-            switch (msg.what)
-            {
+    protected Handler nmHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
                 case Const.connectBreak:// 连接断开
                     // DialogUtil.createConnBreakDialog(BaseActivity.this).show();
                     break;
                 case NetMessageType.KickOutOf:// 被踢
-                    Application app = (Application)getApplication();
+                    Application app = (Application) getApplication();
                     app.setOnline(false);
                     DialogUtil.createKickOfDialog(AdvancedActivity.this).show();
                     break;
@@ -128,7 +115,7 @@ public class AdvancedActivity extends AppCompatActivity {
                     Toast.makeText(AdvancedActivity.this, getResources().getString(R.string.fail_connect_to_server), Toast.LENGTH_SHORT).show();
                     break;
             }
-            terminateObservable.dealHandlerMessage(new MessageWrapper(MessageWrapper.TYPE_SERVICE_UPDATE,msg));
+            terminateObservable.dealHandlerMessage(new MessageWrapper(MessageWrapper.TYPE_SERVICE_UPDATE, msg));
         }
     };
 
@@ -147,11 +134,16 @@ public class AdvancedActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
 
-            ((Application) getApplication()).mangerNetService = mangerNetService = ((BaseService.LocalBinder) service).getService();
-                if (mangerNetService != null) {
-                    terminateObservable.dealHandlerMessage(new MessageWrapper(MessageWrapper.TYPE_SERVICE_INIT,null));
-                    mangerNetService.setNmHandler(nmHandler);
+            mangerNetService = ((Application) getApplication()).mangerNetService = ((BaseService.LocalBinder) service).getService();
+            if (mangerNetService != null) {
+                terminateObservable.dealHandlerMessage(new MessageWrapper(MessageWrapper.TYPE_SERVICE_INIT, null));
+                mangerNetService.setNmHandler(nmHandler);
+                if (!NetUtil.isConnnected(AdvancedActivity.this)) {
+                    Toast.makeText(AdvancedActivity.this, R.string.network_not_connected, Toast.LENGTH_SHORT);
+                    return;
                 }
+                mangerNetService.searchTerminate();
+            }
         }
     };
 
@@ -193,23 +185,17 @@ public class AdvancedActivity extends AppCompatActivity {
         fragmentController = new FragmentController(this);
 
 //      全局主题者
-        Application.getInstance().terminateObservable = terminateObservable = new TerminateObservable();
         receiver = new ConnectBreakBroadcastReceiver();
 
         // 绑定mangerNetService
         Intent _intent1 = new Intent(this, BaseServiceFactory.getBaseService());
         bindService(_intent1, mangerNetServiceConnection, Context.BIND_AUTO_CREATE);
 
-        if (mangerNetService != null) {
-            Intent intent = new Intent(this, LedSelectActivity.class);
-            startActivityForResult(intent, 0);
-        }
 
         // Handle Toolbar
-        Toolbar  toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.drawer_item_advanced_drawer);
-        getSupportActionBar().setElevation(0);
+        getSupportActionBar().setTitle("终端列表");
 
         // Create a few sample profile
 //        profile = new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile));
@@ -228,30 +214,31 @@ public class AdvancedActivity extends AppCompatActivity {
                 .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                 .addDrawerItems(
 
-                        new SectionDrawerItem().withName("Terminals"),
-                        new PrimaryDrawerItem().withName("终端列表").withIcon(R.drawable.btn_receiving_selector),
+
+                        new PrimaryDrawerItem().withName(R.string.terminal_list).withIcon(R.drawable.btn_receiving_selector),
 //                        TODO 图片需要修改
 //                        添加home页
-                        new SectionDrawerItem().withName("Terminals Functions"),
+
                         new PrimaryDrawerItem().withName("终端控制").withIcon(R.drawable.btn_home_selector),
 
 //                        添加sending card页
-                        new CustomPrimaryDrawerItem().withName("发送卡").withIcon(R.drawable.btn_sending_selector),
+//                        new CustomPrimaryDrawerItem().withName("发送卡").withIcon(R.drawable.btn_sending_selector),
+                        new SecondaryDrawerItem().withName("发送卡").withIcon(R.drawable.btn_sending_selector),
+
 //                        添加节目上传
-                        new PrimaryDrawerItem().withName("终端节目").withIcon(R.drawable.btn_receiving_selector),
+                        new SecondaryDrawerItem().withName("终端节目").withIcon(R.drawable.btn_receiving_selector),
 
 //                        添加节目管理
-                        new SectionDrawerItem().withName("Local Programs"),
-                        new CustomUrlPrimaryDrawerItem().withName("编辑节目").withIcon(R.drawable.btn_linking_selector),
+                        new PrimaryDrawerItem().withName("编辑节目").withIcon(R.drawable.btn_linking_selector),
 
 //                        添加第二模块
                         new SectionDrawerItem().withName(R.string.drawer_item_action_settings),
-//                        new SecondaryDrawerItem().withName("语言选择").withIcon(FontAwesome.Icon.faw_cart_plus)
-                        new PrimaryDrawerItem().withName("语言选择").withIcon(FontAwesome.Icon.faw_cart_plus)
+                        new SecondaryDrawerItem().withName("语言选择").withIcon(FontAwesome.Icon.faw_cart_plus)
+//                        new PrimaryDrawerItem().withName("语言选择").withIcon(FontAwesome.Icon.faw_cart_plus)
 
                 )
 
-                 // add the items we want to use with our Drawer
+                        // add the items we want to use with our Drawer
                 .withOnDrawerNavigationListener(new Drawer.OnDrawerNavigationListener() {
                     @Override
                     public boolean onNavigationClickListener(View clickedView) {
@@ -322,11 +309,10 @@ public class AdvancedActivity extends AppCompatActivity {
 //      添加fragment
         fragmentController.add(false, FRAGMENT_TAG_TERMINAL_CONTROL, R.id.fragment_container, new TerminalControlFragment());
         fragmentController.add(false, FRAGMENT_TAG_SEND_CARD, R.id.fragment_container, new SenderCardFragment());
-        fragmentController.add(false,FRAGMENT_TAG_TERMINAL_PROGRAM,R.id.fragment_container,new TerminalProgramFragment());
-        fragmentController.add(false,FRAGMENT_TAG_EDIT_PROGRAM, R.id.fragment_container, new EditProgramFragment());
-        fragmentController.add(false,FRAGMENT_TAG_LANGUAGE,R.id.fragment_container,new LanguageFragment());
+        fragmentController.add(false, FRAGMENT_TAG_TERMINAL_PROGRAM, R.id.fragment_container, new TerminalProgramFragment());
+        fragmentController.add(false, FRAGMENT_TAG_EDIT_PROGRAM, R.id.fragment_container, new EditProgramFragment());
+        fragmentController.add(false, FRAGMENT_TAG_LANGUAGE, R.id.fragment_container, new LanguageFragment());
         fragmentController.add(true, FRAGMENT_TAG_TERMINAL_LIST, R.id.fragment_container, new TerminalListFragment());
-
 
 
 //
@@ -387,13 +373,12 @@ public class AdvancedActivity extends AppCompatActivity {
                 .build();
     }
 
-
     //添加Menu菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
-            return true;
+        return true;
     }
 
     @Override
@@ -402,16 +387,16 @@ public class AdvancedActivity extends AppCompatActivity {
     }
 
 
-//    溢出菜单的监听
+    //    溢出菜单的监听
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.menu_1:
+            case R.id.menu_terminal_info:
                 //update the profile2 and set a new image.
 //                profile2.withIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_android).backgroundColorRes(R.color.accent).sizeDp(48).paddingDp(4));
 //                headerResult.updateProfileByIdentifier(profile2);
-                startActivity(new Intent(AdvancedActivity.this, InfoActivity.class));
+                startActivity(new Intent(this, InfoActivity.class));
                 return true;
 //            case R.id.menu_2:
 //                //show the arrow icon

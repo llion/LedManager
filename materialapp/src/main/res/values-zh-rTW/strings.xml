@@ -21,7 +21,7 @@
         <string name="screen_manager">屏幕管理</string>
         <string name="video_play_control">節目播放控制</string>
         <string name="set_port_area">設定網口面積</string>
-        <string name="search_server">查找服務端</string>
+        <string name="search_server">終端列表</string>
         <string name="search_server_type">查找方式</string>
         <string name="select_upload_program">選擇節目</string>
         <string name="delete_program">刪除節目</string>

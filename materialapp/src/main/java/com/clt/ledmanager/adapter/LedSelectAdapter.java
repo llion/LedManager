@@ -16,81 +16,73 @@ import com.mikepenz.materialdrawer.app.R;
 import java.util.ArrayList;
 
 
-public class LedSelectAdapter extends BaseAdapter
-{
+public class LedSelectAdapter extends BaseAdapter {
     protected ArrayList<LedTerminateInfo> ledInfos;
 
     private Context mContext;
 
     private String ipAddress;
+    private String lastIp;
 
-    public LedSelectAdapter(Context mContext,
-            ArrayList<LedTerminateInfo> ledInfos)
-    {
+    public LedSelectAdapter(Context mContext, ArrayList<LedTerminateInfo> ledInfos) {
         this.mContext = mContext;
         setData(ledInfos);
 
     }
 
-    public void setIpAddress(String ipAddress)
-    {
+    public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
     }
 
-    private void setData(ArrayList<LedTerminateInfo> ledInfos)
-    {
-        if (ledInfos != null)
-        {
+    private void setData(ArrayList<LedTerminateInfo> ledInfos) {
+        if (ledInfos != null) {
             this.ledInfos = ledInfos;
-        }
-        else
-        {
+        } else {
             this.ledInfos = new ArrayList<LedTerminateInfo>();
         }
     }
 
-    public void clearData(){
-    	updateView(new ArrayList<LedTerminateInfo>());
+    public void clearData() {
+        updateView(new ArrayList<LedTerminateInfo>());
     }
-    public void updateView(ArrayList<LedTerminateInfo> ledInfos)
-    {
+
+    public void updateView(ArrayList<LedTerminateInfo> ledInfos) {
         setData(ledInfos);
         notifyDataSetChanged();
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return ledInfos.size();
     }
 
     @Override
-    public LedTerminateInfo getItem(int position)
-    {
+    public LedTerminateInfo getItem(int position) {
         return ledInfos.get(position);
     }
 
     @Override
-    public long getItemId(int position)
-    {
+    public long getItemId(int position) {
         return position;
     }
 
-    public void setChecked(String ipAddress, ListView listView)
-    {
+    public void setChecked(String ipAddress, ListView listView) {
         ImageView ivChecked = (ImageView) listView.findViewWithTag(ipAddress);
-        if (ivChecked != null)
-        {
+        if (lastIp != null) {
+            ImageView lastCheckedImageView = (ImageView) listView.findViewWithTag(lastIp);
+            lastCheckedImageView.setImageResource(android.R.color.transparent);
+        }
+        if (ivChecked != null) {
             ivChecked.setImageResource(R.drawable.right);
+            lastIp = ipAddress;
         }
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder = null;
-        if (convertView == null)
-        {
+
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.led_select_item, null);
             holder = new Holder();
@@ -99,33 +91,25 @@ public class LedSelectAdapter extends BaseAdapter
             holder.ivSelected = (ImageView) convertView
                     .findViewById(R.id.iv_led_selected);
             convertView.setTag(holder);
-        }
-        else
-        {
+        } else {
             holder = (Holder) convertView.getTag();
         }
         LedTerminateInfo ledInfo = getItem(position);
-        holder.tvName.setText(ledInfo.getStrName() + "("
-                + ledInfo.getIpAddress() + ")");
+        holder.tvName.setText(ledInfo.getStrName() + "(" + ledInfo.getIpAddress() + ")");
         // holder.ivSelected.setTag(ledInfo.getIpAddress());
-        if (!TextUtils.isEmpty(ledInfo.getIpAddress())
-                && ledInfo.getIpAddress().equals(ipAddress))
-        {
+        if (!TextUtils.isEmpty(ledInfo.getIpAddress()) && ledInfo.getIpAddress().equals(ipAddress)) {
             holder.ivSelected.setImageResource(R.drawable.right);
-        }
-        else
-        {
+        } else {
             holder.ivSelected.setImageResource(android.R.color.transparent);
         }
 
         return convertView;
     }
 
-    class Holder
-    {
-        private TextView tvName;
+    public static class Holder {
+        public TextView tvName;
 
-        private ImageView ivSelected;
+        public ImageView ivSelected;
 
     }
 }
