@@ -90,7 +90,7 @@
     <string name="setting_fail">设置失败</string>
     <string name="time_input_error">时间输入错误</string>
     <string name="please_input_brightness">请输入亮度</string>
-    <string name="network_not_connected">网络连接失败</string>
+    <string name="network_not_connected">亲,没有连接网络哦,要连接网络才能使用喔</string>
     <string name="app_need_to_reboot">应用需要重新启动，设置才能生效</string>
     <string name="connect_network">请连接wifi</string>
     <string name="fail_connect_to_server">连接服务器失败</string>

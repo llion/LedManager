@@ -253,7 +253,7 @@ public class EditProgramFragment extends Fragment {
     private void initView() {
 
 //		增加ExpandableListView的Head和foot
-        LayoutInflater inflater = LayoutInflater.from(getActivity());//  修改了this变成getActivity()
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
         View headView = inflater.inflate(R.layout.upload_program_head, null);
         View footView = inflater.inflate(R.layout.upload_program_foot, null);
 

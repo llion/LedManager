@@ -90,6 +90,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	private int tabTextSize = 12;
 	private int tabTextColor = 0xFF666666;
+
+	private int selectedTabTextSize=12;
+	private int selectedTabTextColor = 0xFF666666;
+
 	private Typeface tabTypeface = null;
 	private int tabTypefaceStyle = Typeface.BOLD;
 
@@ -135,11 +139,18 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		tabTextSize = a.getDimensionPixelSize(0, tabTextSize);
 		tabTextColor = a.getColor(1, tabTextColor);
 
+
 		a.recycle();
 
 		// get custom attrs
 
 		a = context.obtainStyledAttributes(attrs, R.styleable.PagerSlidingTabStrip);
+
+//		Custom属性
+		tabTextSize=a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_tabTextSize, tabTextSize);//默认字体大小
+		tabTextColor=a.getColor(R.styleable.PagerSlidingTabStrip_tabTextColor, tabTextColor);//默认字体颜色
+		selectedTabTextSize=a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_selectedTabTextSize, selectedTabTextSize);//选中字体大小
+		selectedTabTextColor=a.getColor(R.styleable.PagerSlidingTabStrip_selectedTabTextColor, indicatorColor);//选中字体颜色
 
 		indicatorColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsIndicatorColor, indicatorColor);
 		underlineColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsUnderlineColor, underlineColor);
@@ -388,6 +399,11 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	}
 
+	public void setSelectedTextColor(int textColor) {
+		this.selectedTabTextColor = textColor;
+		updateTabStyles();
+	}
+
 	public void setIndicatorColor(int indicatorColor) {
 		this.indicatorColor = indicatorColor;
 		invalidate();
@@ -396,6 +412,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	public void setIndicatorColorResource(int resId) {
 		this.indicatorColor = getResources().getColor(resId);
 		invalidate();
+	}
+
+	public int getSelectedTextColor() {
+		return selectedTabTextColor;
 	}
 
 	public int getIndicatorColor() {

@@ -134,4 +134,7 @@ public class NetMessageType
 
     public static final int MSG_WHAT_PROGRAM_UPDATE =3043;//通知节目更新
 
+
+    public static final int MSG_WHAT_SOCKET_EXCEPTION =3044;//通知节目更新
+
 }

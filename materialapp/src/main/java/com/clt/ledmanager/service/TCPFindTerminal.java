@@ -1,5 +1,16 @@
 package com.clt.ledmanager.service;
 
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+
+import com.clt.commondata.LedTerminateInfo;
+import com.clt.ledmanager.LifeCycle;
+import com.clt.ledmanager.TCPConnector;
+import com.clt.netmessage.NMFindTerminate;
+import com.clt.netmessage.NMFindTerminateAnswer;
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -9,17 +20,6 @@ import java.net.Socket;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import android.content.Context;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-
-import com.clt.ledmanager.LifeCycle;
-import com.clt.ledmanager.TCPConnector;
-import com.clt.commondata.LedTerminateInfo;
-import com.clt.netmessage.NMFindTerminate;
-import com.clt.netmessage.NMFindTerminateAnswer;
-import com.google.gson.Gson;
 
 /**
  * TCP轮询查找服务器ip
@@ -103,6 +103,7 @@ public class TCPFindTerminal implements LifeCycle
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 		}
 	}
 	

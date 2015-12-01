@@ -24,10 +24,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,7 +106,9 @@ public class TerminalControlFragment extends BaseObserverFragment implements
     /**
      * 视图：测试模式，屏幕开关,语言切换
      */
-    private CustomerSpinner spinnerTestMode, spinnerOnOff, spinnerLanguage;// 下拉框
+    private CustomerSpinner spinnerTestMode,spinnerLanguage;
+
+//    spinnerOnOff, ;// 下拉框
 
     private String[] arrTestMode, arrOnOff, arrLanguage;
 
@@ -150,6 +154,7 @@ public class TerminalControlFragment extends BaseObserverFragment implements
     private View btnEmpTestmode;
     private Drawer result;
     private LinearLayout llLayout;
+    private Switch switchButton;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -266,6 +271,43 @@ public class TerminalControlFragment extends BaseObserverFragment implements
 //                }
 //            });
 
+
+             /**switch_button**/
+            switchButton = (Switch)layout.findViewById(R.id.switch_button);
+            switchButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (mangerNetService != null) {
+                        if (isChecked) {
+                            mangerNetService.SetShowOnOff(true);
+                        } else {
+                            mangerNetService.SetShowOnOff(false);
+                        }
+                    }
+                }
+            });
+
+        //        //开关屏
+//        spinnerOnOff.setOnItemClickListener(new OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//
+//                if (mangerNetService == null) {
+//                    return;
+//                }
+//                if (position == 0) {
+//                    mangerNetService.SetShowOnOff(true);
+//                } else {
+//                    mangerNetService.SetShowOnOff(false);
+//                }
+//            }
+//        });
+
+
+
+
             /** 服务端信息 **/
             tvTerminateConInfo = (TextView) layout.findViewById(R.id.tv_terminate_coninfo);
             tvConnTime = (TextView) layout.findViewById(R.id.tv_terminate_conntime);
@@ -309,9 +351,9 @@ public class TerminalControlFragment extends BaseObserverFragment implements
             spinnerAutoBright.initView(R.array.on_off);
             spinnerAutoBright.setSelection(0, true);
             /** 开关 ***/
-            spinnerOnOff = (CustomerSpinner) layout.findViewById(R.id.spinner_on_off);
-            spinnerOnOff.initView(R.array.on_off);
-            spinnerOnOff.setSelection(0, true);
+//            spinnerOnOff = (CustomerSpinner) layout.findViewById(R.id.spinner_on_off);
+//            spinnerOnOff.initView(R.array.on_off);
+//            spinnerOnOff.setSelection(0, true);
 
             /** 语言 ***/
 //            spinnerLanguage = (CustomerSpinner) layout.findViewById(R.id.spinner_change_language);
@@ -483,45 +525,47 @@ public class TerminalControlFragment extends BaseObserverFragment implements
             }
 
         });
-        // 开关屏幕
-        spinnerOnOff.setOnItemClickListener(new OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                try {
-                    if (mangerNetService == null) {
-                        return;
-                    }
-                    if (position == 0) {
-                        mangerNetService.SetShowOnOff(true);
-                    } else {
-                        mangerNetService.SetShowOnOff(false);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-            }
-
-        });
-        //开关屏
-        spinnerOnOff.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                if (mangerNetService == null) {
-                    return;
-                }
-                if (position == 0) {
-                    mangerNetService.SetShowOnOff(true);
-                } else {
-                    mangerNetService.SetShowOnOff(false);
-                }
-            }
-        });
+//        // 开关屏幕
+//        spinnerOnOff.setOnItemClickListener(new OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//                try {
+//                    if (mangerNetService == null) {
+//                        return;
+//                    }
+//                    if (position == 0) {
+//                        mangerNetService.SetShowOnOff(true);
+//                    } else {
+//                        mangerNetService.SetShowOnOff(false);
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//        });
+//        //开关屏
+//        spinnerOnOff.setOnItemClickListener(new OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//
+//                if (mangerNetService == null) {
+//                    return;
+//                }
+//                if (position == 0) {
+//                    mangerNetService.SetShowOnOff(true);
+//                } else {
+//                    mangerNetService.SetShowOnOff(false);
+//                }
+//            }
+//        });
 
 
         /**
@@ -805,7 +849,7 @@ public class TerminalControlFragment extends BaseObserverFragment implements
      */
     @Override
     protected void dealHandlerMessage(Message netMessage) {
-        try {
+
             switch (netMessage.what) {
                 case NetMessageType.ConnectSuccess:// 连接上服务器
                 {
@@ -819,9 +863,7 @@ public class TerminalControlFragment extends BaseObserverFragment implements
                     /**
                      * 如果已经连接上， 1.立即探测发送卡 2.返回节目列表
                      */
-                    Toast.makeText(fragmentActivity,
-                            getString(R.string.detect_sender_card), Toast.LENGTH_SHORT)
-                            .show();
+                    Toast.makeText(fragmentActivity, getString(R.string.detect_sender_card), Toast.LENGTH_SHORT).show();
                     mangerNetService.DetectSender();
                     mangerNetService.getProgramsNames();
                     mangerNetService.getSomeInfo();
@@ -838,12 +880,16 @@ public class TerminalControlFragment extends BaseObserverFragment implements
                         this.app.senderInfo = nmDetectSenderAnswer
                                 .getSenderInfo();
                         updateView();
-                        Toast.makeText(fragmentActivity,
-                                getString(R.string.detect_card_success),
-                                Toast.LENGTH_LONG).show();
+
+                        Toast toast = Toast.makeText(getActivity(), getString(R.string.detect_card_success), Toast.LENGTH_SHORT);
+//                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+
                     } else if (nmDetectSenderAnswer == null || nmDetectSenderAnswer.getErrorCode() == 0) {
-                        Toast.makeText(fragmentActivity, getString(R.string.detect_card_fail), Toast.LENGTH_LONG)
-                                .show();
+
+                        Toast toast = Toast.makeText(getActivity(), getString(R.string.detect_card_fail), Toast.LENGTH_SHORT);
+//                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
                     }
                 }
                 break;
@@ -866,9 +912,7 @@ public class TerminalControlFragment extends BaseObserverFragment implements
                             .fromJson(message,
                                     NMSaveBrightAndColorTempAnswer.class);
                     if (answer.getErrorCode() == 0) {
-                        Toast.makeText(fragmentActivity,
-                                getResources().getString(R.string.save_fail),
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragmentActivity, getResources().getString(R.string.save_fail), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(fragmentActivity, getResources().getString(R.string.save_success), Toast.LENGTH_SHORT).show();
 
@@ -924,9 +968,7 @@ public class TerminalControlFragment extends BaseObserverFragment implements
                 }
                 break;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
     }
 
@@ -1021,7 +1063,7 @@ public class TerminalControlFragment extends BaseObserverFragment implements
 //				}
                 // 开关
                 int onOffIndex = app.senderInfo.isbShowOn() ? 0 : 1;
-                spinnerOnOff.setSelection(onOffIndex, true);
+//                spinnerOnOff.setSelection(onOffIndex, true);
             }
 
         } catch (Exception e) {

@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +59,7 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
     /**
      * 视图：自动亮度调节
      */
-    private CustomerSpinner spinnerAutoBright;
+//    private CustomerSpinner spinnerAutoBright;
 
     private String[] arrAutoBright;
 
@@ -122,13 +124,51 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
 
     private View view;
 
+    private Switch scSwitchButton;
+
+    private final static int SC_SWITCHBUTTON_ON =0;
+    private final static int SC_SWITCHBUTTON_OFF =1;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.sender_card, container, false);
+//        setHasOptionsMenu(true);
         return view;
     }
+
+//######################################添加溢出菜单##################################
+   /* private static final int RESULT_SCREEN_SHOT =3010;
+
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.detect_sender_menu, menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        switch (item.getItemId()) {
+
+            case R.id.detect_sender:
+
+                Intent detect_sender = new Intent(getActivity(),DetectSenderCard.class);
+                startActivity(detect_sender) ;
+                break;
+
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }*/
+
+//######################################添加溢出菜单##################################
+
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -199,10 +239,31 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
             spinnerFrameRate.setSelection(0, true);
             freq = 60;
 
-            /****** 自动亮度调节（C1S） ***********/
-            spinnerAutoBright = (CustomerSpinner) view.findViewById(R.id.spinner_auto_bright_adjust);
-            spinnerAutoBright.initView(R.array.on_off);
-            spinnerAutoBright.setSelection(0, true);
+//            /****** 自动亮度调节（C1S） ***********/
+//            spinnerAutoBright = (CustomerSpinner) view.findViewById(R.id.spinner_auto_bright_adjust);
+//            spinnerAutoBright.initView(R.array.on_off);
+//            spinnerAutoBright.setSelection(0, true);
+
+        /**switch_button**/
+            scSwitchButton = (Switch)view.findViewById(R.id.switch_button_sender_card);
+            scSwitchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (mangerNetService == null || (app.senderInfo == null)) {
+                    return;
+                }
+                 {
+                    if (isChecked) {
+                        setAutoBright(SC_SWITCHBUTTON_ON);//自动调节亮度 打开状态
+                    } else {
+                        setAutoBright(SC_SWITCHBUTTON_OFF);//自动调节亮度 关闭状态
+                    }
+                }
+            }
+        });
+
+
             // 发送卡输出
             spinnerOutPut = (CustomerSpinner) view.findViewById(R.id.spinner_out_put);
             spinnerOutPut.initView(R.array.sender_output);
@@ -280,16 +341,16 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
             }
         });
 
-        // 自动亮度调节
-        spinnerAutoBright.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (mangerNetService != null) {
-                        setAutoBright(position);
-                    }
-            }
-        });
+//        // 自动亮度调节
+//        spinnerAutoBright.setOnItemClickListener(new OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    if (mangerNetService != null) {
+//                        setAutoBright(position);
+//                    }
+//            }
+//        });
         // 修改分辨率
         spinnerResolution.setOnItemClickListener(new OnItemClickListener() {
 
@@ -422,6 +483,7 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
             }
         });
 
+
         /**
          * 保存控制面积
          */
@@ -432,11 +494,8 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
 
                 showEnterPassDialog(app.operationPassword,
                         new OnPassDialogSubmitCallback() {
-
                             @Override
                             public void onSubmit() {
-                                try {
-
                                     if (app.senderInfo == null) {
                                         return;
                                     }
@@ -459,11 +518,8 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
                                     // 设置网口面积
                                     params.setPorts(getPorts());
                                     mangerNetService.setBasicParams(params);
-                                } catch (Exception e) {
-                                }
                             }
                         });
-
             }
         });
     }
@@ -494,7 +550,7 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
      * 发送卡输出，逐帧，隔帧
      */
     public void setOutPut(int frameRate) {
-        try {
+
             if (app.senderInfo == null) {
                 return;
             }
@@ -510,8 +566,7 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
             params.setPorts(app.senderInfo.getPorts());
             params.setInputType(app.senderInfo.getInputType());
             mangerNetService.setBasicParams(params);
-        } catch (Exception e) {
-        }
+
     }
 
     /**
@@ -648,15 +703,11 @@ public class SenderCardFragment extends BaseObserverFragment implements Observer
                     view.findViewById(R.id.tr_video_source).setVisibility(View.GONE);
                 }
                 // 判断是否有自动亮度调节功能
-                if (SendingCardFunctionHelper.haveFeature(features,
-                        SendingCardFunctionHelper.SCF_AUTO_BRIGHT)) {
-                    view.findViewById(R.id.tr_auto_bright_adjust).setVisibility(
-                            View.VISIBLE);
-                    spinnerAutoBright.setSelection(
-                            app.senderInfo.isAutoBright() ? 0 : 1, true);
+                if (SendingCardFunctionHelper.haveFeature(features, SendingCardFunctionHelper.SCF_AUTO_BRIGHT)) {
+                    view.findViewById(R.id.tr_auto_bright_adjust).setVisibility(View.VISIBLE);
+//                    spinnerAutoBright.setSelection(app.senderInfo.isAutoBright() ? 0 : 1, true);
                 } else {
-                    view.findViewById(R.id.tr_auto_bright_adjust).setVisibility(
-                            View.GONE);
+                    view.findViewById(R.id.tr_auto_bright_adjust).setVisibility(View.GONE);
                 }
                 /**
                  * 控制面积

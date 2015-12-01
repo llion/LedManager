@@ -9,6 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.clt.ledmanager.activity.Application;
+import com.clt.ledmanager.app.Fragment.ReceiverCardFragment;
 import com.clt.ledmanager.app.Fragment.SenderCardFragment;
 import com.clt.ledmanager.app.Fragment.TerminalControlFragment;
 import com.clt.ledmanager.app.Fragment.TerminalProgramFragment;
@@ -19,6 +21,7 @@ public class SelectListActivity extends BaseObservableActivity {
 
     private PagerSlidingTabStrip        mTabs;
     private ViewPager					mViewPager;
+    private Application app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,21 +30,28 @@ public class SelectListActivity extends BaseObservableActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_list);
 
-
         // 处理 Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_select_list_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("" + (intent.getStringExtra("data")));
+        getSupportActionBar().setTitle("" + data);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         initView();
         initData();
-        initListener();
-
-
+        handlerSelectedServer();
     }
-//   对home icon返回
+
+    private void handlerSelectedServer() {
+        app = (Application)getApplication();
+        if (app.ledTerminateInfo != null) {
+            if (app.mangerNetService != null) {
+                app.mangerNetService.onSeverAddressChanged(app.ledTerminateInfo.getIpAddress());
+            }
+        }
+    }
+
+
+//   对ActionBar的 home icon返回
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -54,7 +64,6 @@ public class SelectListActivity extends BaseObservableActivity {
                 break;
         }
 
-
         return super.onOptionsItemSelected(item);
 
     }
@@ -63,6 +72,8 @@ public class SelectListActivity extends BaseObservableActivity {
 
         mTabs = (PagerSlidingTabStrip) findViewById(R.id.main_tabs);
         mViewPager = (ViewPager) findViewById(R.id.main_viewPager);
+        mViewPager.setOffscreenPageLimit(3);
+
     }
 
     private void initData() {
@@ -70,28 +81,23 @@ public class SelectListActivity extends BaseObservableActivity {
 //         设置adapter
 
         mViewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()));
-
         mTabs.setViewPager(mViewPager);
-    }
-
-    private void initListener(){
 
     }
-
-
 
 
 class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    String[] titles = { "终端控制", "发送卡", "终端节目" };
+    String[] titles = { "终端控制", "发送卡","终端节目","接受卡" };
+
     TerminalControlFragment  tcFragment;
     SenderCardFragment  scFragment;
     TerminalProgramFragment tpFragment;
+    ReceiverCardFragment rcFragment;
 
     public MainFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
-
 
     @Override
     public Fragment getItem(int position) {
@@ -100,11 +106,14 @@ class MainFragmentPagerAdapter extends FragmentPagerAdapter {
                 tcFragment = new TerminalControlFragment();
                 return tcFragment;
             case 1:
-                scFragment = new SenderCardFragment();
+                scFragment= new SenderCardFragment();
                 return scFragment;
             case 2:
-                tpFragment = new TerminalProgramFragment();
+                tpFragment=new TerminalProgramFragment();
                 return tpFragment;
+            case 3:
+                rcFragment=new ReceiverCardFragment();
+                return rcFragment;
 
             default:
                 return null;

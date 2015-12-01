@@ -73,7 +73,10 @@ public class LedSelectAdapter extends BaseAdapter {
             lastCheckedImageView.setImageResource(android.R.color.transparent);
         }
         if (ivChecked != null) {
+
+            ivChecked.setPadding(10,10,10,10);
             ivChecked.setImageResource(R.drawable.right);
+
             lastIp = ipAddress;
         }
     }

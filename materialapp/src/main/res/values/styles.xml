@@ -111,4 +111,15 @@
         <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
     </style>
 
+    <style name="customSwitch">
+        <item name="android:switchMinWidth">0dp</item>
+        <item name="android:textOff"/>
+        <item name="android:textOn"/>
+        <item name="android:checked">false</item>
+        <item name="android:thumb">@drawable/custom_swith_thumb</item>
+        <item name="android:thumbTextPadding">@dimen/dp_15</item>
+        <item name="android:track">@drawable/custom_switch_track</item>
+    </style>
+
+
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mikepenz.materialdrawer.app">
+    package="com.mikepenz.materialdrawer.app" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
@@ -23,13 +23,13 @@
     <application
         android:name="com.clt.ledmanager.app.CustomApplication"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name" >
 
         <!-- android:supportsRtl="true" -->
         <activity
             android:name="com.clt.ledmanager.app.AdvancedActivity"
             android:label="@string/app_name"
-            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus">
+            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,12 +38,12 @@
         </activity>
 
         <!-- 节目上传 -->
-        <activity android:name="com.clt.ledmanager.app.UploadProgramActivity"></activity>
+        <activity android:name="com.clt.ledmanager.app.UploadProgramActivity" />
         <activity
             android:name="com.clt.ledmanager.app.MyTabActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <!-- 选择上传节目页面 -->
         <activity
@@ -65,12 +65,14 @@
 
         <service android:name="com.clt.ledmanager.service.NetService" />
 
-        <activity android:name="com.clt.ledmanager.app.TerminalScannActivity"></activity>
-        <activity android:name="com.clt.ledmanager.app.TerminalmanualActivity"></activity>
-        <activity android:name="com.clt.ledmanager.app.TerminalrefreshActivity"></activity>
+        <activity android:name="com.clt.ledmanager.app.TerminalScannActivity" />
+        <activity android:name="com.clt.ledmanager.app.TerminalmanualActivity" />
+        <activity android:name="com.clt.ledmanager.app.TerminalrefreshActivity" />
         <activity
             android:name="com.clt.ledmanager.app.SelectListActivity"
-            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus"></activity>
+            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus" />
+        <activity android:name="com.clt.ledmanager.app.utils.DetectSenderCard" >
+        </activity>
     </application>
 
 </manifest>

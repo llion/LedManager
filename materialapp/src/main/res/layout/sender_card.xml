@@ -69,14 +69,21 @@
                                 android:gravity="center_vertical"
                                 android:text="@string/auto_bright_adjust" />
 
-                            <com.clt.ledmanager.ui.CustomerSpinner
-                                android:id="@+id/spinner_auto_bright_adjust"
-                                android:layout_width="wrap_content"
+                            <Switch
+                                style="@style/customSwitch"
+                                android:id="@+id/switch_button_sender_card"
                                 android:layout_height="@dimen/item_height"
-                                android:layout_marginLeft="10dp"
-                                android:background="@drawable/spinner_selector"
-                                android:gravity="left|center_vertical"
-                                android:textSize="@dimen/font_14" />
+
+                                />
+
+                            <!--<com.clt.ledmanager.ui.CustomerSpinner-->
+                                <!--android:id="@+id/spinner_auto_bright_adjust"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="@dimen/item_height"-->
+                                <!--android:layout_marginLeft="10dp"-->
+                                <!--android:background="@drawable/spinner_selector"-->
+                                <!--android:gravity="left|center_vertical"-->
+                                <!--android:textSize="@dimen/font_14" />-->
                         </TableRow>
                         <!-- 分辨率第一列 -->
 

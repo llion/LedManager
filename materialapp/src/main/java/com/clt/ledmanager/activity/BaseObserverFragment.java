@@ -1,23 +1,22 @@
 package com.clt.ledmanager.activity;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.clt.ledmanager.IService;
 import com.clt.ledmanager.app.AdvancedActivity;
 import com.clt.ledmanager.app.BaseObservableActivity;
-import com.clt.ledmanager.ui.DialogFactory;
 import com.mikepenz.materialdrawer.app.R;
 
 import java.util.Observable;
@@ -52,6 +51,7 @@ public abstract class BaseObserverFragment extends Fragment implements Observer 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        mangerNetService =((Application)fragmentActivity.getApplication()).mangerNetService;
         super.onCreate(savedInstanceState);
 
     }
@@ -101,6 +101,58 @@ public abstract class BaseObserverFragment extends Fragment implements Observer 
      */
     protected void showEnterPassDialog(final String rightPassword,
                                        final OnPassDialogSubmitCallback callBack) {
+
+//        ##########################################新增Dialog########################################
+
+        LayoutInflater password_inflater = LayoutInflater.from(getActivity());
+        final View password_view = password_inflater.inflate(R.layout.password, null);
+
+        enterPassDialog = new AlertDialog.Builder(getActivity()).setTitle("亲,要输入密码哦")
+                .setView(password_view)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                      终端的设定密码和输入密码
+                        EditText password = (EditText) password_view.findViewById(R.id.entry_password);
+                        String entryPassword = password.getText().toString();//获取输入的密码
+
+                        if (entryPassword.equals(rightPassword)) {
+                            if (callBack != null) {
+                                callBack.onSubmit();
+                                if (enterPassDialog != null) {
+                                    enterPassDialog.dismiss();
+                                }
+                            }
+                        } else {
+                            Toast toast = Toast.makeText(getActivity(), " 亲,密码不正确哦", Toast.LENGTH_SHORT);
+                            toast.show();
+//                            password.setText("");
+//                            password.setSelection(0);
+                        }
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 取消
+                        if (enterPassDialog != null) {
+                            enterPassDialog.dismiss();
+                        }
+                    }
+                }).show();
+
+
+
+
+
+
+//        ##########################################新增Dialog########################################
+
+
+
+/*
+        //对话框
         try {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view = inflater.inflate(R.layout.entry_password, null);
@@ -142,6 +194,7 @@ public abstract class BaseObserverFragment extends Fragment implements Observer 
         } catch (Exception e) {
             e.printStackTrace();
         }
+*/
 
     }
 

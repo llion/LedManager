@@ -1,5 +1,27 @@
 package com.clt.ledmanager.service;
 
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
+import com.clt.commondata.LedTerminateInfo;
+import com.clt.commondata.LedTerminateInfoList;
+import com.clt.ledmanager.UDPConnector;
+import com.clt.ledmanager.util.Const;
+import com.clt.ledmanager.util.FileLogger;
+import com.clt.netmessage.NMFindTerminate;
+import com.clt.netmessage.NMFindTerminateAnswer;
+import com.clt.netmessage.NetMessageType;
+import com.clt.util.Config;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -8,27 +30,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-
-import com.clt.ledmanager.UDPConnector;
-import com.clt.commondata.LedTerminateInfo;
-import com.clt.commondata.LedTerminateInfoList;
-import com.clt.netmessage.NMFindTerminate;
-import com.clt.netmessage.NMFindTerminateAnswer;
-import com.clt.util.Config;
-import com.clt.ledmanager.util.Const;
-import com.clt.ledmanager.util.FileLogger;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 /**
  * 查找服务端的线程，UDP广播
@@ -116,18 +117,22 @@ public class UDPConnectorImpl implements UDPConnector
             }
             catch (SocketException e)
             {
+                mHandler.sendEmptyMessage(NetMessageType.MSG_WHAT_SOCKET_EXCEPTION);
                 e.printStackTrace();
             }
             catch (UnknownHostException e)
             {
+                mHandler.sendEmptyMessage(NetMessageType.MSG_WHAT_SOCKET_EXCEPTION);
                 e.printStackTrace();
             }
             catch (IOException e)
             {
+                mHandler.sendEmptyMessage(NetMessageType.MSG_WHAT_SOCKET_EXCEPTION);
                 e.printStackTrace();
             }
             catch (Exception e)
             {
+                mHandler.sendEmptyMessage(NetMessageType.MSG_WHAT_SOCKET_EXCEPTION);
                 e.printStackTrace();
             }
         }
