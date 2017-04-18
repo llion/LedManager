@@ -1,7 +1,8 @@
 package com.clt.entity;
 
 import java.io.Serializable;
-/**接收卡参数设置***/
+//*接收卡参数设置**
+
 
 public class ReceiverSettingInfo implements Serializable
 {

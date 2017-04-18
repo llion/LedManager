@@ -1,5 +1,6 @@
 package com.clt.ledmanager.app.Fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -106,8 +107,7 @@ public class LanguageFragment extends Fragment
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 i.putExtra("Type", "changeLanguage");
                 getActivity().startActivity(i);
-
-                getActivity().finish();//finish掉自己
+//                getActivity().finish();//finish掉自己
             }
         });
     }

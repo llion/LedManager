@@ -19,8 +19,8 @@ public class TerminalScannActivity extends Activity {
     public void init(){
 
 //           调用扫描
-        Intent scan = new Intent("com.color.android.SCAN");
-        startActivity(scan);
+        //Intent scan = new Intent("com.color.android.SCAN");
+        //startActivity(scan);
     }
 
 }

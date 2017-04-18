@@ -92,8 +92,8 @@
     <string name="d_port">D Port</string>
     <string name="sender_type">Sender</string>
     <string name="custom">Custom</string>
-    <string name="bright">Brightness</string>
-    <string name="color_temp">Temperature</string>
+    <string name="bright">Brightness:</string>
+    <string name="color_temp">Temperature:</string>
     <string name="switch_screen">Screen Switch</string>
     <string name="auto_bright_adjust">Auto Bright Tune</string>
     <string name="receiver_params_from_sender">Receiver Card Parameters From Send</string>

@@ -94,7 +94,7 @@
             <!-- 音量 -->
 
             <TableRow
-                android:id="@+id/tr_box_w_h"
+                android:id="@+id/tr_box_w_h1"
                 android:background="@drawable/page_list_middle"
                 android:gravity="center_vertical"
                 android:paddingBottom="5dp"
@@ -140,7 +140,7 @@
             <!-- 不透明度 -->
 
             <TableRow
-                android:id="@+id/tr_box_w_h"
+                android:id="@+id/tr_box_w_h2"
                 android:background="@drawable/page_list_middle"
                 android:gravity="center_vertical"
                 android:paddingBottom="5dp"

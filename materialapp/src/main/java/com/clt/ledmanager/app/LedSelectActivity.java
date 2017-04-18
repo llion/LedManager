@@ -246,7 +246,7 @@ public class LedSelectActivity extends BaseActivity implements Observer {
             }
         });
 
-        listView.setOnItemClickListener(new OnItemClickListener() {
+       /* listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
                 // 查看密码是否已经输入过
@@ -316,7 +316,7 @@ public class LedSelectActivity extends BaseActivity implements Observer {
                 dialog = DialogFactory.createDialog(LedSelectActivity.this, view);
                 dialog.show();
             }
-        });
+        });*/
     }
 
     /**

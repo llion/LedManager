@@ -84,17 +84,17 @@ public class TerminalProgramFragment extends BaseObserverFragment  {
 
     public boolean onOptionsItemSelected(MenuItem item){
 
-        switch (item.getItemId()) {
-
-            case R.id.menu_upload_program:
-
-                Intent upload_program = new Intent(getActivity(),EditProgramFragment.class);
-                startActivityForResult(upload_program,RESULT_UPLOAD_PROGRAM) ;
-                break;
-
-            default:
-                break;
-        }
+//        switch (item.getItemId()) {
+//
+//            case R.id.menu_upload_program:
+//
+//                Intent upload_program = new Intent(getActivity(),EditProgramFragment.class);
+//                startActivityForResult(upload_program,RESULT_UPLOAD_PROGRAM) ;
+//                break;
+//
+//            default:
+//                break;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

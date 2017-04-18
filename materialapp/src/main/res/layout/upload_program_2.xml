@@ -164,7 +164,7 @@
                 <!-- 宽高 -->
 
                 <TableRow
-                    android:id="@+id/tr_box_w_h"
+                    android:id="@+id/tr_box_w_h1"
                     android:layout_height="58dp"
                     android:background="@drawable/page_list_below"
                     android:gravity="center_vertical"

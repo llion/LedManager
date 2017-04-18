@@ -20,6 +20,13 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    public static boolean isMNC() {
+        return Build.VERSION.SDK_INT >= 23;
+    }
+    Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS);
+    intent.setData(Uri.parse("package:" + getPackageName()));
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(intent);
     <application
         android:name="com.clt.ledmanager.app.CustomApplication"
         android:icon="@drawable/ic_launcher"

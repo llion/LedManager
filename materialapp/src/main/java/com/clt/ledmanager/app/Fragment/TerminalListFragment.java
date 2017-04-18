@@ -124,7 +124,7 @@ public class TerminalListFragment extends BaseObserverFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         menu.clear();
-        inflater.inflate(R.menu.fragment_terminallist, menu);
+        //inflater.inflate(R.menu.fragment_terminallist, menu);
     }
 
     private static final int RESULT_SCANN =3001;
@@ -260,8 +260,17 @@ public class TerminalListFragment extends BaseObserverFragment {
                     startActivity(intent);
                     return;
                 }
-
-                LayoutInflater password_inflater = LayoutInflater.from(getActivity());
+                adapter.setIpAddress(ip);
+                updateImageViewSelector(arg1);
+                app.ledTerminateInfo = adapter.getItem(position);
+//                                    handlerSelectedServer(adapter.getItem(position));
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                startActivity(intent);
+                app.getIp2TerminateMap().get(ip)
+                        .setHasEnteredPass(true);
+                /*LayoutInflater password_inflater = LayoutInflater.from(getActivity());
                 final View password_view = password_inflater.inflate(R.layout.password, null);
 
                 dialog = new AlertDialog.Builder(getActivity()).setTitle("亲,要输入密码哦")
@@ -303,7 +312,7 @@ public class TerminalListFragment extends BaseObserverFragment {
                                 }
                             }
                         }).show();
-
+*/
             }
         });
     }

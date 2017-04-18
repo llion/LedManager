@@ -14,37 +14,12 @@
        	clt:right_text="@string/info"/>-->
 
     <!-- 服务端信息 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_gravity="end">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-         </FrameLayout>
-
-        <Button
-            android:id="@+id/btn_scan_ap"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_gravity="right"
-            android:background="@drawable/btn_search_terminal_selector"
-            android:text="@string/scan_device"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_14"
-            android:layout_marginRight="10dp"
-            android:visibility="gone"/>
-
-    </LinearLayout>
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="1.0" >
+        android:layout_weight="1.0">
 
 
         <LinearLayout
@@ -53,20 +28,20 @@
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp" >
+            android:paddingRight="10dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
-                 <!--服务端名称 -->
+                <!--服务端名称 -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_terminate_coninfo"
@@ -74,9 +49,9 @@
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:text="@string/not_connect"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
-                   <TextView
+                    <TextView
                         android:id="@+id/tv_terminate_conntime"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -91,16 +66,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10px"
-                    android:stretchColumns="1" >
+                    >
 
                     <!-- 亮度 -->
 
-                    <TableRow >
+                    <TableRow>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="@dimen/item_height"
-                            android:gravity="center_vertical" >
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/tvBrightHint"
@@ -109,51 +84,54 @@
                                 android:ellipsize="marquee"
                                 android:focusable="true"
                                 android:focusableInTouchMode="true"
-                                android:gravity="center_vertical|left"
-                                android:maxWidth="60dp"
+                                android:gravity="center"
+                                android:maxWidth="80dp"
                                 android:singleLine="true"
                                 android:text="@string/bright" />
 
                             <TextView
                                 android:id="@+id/tvBrightValue"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="@dimen/item_height"
                                 android:layout_marginLeft="5dp"
-                                android:gravity="center"
+                                android:gravity="left|center"
                                 android:text="100%" />
                         </LinearLayout>
+                    </TableRow>
 
+                    <TableRow>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height"
+                            android:layout_weight="1.0"
                             android:gravity="center_vertical"
-                            android:orientation="vertical" >
+                            android:orientation="vertical">
 
                             <SeekBar
                                 android:id="@+id/sbBright"
-                                android:layout_width="fill_parent"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp" />
                         </LinearLayout>
                     </TableRow>
                     <!-- 色温 -->
 
-                    <TableRow >
+                    <TableRow>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height"
-                            android:gravity="center_vertical" >
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/tvColorTempHint"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:ellipsize="marquee"
                                 android:focusable="true"
                                 android:focusableInTouchMode="true"
-                                android:gravity="center_vertical|left"
-                                android:maxWidth="60dp"
+                                android:gravity="center"
+                                android:maxWidth="80dp"
                                 android:singleLine="true"
                                 android:text="@string/color_temp" />
 
@@ -162,19 +140,22 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="5dp"
-                                android:gravity="center"
+                                android:gravity="right|center"
                                 android:text="6500K" />
                         </LinearLayout>
+                    </TableRow>
 
+                    <TableRow>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/item_height"
+                            android:layout_weight="1.0"
                             android:gravity="center_vertical"
-                            android:orientation="vertical" >
+                            android:orientation="vertical">
 
                             <SeekBar
                                 android:id="@+id/sbColorTempHint"
-                                android:layout_width="fill_parent"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp" />
                         </LinearLayout>
@@ -205,7 +186,7 @@
 
                     <TableRow
                         android:id="@+id/tr_auto_bright_adjust"
-                        android:layout_marginTop="10dp" 
+                        android:layout_marginTop="10dp"
                         android:visibility="gone">
 
                         <TextView
@@ -226,7 +207,6 @@
                     <!-- 开关屏 -->
 
 
-
                     <TableRow android:layout_marginTop="1dp" >
 
                         <TextView
@@ -238,81 +218,83 @@
                             style="@style/customSwitch"
                             android:id="@+id/switch_button"
                             android:layout_width="wrap_content"
+                            android:layout_weight="1"
                             android:layout_height="@dimen/item_height"
+                            android:gravity="center_vertical|right"
 
                             />
                         <!--<com.clt.ledmanager.ui.CustomerSpinner-->
-                            <!--android:id="@+id/spinner_on_off"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="@dimen/item_height"-->
-                            <!--android:layout_marginLeft="10dp"-->
-                            <!--android:background="@drawable/spinner_selector"-->
-                            <!--android:gravity="left|center_vertical"-->
-                            <!--android:textSize="@dimen/font_14" />-->
+                        <!--android:id="@+id/spinner_on_off"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="@dimen/item_height"-->
+                        <!--android:layout_marginLeft="10dp"-->
+                        <!--android:background="@drawable/spinner_selector"-->
+                        <!--android:gravity="left|center_vertical"-->
+                        <!--android:textSize="@dimen/font_14" />-->
                     </TableRow>
 
                     <!-- 节目管理 -->
 
                     <!--<TableRow-->
-                        <!--android:id="@+id/tr_manager_program"-->
-                        <!--android:layout_marginTop="10dp" >-->
+                    <!--android:id="@+id/tr_manager_program"-->
+                    <!--android:layout_marginTop="10dp" >-->
 
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="@dimen/item_height"-->
-                            <!--android:gravity="center_vertical|left"-->
-                            <!--android:text="@string/program_manager" />-->
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="@dimen/item_height"-->
+                    <!--android:gravity="center_vertical|left"-->
+                    <!--android:text="@string/program_manager" />-->
 
-                        <!--<com.clt.ledmanager.ui.CustomerSpinner-->
-                            <!--android:id="@+id/spinner_program_manager"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="@dimen/item_height"-->
-                            <!--android:layout_marginLeft="10dp"-->
-                            <!--android:background="@drawable/spinner_selector"-->
-                            <!--android:gravity="left|center_vertical"-->
-                            <!--android:textSize="@dimen/font_14" />-->
+                    <!--<com.clt.ledmanager.ui.CustomerSpinner-->
+                    <!--android:id="@+id/spinner_program_manager"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="@dimen/item_height"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:background="@drawable/spinner_selector"-->
+                    <!--android:gravity="left|center_vertical"-->
+                    <!--android:textSize="@dimen/font_14" />-->
                     <!--</TableRow>-->
                     <!-- 节目上传 -->
 
                     <!--<TableRow-->
-                        <!--android:id="@+id/tr_upload_program"-->
-                        <!--android:layout_marginTop="10dp" -->
-                        <!--android:visibility="gone">-->
+                    <!--android:id="@+id/tr_upload_program"-->
+                    <!--android:layout_marginTop="10dp" -->
+                    <!--android:visibility="gone">-->
 
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="@dimen/item_height"-->
-                            <!--android:gravity="center_vertical"-->
-                            <!--android:text="@string/upload_program"-->
-                            <!--android:visibility="invisible" />-->
-						<!--<LinearLayout-->
-                            <!--android:layout_width="0dp"-->
-                            <!--android:layout_weight="1.0"-->
-                            <!--android:layout_height="@dimen/item_height"-->
-                            <!--android:gravity="center_vertical" >-->
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="@dimen/item_height"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:text="@string/upload_program"-->
+                    <!--android:visibility="invisible" />-->
+                    <!--<LinearLayout-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_weight="1.0"-->
+                    <!--android:layout_height="@dimen/item_height"-->
+                    <!--android:gravity="center_vertical" >-->
 
-                            <!--<ProgressBar-->
-                                <!--android:id="@+id/pb_upload_progress"-->
-                                <!--style="@android:style/Widget.ProgressBar.Horizontal"-->
-                                <!--android:layout_width="0dp"-->
-                                <!--android:layout_height="20dp"-->
-                                <!--android:layout_marginLeft="10dp"-->
-                                <!--android:layout_weight="1.0"-->
-                                <!--android:max="100"-->
-                                <!--android:progressDrawable="@drawable/pb_sdcard_percent" />-->
+                    <!--<ProgressBar-->
+                    <!--android:id="@+id/pb_upload_progress"-->
+                    <!--style="@android:style/Widget.ProgressBar.Horizontal"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="20dp"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:layout_weight="1.0"-->
+                    <!--android:max="100"-->
+                    <!--android:progressDrawable="@drawable/pb_sdcard_percent" />-->
 
-                            <!--<TextView-->
-                                <!--android:id="@+id/tv_upload_progress"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="@dimen/item_height"-->
-                                <!--android:gravity="center_vertical"-->
-                                <!--android:singleLine="true"-->
-                                <!--android:layout_marginLeft="10dp"/>-->
-                        <!--</LinearLayout>-->
+                    <!--<TextView-->
+                    <!--android:id="@+id/tv_upload_progress"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="@dimen/item_height"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:layout_marginLeft="10dp"/>-->
+                    <!--</LinearLayout>-->
                     <!--</TableRow>-->
                     <!-- 语言切换 -->
 
-               <!--     <TableRow android:layout_marginTop="10dp" >
+                    <!--     <TableRow android:layout_marginTop="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -331,27 +313,27 @@
                     </TableRow>-->
                 </TableLayout>
 
-            <!--保存设置数据 -->
+                <!--保存设置数据 -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
 
                     <Button
                         android:id="@+id/btn_save_bright_colortemp"
                         android:layout_width="120dp"
                         android:layout_height="50dp"
+                        android:layout_gravity="center"
                         android:background="@drawable/btn_search_terminal_selector"
                         android:text="@string/save"
-                        android:layout_gravity="center"
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_16" />
 
                     <Button
                         android:id="@+id/btn_screen_shot"
-                        style="?android:attr/buttonStyleSmall"
+                        style="?android:attr/buttonStyle"
                         android:layout_width="match_parent"
                         android:layout_height="10dp"
                         android:layout_marginTop="20dp"
@@ -359,8 +341,7 @@
                         android:text="@string/screenshots"
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_14"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
 
                     <Button
                         android:id="@+id/btnSearch"
@@ -372,11 +353,10 @@
                         android:text="@string/search"
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_14"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
 
                 </LinearLayout>
-
 
 
                 <!-- 右边按钮 -->
@@ -385,47 +365,43 @@
             <!-- 按钮组 -->
 
             <!--<LinearLayout-->
-                <!--android:layout_width="70dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="vertical" >-->
+            <!--android:layout_width="70dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical" >-->
 
-                 <!--查找服务端按钮 -->
-
-
+            <!--查找服务端按钮 -->
 
 
+            <!-- 保存亮度色温按钮 -->
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="96dp" >-->
+
+            <!--<Button-->
+            <!--android:id="@+id/btn_save_bright_colortemp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="70dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:background="@drawable/btn_search_terminal_selector"-->
+            <!--android:text="@string/save"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="@dimen/font_14" />-->
+            <!--</LinearLayout>-->
+            <!-- 空按钮 -->
+
+            <!--<Button-->
+            <!--android:id="@+id/btn_emp_tesmode"-->
+            <!--style="?android:attr/buttonStyleSmall"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/item_height"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:visibility="invisible" />-->
+            <!-- 空按钮 -->
 
 
-                <!-- 保存亮度色温按钮 -->
-
-                <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="96dp" >-->
-
-                    <!--<Button-->
-                        <!--android:id="@+id/btn_save_bright_colortemp"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="70dp"-->
-                        <!--android:layout_marginTop="10dp"-->
-                        <!--android:background="@drawable/btn_search_terminal_selector"-->
-                        <!--android:text="@string/save"-->
-                        <!--android:textColor="@color/white"-->
-                        <!--android:textSize="@dimen/font_14" />-->
-                <!--</LinearLayout>-->
-                <!-- 空按钮 -->
-
-                <!--<Button-->
-                    <!--android:id="@+id/btn_emp_tesmode"-->
-                    <!--style="?android:attr/buttonStyleSmall"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="@dimen/item_height"-->
-                    <!--android:layout_marginTop="10dp"-->
-                    <!--android:visibility="invisible" />-->
-                <!-- 空按钮 -->
-
-               
-                <!--屏幕截屏按钮-->
-             <!--   <Button
+            <!--屏幕截屏按钮-->
+            <!--   <Button
                     android:id="@+id/btn_screen_shot"
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="match_parent"
@@ -434,45 +410,70 @@
                     android:background="@drawable/btn_search_terminal_selector"
                     android:text="@string/screenshots"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/font_14" 
+                    android:textSize="@dimen/font_14"
                     />-->
 
 
-                <!--&lt;!&ndash; 上传节目按钮 &ndash;&gt;-->
+            <!--&lt;!&ndash; 上传节目按钮 &ndash;&gt;-->
 
-                <!--<Button-->
-                    <!--android:id="@+id/btn_upload_program"-->
-                    <!--style="?android:attr/buttonStyleSmall"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="@dimen/item_height"-->
-                    <!--android:layout_marginTop="10dp"-->
-                    <!--android:background="@drawable/btn_search_terminal_selector"-->
-                    <!--android:text="@string/upload_program"-->
-                    <!--android:textColor="@color/white"-->
-                    <!--android:textSize="@dimen/font_14" />-->
+            <!--<Button-->
+            <!--android:id="@+id/btn_upload_program"-->
+            <!--style="?android:attr/buttonStyleSmall"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/item_height"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:background="@drawable/btn_search_terminal_selector"-->
+            <!--android:text="@string/upload_program"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="@dimen/font_14" />-->
 
-                <!--<TextView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="@dimen/item_height"-->
-                    <!--android:layout_marginTop="10dp"-->
-                    <!--android:layout_marginBottom="10dp"-->
-                    <!--android:gravity="center_vertical"-->
-                    <!--android:singleLine="true" />-->
+            <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/item_height"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:singleLine="true" />-->
 
-                <!--<Button-->
-                    <!--android:id="@+id/btn_control_upload"-->
-                    <!--style="?android:attr/buttonStyleSmall"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="@dimen/item_height"-->
-                    <!--android:layout_marginTop="10dp"-->
-                    <!--android:background="@drawable/btn_search_terminal_selector"-->
-                    <!--android:text="@string/start_upload"-->
-                    <!--android:textColor="@color/white"-->
-                    <!--android:textSize="@dimen/font_14"-->
-                    <!--android:visibility="gone" />-->
+            <!--<Button-->
+            <!--android:id="@+id/btn_control_upload"-->
+            <!--style="?android:attr/buttonStyleSmall"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/item_height"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:background="@drawable/btn_search_terminal_selector"-->
+            <!--android:text="@string/start_upload"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="@dimen/font_14"-->
+            <!--android:visibility="gone" />-->
             <!--</LinearLayout>-->
 
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="end">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+         </FrameLayout>
+
+        <Button
+            android:id="@+id/btn_scan_ap"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_gravity="right"
+            android:background="@drawable/btn_search_terminal_selector"
+            android:text="@string/scan_device"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_14"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
 </LinearLayout>

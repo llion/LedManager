@@ -1044,8 +1044,8 @@ public class TerminalControlFragment extends BaseObserverFragment implements
                             View.INVISIBLE);
 
                 } else {
-                    trTestMode.setVisibility(View.GONE);
-                    btnEmpTestmode.setVisibility(View.GONE);
+                    //trTestMode.setVisibility(View.GONE);
+                    //btnEmpTestmode.setVisibility(View.GONE);
                 }
 //				// 判断是否有自动亮度调节功能
 //				if (SendingCardFunctionHelper.haveFeature(features,

@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,7 +65,7 @@ public class AdvancedActivity extends BaseObservableActivity {
 //    private static final int ITEM_POSITION_SEND_CARD = 3;
 //    private static final int ITEM_POSITION_TERMINAL_PROGRAM = 4;
     private static final int ITEM_POSITION_EDIT_PROGRAM = 2;
-    private static final int ITEM_POSITION_LANGUAGE = 4;
+    private static final int ITEM_POSITION_LANGUAGE = 3;
 
 
     private static final String FRAGMENT_TAG_TERMINAL_LIST = "terminal_list";
@@ -262,8 +263,8 @@ public class AdvancedActivity extends BaseObservableActivity {
 //                        添加节目上传
 //                        new SecondaryDrawerItem().withName("终端节目").withIcon(R.drawable.btn_receiving_selector),
 
-//                        添加节目管理
-                        new PrimaryDrawerItem().withName("编辑节目").withIcon(R.drawable.btn_linking_selector),
+////                        添加节目管理
+//                        new PrimaryDrawerItem().withName("编辑节目").withIcon(R.drawable.btn_linking_selector),
 
 //                        添加第二模块
                         new SectionDrawerItem().withName(R.string.drawer_item_action_settings),
@@ -405,8 +406,9 @@ public class AdvancedActivity extends BaseObservableActivity {
     //添加Menu菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        /*MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);*/
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 

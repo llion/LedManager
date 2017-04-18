@@ -45,8 +45,8 @@
     <string name="d_port">D口</string>
     <string name="sender_type">发送卡型号</string>
     <string name="custom">自定义</string>
-    <string name="bright">亮度</string>
-    <string name="color_temp">色温</string>
+    <string name="bright">亮度:</string>
+    <string name="color_temp">色温:</string>
     <string name="switch_screen">开关屏幕</string>
     <string name="auto_bright_adjust">自动亮度调节</string>
     <string name="receiver_params_from_sender">接收卡参数来自发送卡</string>

@@ -88,7 +88,8 @@ public class SelectListActivity extends BaseObservableActivity {
 
 class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    String[] titles = { "终端控制", "发送卡","终端节目","接受卡" };
+//    String[] titles = { "终端控制", "发送卡","终端节目","接受卡" };
+    String[] titles = { "终端控制", "终端节目" };
 
     TerminalControlFragment  tcFragment;
     SenderCardFragment  scFragment;
@@ -105,15 +106,15 @@ class MainFragmentPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 tcFragment = new TerminalControlFragment();
                 return tcFragment;
+//            case 1:
+//                scFragment= new SenderCardFragment();
+//                return scFragment;
             case 1:
-                scFragment= new SenderCardFragment();
-                return scFragment;
-            case 2:
                 tpFragment=new TerminalProgramFragment();
                 return tpFragment;
-            case 3:
-                rcFragment=new ReceiverCardFragment();
-                return rcFragment;
+//            case 3:
+//                rcFragment=new ReceiverCardFragment();
+//                return rcFragment;
 
             default:
                 return null;

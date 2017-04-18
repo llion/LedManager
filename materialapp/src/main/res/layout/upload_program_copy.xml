@@ -59,7 +59,7 @@
                 <TableRow >
 
                     <TextView
-                        android:id="@+id/tv_terminate_coninfo"
+                        android:id="@+id/tv_terminate_coninfo1"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/item_height"
                         android:gravity="center_vertical"

@@ -13,6 +13,7 @@
     <dimen name="dp_15">15dp</dimen>
     <dimen name="dp_45">45dp</dimen>
     <dimen name="dp_30">30dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
 
     <dimen name="item_height">48dp</dimen>
 </resources>
