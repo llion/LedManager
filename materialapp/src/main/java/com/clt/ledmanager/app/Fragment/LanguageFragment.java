@@ -14,9 +14,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.clt.ledmanager.activity.Application;
+import com.clt.ledmanager.activity.FragmentController;
 import com.clt.ledmanager.adapter.SpinnerAdapter;
+import com.clt.ledmanager.app.AdvancedActivity;
 import com.clt.ledmanager.util.Const;
 import com.clt.ledmanager.util.SharedPreferenceUtil;
 import com.mikepenz.materialdrawer.app.R;
@@ -35,6 +38,7 @@ public class LanguageFragment extends Fragment
     private LinearLayout view;
     private ListView language_listView;
     private SpinnerAdapter spinnerAdapter;
+    public FragmentController fragmentController;
 
     private SharedPreferenceUtil sharedPreferenceUtil;// 偏好设置
 
@@ -58,6 +62,8 @@ public class LanguageFragment extends Fragment
 
     private void init() {
 
+
+        fragmentController = new FragmentController(getActivity());
         language_listView = (ListView) view.findViewById(R.id.setting_language_list_view);
         sharedPreferenceUtil = SharedPreferenceUtil.getInstance(getActivity(), null);
 
@@ -107,7 +113,11 @@ public class LanguageFragment extends Fragment
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 i.putExtra("Type", "changeLanguage");
                 getActivity().startActivity(i);
-//                getActivity().finish();//finish掉自己
+
+                fragmentController.changeFragment(AdvancedActivity.FRAGMENT_TAG_TERMINAL_LIST);
+                //getActivity().finish();//finish掉自己
+                Toast.makeText(getActivity(), "切换成功", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

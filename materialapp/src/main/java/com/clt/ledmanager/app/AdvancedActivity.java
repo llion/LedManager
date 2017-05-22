@@ -68,7 +68,7 @@ public class AdvancedActivity extends BaseObservableActivity {
     private static final int ITEM_POSITION_LANGUAGE = 3;
 
 
-    private static final String FRAGMENT_TAG_TERMINAL_LIST = "terminal_list";
+    public static final String FRAGMENT_TAG_TERMINAL_LIST = "terminal_list";
     private static final String FRAGMENT_TAG_TERMINAL_CONTROL = "terminal_control";
     private static final String FRAGMENT_TAG_SEND_CARD = "send_card";
     private static final String FRAGMENT_TAG_TERMINAL_PROGRAM = "terminal_program";
@@ -76,7 +76,7 @@ public class AdvancedActivity extends BaseObservableActivity {
     private static final String FRAGMENT_TAG_LANGUAGE = "language";
 
 
-    private FragmentController fragmentController;
+    public FragmentController fragmentController;
     private BroadcastReceiver receiver;
 
     private static final boolean DBG = true;
@@ -452,4 +452,5 @@ public class AdvancedActivity extends BaseObservableActivity {
         super.onDestroy();
         unbindService(mangerNetServiceConnection);
     }
+
 }

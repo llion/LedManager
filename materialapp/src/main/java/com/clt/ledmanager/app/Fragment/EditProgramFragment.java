@@ -563,7 +563,7 @@ public class EditProgramFragment extends Fragment {
 
                 }
             } else {
-                Toast.makeText(getActivity(), getString(R.string.upload_fail), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), getString(R.string.upload_fail), Toast.LENGTH_LONG).show();
             }
         }
 

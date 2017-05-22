@@ -115,7 +115,7 @@ public class TerminalProgramFragment extends BaseObserverFragment  {
             }
 
         });
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+/*        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -177,7 +177,7 @@ public class TerminalProgramFragment extends BaseObserverFragment  {
                 deleteProgramDialog.show();
                 return true;
             }
-        });
+        });*/
     }
     /**
      * 获取节目清单后更新
